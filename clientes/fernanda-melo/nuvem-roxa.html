@@ -1,0 +1,322 @@
+<title>Nuvem Roxa Fernanda Melo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+/* Laboratório 2: nuvem real (timelapse) pintada de roxo e ouro num céu de noite. Visual único, escuro. */
+:root{
+  --branco:#FFFFFF; --roxo:#6B21A8; --berinjela:#3B0A57; --ouro:#FBBF24; --tinta:#1E0B30; --noite:#05030C;
+  --fd:'DM Serif Display',Georgia,serif; --fb:'Space Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{margin:0;background:var(--noite);color:#F1ECFA;font-family:var(--fb);-webkit-font-smoothing:antialiased}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+#ceu{z-index:1;touch-action:none}
+#raio{z-index:2;pointer-events:none}
+video{position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;left:-10px;top:-10px}
+.aviso{position:fixed;inset:0;display:none;place-items:center;text-align:center;padding:2rem;z-index:5}
+
+.painel{position:fixed;z-index:4;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));
+  width:min(20rem,calc(100vw - 32px));max-height:calc(100% - 32px - env(safe-area-inset-bottom,0px) - env(safe-area-inset-top,0px));overflow:auto;
+  background:rgb(12 6 22/.72);backdrop-filter:blur(14px);border:1px solid rgb(251 191 36/.18);border-radius:18px;padding:1rem 1.1rem 1.1rem;display:grid;gap:.85rem}
+.painel[hidden]{display:none!important}
+.painel h1{margin:0;font:italic 400 1.35rem/1.1 var(--fd);color:var(--ouro)}
+.painel h1 small{display:block;font:600 .62rem/1.4 var(--fb);letter-spacing:.2em;text-transform:uppercase;color:#D9CCEF;font-style:normal;margin-bottom:.2rem}
+.grupo{display:grid;gap:.4rem}
+.rot{display:flex;justify-content:space-between;font:600 .64rem/1 var(--fb);letter-spacing:.16em;text-transform:uppercase;color:#D9CCEF}
+.rot output{font-variant-numeric:tabular-nums;color:var(--ouro)}
+input[type=range]{width:100%;accent-color:var(--ouro);margin:0}
+.check{display:flex;align-items:center;gap:.5rem;font:500 .8rem/1.3 var(--fb)}
+.check input{accent-color:var(--ouro);width:1rem;height:1rem}
+.acoes{display:flex;flex-wrap:wrap;gap:.4rem}
+button{font:600 .66rem/1 var(--fb);letter-spacing:.14em;text-transform:uppercase;cursor:pointer;border-radius:99px;padding:.75em 1.05em;
+  border:1px solid rgb(255 255 255/.25);background:rgb(255 255 255/.06);color:#F1ECFA;transition:border-color .25s,background .25s}
+button:hover{border-color:var(--ouro)}
+button.raio{background:var(--ouro);color:var(--tinta);border-color:var(--ouro)}
+#saida{width:100%;min-height:5rem;font:500 .72rem/1.4 ui-monospace,Menlo,monospace;border:1px solid rgb(255 255 255/.25);border-radius:10px;padding:.5rem;color:#F1ECFA;background:rgb(0 0 0/.3)}
+.rodape{display:flex;justify-content:space-between;font:500 .7rem/1 var(--fb);color:#D9CCEF}
+#fps{font-variant-numeric:tabular-nums}
+.flutua{position:fixed;z-index:4;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;gap:.4rem}
+.flutua button{backdrop-filter:blur(8px)}
+.dica{position:fixed;z-index:3;top:calc(16px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);font:500 .68rem/1 var(--fb);letter-spacing:.16em;text-transform:uppercase;
+  color:#F1ECFA;background:rgb(255 255 255/.08);padding:.6em 1em;border-radius:99px;white-space:nowrap;transition:opacity .8s;margin:0}
+:focus-visible{outline:3px solid var(--ouro);outline-offset:2px}
+</style>
+
+<video id="vA" muted playsinline preload="auto" poster="midia/nuvem-poster.jpg"><source src="midia/nuvem.webm" type="video/webm"><source src="midia/nuvem.mp4" type="video/mp4"></video>
+<video id="vB" muted playsinline preload="auto" poster="midia/nuvem-poster.jpg"><source src="midia/nuvem.webm" type="video/webm"><source src="midia/nuvem.mp4" type="video/mp4"></video>
+<canvas id="ceu" aria-label="Nuvem roxa e dourada no céu da noite"></canvas>
+<canvas id="raio" aria-hidden="true"></canvas>
+<p class="aviso" id="aviso">Este navegador não conseguiu iniciar o WebGL. Abra no Chrome, Safari ou Edge atualizados.</p>
+<p class="dica" id="dica">Mexa o dedo ou o mouse: a luz dourada segue</p>
+
+<aside class="painel" id="painel" aria-label="Ajustes da nuvem">
+  <h1><small>Laboratório 2 · Fernanda Melo</small>Nuvem roxa</h1>
+  <label class="grupo"><span class="rot">Ouro nas bordas <output id="o-ouro"></output></span><input type="range" id="ouro" min="0" max="1" step=".01"></label>
+  <label class="grupo"><span class="rot">Brilho do roxo <output id="o-brilho"></output></span><input type="range" id="brilho" min="0" max="1" step=".01"></label>
+  <label class="grupo"><span class="rot">Contraste (sombra) <output id="o-contraste"></output></span><input type="range" id="contraste" min="0" max="1" step=".01"></label>
+  <label class="grupo"><span class="rot">Velocidade da nuvem <output id="o-vel"></output></span><input type="range" id="vel" min="0" max="1" step=".01"></label>
+  <label class="grupo"><span class="rot">Luz dourada <output id="o-luz"></output></span><input type="range" id="luz" min="0" max="1" step=".01"></label>
+  <label class="check"><input type="checkbox" id="segue" checked> A luz segue o dedo ou o mouse</label>
+  <div class="acoes">
+    <button type="button" class="raio" id="bRaio">Relâmpago</button>
+    <button type="button" id="bCopiar">Copiar ajustes</button>
+    <button type="button" id="bPadrao">Padrão</button>
+  </div>
+  <textarea id="saida" hidden readonly aria-label="Ajustes para copiar"></textarea>
+  <div class="rodape"><span>Vídeo: Mixkit (licença livre)</span><span id="fps">— fps</span></div>
+</aside>
+
+<div class="flutua">
+  <button type="button" class="raio" id="bRaio2">Relâmpago</button>
+  <button type="button" id="bPainel" aria-expanded="true" aria-controls="painel">Esconder ajustes</button>
+</div>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const leve = matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+const reduz = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const cv = $('#ceu'), cr = $('#raio'), vA = $('#vA'), vB = $('#vB');
+const gl = cv.getContext('webgl', { antialias: false, alpha: false, premultipliedAlpha: false });
+if (!gl) { $('#aviso').style.display = 'grid'; return; }
+
+const PADRAO = { ouro: .4, brilho: .55, contraste: .5, vel: .45, luz: .45, segue: true };
+let A = { ...PADRAO };
+try { const s = JSON.parse(localStorage.getItem('fm-nuvem') || 'null'); if (s) A = { ...A, ...s }; } catch (e) {}
+
+const VS = `attribute vec2 p; void main(){ gl_Position = vec4(p, 0., 1.); }`;
+const FS = `precision highp float;
+uniform sampler2D uA, uB; uniform float uMix;
+uniform vec2 uRes, uVid; uniform float uT, uZoom;
+uniform vec2 uPar, uLuz, uRaioP; uniform float uLuzI, uOuro, uBrilho, uCont, uRaio;
+float h21(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
+vec3 hex(float r, float g, float b){ return vec3(r, g, b) / 255.; }
+vec3 rampa(float t){
+  vec3 c0 = hex(8.,2.,16.), c1 = hex(36.,6.,58.), c2 = hex(59.,10.,87.), c3 = hex(107.,33.,168.), c4 = hex(139.,44.,255.);
+  if (t < .25) return mix(c0, c1, t / .25);
+  if (t < .5) return mix(c1, c2, (t - .25) / .25);
+  if (t < .75) return mix(c2, c3, (t - .5) / .25);
+  return mix(c3, c4, (t - .75) / .25);
+}
+void main(){
+  vec2 fc = gl_FragCoord.xy, uv0 = fc / uRes;
+  float ra = uRes.x / uRes.y, rv = uVid.x / uVid.y;
+  vec2 s = ra > rv ? vec2(1., rv / ra) : vec2(ra / rv, 1.);
+  vec2 meio = .5 * s / uZoom + abs(uPar) + .002;
+  vec2 foco = clamp(vec2(.62, .5), meio, 1. - meio);
+  vec2 uv = (uv0 - .5) * s / uZoom + foco + uPar;
+  uv.y = 1. - uv.y;
+  vec3 c = mix(texture2D(uA, uv).rgb, texture2D(uB, uv).rgb, uMix);
+  float azul = c.b - c.r;
+  float ceu = smoothstep(.2, .36, azul);
+  float L = dot(c, vec3(.299, .587, .114));
+
+  // nuvem: luminância -> berinjela, deep purple, roxo claro; topo vira ouro
+  float t = clamp((L - .3) / .7, 0., 1.);
+  t = pow(t, mix(1.6, .7, uCont));
+  vec3 nuv = rampa(t) * (.7 + uBrilho * .7);
+  float topo = smoothstep(.9 - uOuro * .08, .99, L);
+  vec3 ouro = hex(251.,191.,36.), ouroQ = hex(255.,226.,150.);
+  nuv = mix(nuv, ouro * (.85 + .3 * topo), pow(topo, .7) * uOuro);
+  float borda = smoothstep(.05, .4, ceu) * (1. - smoothstep(.5, .95, ceu));
+  nuv = mix(nuv, ouro, borda * uOuro * .7 * smoothstep(.6, .9, L));
+
+  // céu de noite: gradiente, estrelas, lua fina
+  vec2 q = (fc - .5 * uRes) / uRes.y;
+  vec3 noite = mix(hex(20.,6.,40.), hex(3.,2.,9.), clamp(uv0.y * 1.1, 0., 1.));
+  vec2 g = (fc + uPar * uRes * .4) / 2.2;
+  vec2 cel = floor(g), f = fract(g) - .5;
+  float r = h21(cel);
+  if (r > .985) {
+    float tw = .6 + .4 * sin(uT * (1. + r * 3.) + r * 40.);
+    noite += vec3(.95, .92, 1.) * tw * smoothstep(.45, .0, length(f)) * (r - .985) * 60.;
+  }
+  vec2 lua = vec2(-.22 * ra, .36) + uPar * .6;
+  float dl = length(q - lua);
+  float disco = smoothstep(.026, .022, dl), sombra = smoothstep(.024, .02, length(q - lua - vec2(.009, .004)));
+  noite += vec3(1., .96, .86) * max(0., disco - sombra) * 1.4;
+  noite += vec3(.45, .35, .6) * .1 * exp(-dl * 18.);
+
+  vec3 col = mix(nuv, noite, ceu);
+
+  // luz dourada (dedo / mouse) e relâmpago por dentro da nuvem
+  vec2 dL = (uv0 - uLuz) * vec2(ra, 1.);
+  float luz = exp(-dot(dL, dL) * 16.) * uLuzI;
+  col = mix(col, ouro * (.6 + .6 * L), clamp(luz * (1. - ceu) * smoothstep(.55, .95, L) * .55, 0., .55));
+  vec2 dR = (uv0 - uRaioP) * vec2(ra, 1.);
+  float rr = exp(-dot(dR, dR) * 3.5) * uRaio;
+  col = mix(col, mix(ouro, ouroQ, rr * .6) * (.7 + .8 * L), clamp(rr * (1. - ceu) * smoothstep(.35, .9, L) * 1.3, 0., 1.));
+  col += ouroQ * rr * .08;
+  col += hex(107.,33.,168.) * uRaio * .12 * ceu;
+
+  float vin = smoothstep(1.25, .35, length((uv0 - .5) * vec2(ra, 1.) * .9));
+  col *= mix(.72, 1., vin);
+  gl_FragColor = vec4(col, 1.);
+}`;
+function sh(tipo, src) {
+  const s = gl.createShader(tipo); gl.shaderSource(s, src); gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+  return s;
+}
+const prog = gl.createProgram();
+gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(prog); gl.useProgram(prog);
+const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+const loc = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+const U = {}; for (const n of ['uA', 'uB', 'uMix', 'uRes', 'uVid', 'uT', 'uZoom', 'uPar', 'uLuz', 'uRaioP', 'uLuzI', 'uOuro', 'uBrilho', 'uCont', 'uRaio']) U[n] = gl.getUniformLocation(prog, n);
+function tex(unid) {
+  const t = gl.createTexture(); gl.activeTexture(gl.TEXTURE0 + unid); gl.bindTexture(gl.TEXTURE_2D, t);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, 1, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, new Uint8Array([60, 120, 200]));
+  return t;
+}
+const texs = [tex(0), tex(1)];
+gl.uniform1i(U.uA, 0); gl.uniform1i(U.uB, 1);
+function sobe(unid, v) {
+  if (v.readyState < 2) return;
+  gl.activeTexture(gl.TEXTURE0 + unid); gl.bindTexture(gl.TEXTURE_2D, texs[unid]);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, v);
+}
+
+/* ---------- tamanho ---------- */
+let W, H;
+function medir() {
+  W = innerWidth; H = innerHeight;
+  const dpr = Math.min(devicePixelRatio || 1, leve ? 1.5 : 2);
+  cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+  cr.width = Math.round(W * dpr); cr.height = Math.round(H * dpr);
+  gl.viewport(0, 0, cv.width, cv.height);
+}
+addEventListener('resize', medir);
+
+/* ---------- vídeo em laço com fusão (sem emenda visível) ---------- */
+let atual = vA, prox = vB, unidAtual = 0, fusao = 0;
+const FUSAO = 1.4;
+function velocidade() { return .3 + A.vel * .9; }
+[vA, vB].forEach(v => { v.playbackRate = velocidade(); });
+function inicia() {
+  vA.playbackRate = velocidade();
+  const p = vA.play(); if (p) p.catch(() => {});
+}
+function cuidaLaco() {
+  const d = atual.duration; if (!d || reduz) return;
+  const resta = d - atual.currentTime;
+  if (resta < FUSAO * atual.playbackRate && prox.paused) {
+    prox.currentTime = 0; prox.playbackRate = velocidade(); const p = prox.play(); if (p) p.catch(() => {});
+  }
+  if (!prox.paused) {
+    fusao = Math.min(1, prox.currentTime / (FUSAO * prox.playbackRate));
+    if (atual.ended || fusao >= 1) {
+      atual.pause(); [atual, prox] = [prox, atual]; unidAtual = 1 - unidAtual; fusao = 0;
+    }
+  }
+}
+
+/* ---------- luz e paralaxe ---------- */
+const m = { x: .62, y: .55, tx: .62, ty: .55 };
+let mexeu = false;
+cv.addEventListener('pointermove', e => {
+  m.tx = e.clientX / W; m.ty = 1 - e.clientY / H;
+  if (!mexeu) { mexeu = true; $('#dica').style.opacity = 0; }
+});
+cv.addEventListener('pointerdown', e => { m.tx = e.clientX / W; m.ty = 1 - e.clientY / H; });
+
+/* ---------- relâmpago ---------- */
+const raio = { t: -9, p: [.5, .5], linhas: [] };
+function geraRaio() {
+  const x0 = W * (.3 + Math.random() * .4), x1 = W * (.35 + Math.random() * .3), y1 = H * (.45 + Math.random() * .2);
+  let pts = [[x0, -20], [x1, y1]];
+  for (let n = 0, des = W * .1; n < 7; n++, des *= .55) {
+    const np = [pts[0]];
+    for (let i = 0; i < pts.length - 1; i++) {
+      const a = pts[i], b = pts[i + 1];
+      np.push([(a[0] + b[0]) / 2 + (Math.random() - .5) * des, (a[1] + b[1]) / 2 + (Math.random() - .5) * des * .3], b);
+    }
+    pts = np;
+  }
+  const ramos = [];
+  for (let k = 0; k < 3; k++) {
+    const i = Math.floor(pts.length * (.25 + Math.random() * .5)), o = pts[i], r = [o];
+    let ang = Math.PI / 2 + (Math.random() < .5 ? -1 : 1) * (.5 + Math.random() * .6), x = o[0], y = o[1];
+    for (let j = 0; j < 14; j++) { ang += (Math.random() - .5) * .7; x += Math.cos(ang) * 9; y += Math.sin(ang) * 9; r.push([x, y]); }
+    ramos.push(r);
+  }
+  raio.linhas = [pts, ...ramos]; raio.p = [x1 / W, 1 - y1 / H]; raio.t = performance.now() / 1000;
+}
+function intensidade(t) {
+  if (t < 0 || t > 1.1) return 0;
+  if (t < .07) return 1; if (t < .12) return .15; if (t < .2) return .9; if (t < .26) return .3;
+  return .8 * Math.exp(-(t - .26) * 5);
+}
+function desenhaRaio(k) {
+  const g = cr.getContext('2d'), dpr = cr.width / W;
+  g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+  if (k <= .01) return;
+  g.lineCap = 'round'; g.lineJoin = 'round';
+  raio.linhas.forEach((l, i) => {
+    const p = new Path2D(); l.forEach((q, j) => j ? p.lineTo(q[0], q[1]) : p.moveTo(q[0], q[1]));
+    const f = i ? .55 : 1;
+    g.globalAlpha = k * .25 * f; g.strokeStyle = '#F59E0B'; g.lineWidth = 14 * f; g.stroke(p);
+    g.globalAlpha = k * .65 * f; g.strokeStyle = '#FBBF24'; g.lineWidth = 4 * f; g.stroke(p);
+    g.globalAlpha = k * f; g.strokeStyle = '#FFF4CC'; g.lineWidth = 1.4 * f; g.stroke(p);
+  });
+  g.globalAlpha = 1;
+}
+$('#bRaio').addEventListener('click', geraRaio); $('#bRaio2').addEventListener('click', geraRaio);
+
+/* ---------- painel ---------- */
+const sliders = ['ouro', 'brilho', 'contraste', 'vel', 'luz'];
+function pinta() { for (const k of sliders) { $('#' + k).value = A[k]; $('#o-' + k).textContent = Math.round(A[k] * 100); } $('#segue').checked = A.segue; }
+function salva() { try { localStorage.setItem('fm-nuvem', JSON.stringify(A)); } catch (e) {} }
+for (const k of sliders) $('#' + k).addEventListener('input', e => {
+  A[k] = +e.target.value; $('#o-' + k).textContent = Math.round(A[k] * 100);
+  if (k === 'vel') [vA, vB].forEach(v => { v.playbackRate = velocidade(); });
+  salva();
+});
+$('#segue').addEventListener('change', e => { A.segue = e.target.checked; salva(); });
+$('#bPadrao').addEventListener('click', () => { A = { ...PADRAO }; pinta(); [vA, vB].forEach(v => { v.playbackRate = velocidade(); }); salva(); });
+$('#bCopiar').addEventListener('click', async () => {
+  const txt = 'Nuvem roxa Fernanda Melo · ajustes: ' + JSON.stringify(A), saida = $('#saida'); saida.value = txt;
+  try { await navigator.clipboard.writeText(txt); $('#bCopiar').textContent = 'Copiado'; setTimeout(() => $('#bCopiar').textContent = 'Copiar ajustes', 1600); }
+  catch (e) { saida.hidden = false; saida.focus(); saida.select(); $('#bCopiar').textContent = 'Copie o texto abaixo'; }
+});
+$('#bPainel').addEventListener('click', () => {
+  const p = $('#painel'); p.hidden = !p.hidden;
+  $('#bPainel').textContent = p.hidden ? 'Mostrar ajustes' : 'Esconder ajustes'; $('#bPainel').setAttribute('aria-expanded', String(!p.hidden));
+});
+if (leve) { $('#painel').hidden = true; $('#bPainel').textContent = 'Mostrar ajustes'; $('#bPainel').setAttribute('aria-expanded', 'false'); }
+
+/* ---------- laço ---------- */
+let tempo = 0, ult = performance.now() / 1000, quadros = 0, acum = 0;
+function quadro() {
+  const agora = performance.now() / 1000, dt = Math.min(.05, agora - ult); ult = agora; tempo += dt;
+  quadros++; acum += dt; if (acum > .6) { $('#fps').textContent = Math.round(quadros / acum) + ' fps'; quadros = 0; acum = 0; }
+  cuidaLaco();
+  sobe(unidAtual, atual); if (!prox.paused) sobe(1 - unidAtual, prox);
+  if (A.segue) { m.x += (m.tx - m.x) * (1 - Math.exp(-dt * 3)); m.y += (m.ty - m.y) * (1 - Math.exp(-dt * 3)); }
+  else { m.x = .55 + Math.cos(tempo * .25) * .2; m.y = .5 + Math.sin(tempo * .18) * .12; }
+  const k = intensidade(agora - raio.t);
+  gl.uniform2f(U.uRes, cv.width, cv.height);
+  gl.uniform2f(U.uVid, atual.videoWidth || 1280, atual.videoHeight || 648);
+  gl.uniform1f(U.uT, tempo);
+  gl.uniform1f(U.uZoom, reduz ? 1.04 : 1.05 + Math.sin(tempo * .35) * .012);
+  gl.uniform2f(U.uPar, (m.x - .5) * -.018, (m.y - .5) * .012);
+  gl.uniform1f(U.uMix, unidAtual === 0 ? fusao : 1 - fusao);
+  gl.uniform2f(U.uLuz, m.x, m.y); gl.uniform1f(U.uLuzI, A.luz);
+  gl.uniform2f(U.uRaioP, raio.p[0], raio.p[1]); gl.uniform1f(U.uRaio, k);
+  gl.uniform1f(U.uOuro, A.ouro); gl.uniform1f(U.uBrilho, A.brilho); gl.uniform1f(U.uCont, A.contraste);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  desenhaRaio(k);
+  requestAnimationFrame(quadro);
+}
+pinta(); medir();
+if (reduz) { vA.addEventListener('loadeddata', () => { vA.currentTime = 4; }, { once: true }); } else inicia();
+addEventListener('pointerdown', () => { if (vA.paused && vB.paused && !reduz) inicia(); }, { once: true });
+requestAnimationFrame(quadro);
+})();
+</script>

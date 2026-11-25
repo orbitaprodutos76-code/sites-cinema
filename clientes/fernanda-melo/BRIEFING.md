@@ -89,3 +89,12 @@ O senhor mandou a referência "Deep Purple × Gold". Interpretado como as duas c
 - `laboratorio-nevoa.html` → https://claude.ai/artifact/KuNmLxkDYiFiCsJVcv2qbx · raymarching em WebGL 2, ruído 3D gerado no carregamento, luz dourada que segue o cursor, botão Relâmpago, ajustes (fundo, cor, densidade, quantidade, formato, contorno, tamanho, velocidade, luz, qualidade) e botão "Copiar ajustes" para o senhor mandar os valores.
 - `abertura.html` (v1 da fachada) fica no repositório só como histórico.
 - PENDENTE: o senhor testar o laboratório no PC e no celular e mandar os ajustes de que gostou.
+
+## Nuvem roxa realista (25/11/2026) — laboratório 2
+- O senhor mandou referência: **cúmulo real à noite, com lua fina e estrelas** (foto P&B, provavelmente Pinterest: só referência, NÃO usar no site) + a paleta Deep Purple × Gold. Frase dele: "quando eu digo nuvem roxa é uma nuvem roxa, porém quero animações nela".
+- Laboratório 1 (nuvem 100% em código) ficou parecendo borrão: reprovado.
+- Decisão: **vídeo real colorizado** + **céu de noite com lua e estrelas**.
+- Vídeo: Mixkit #51102 "White clouds moving across a clear blue sky" (Mixkit Stock Video Free License: uso comercial liberado, sem crédito obrigatório). Recortado para tirar as montanhas, 1280×648, em `midia/nuvem.webm` (1,9 MB) e `midia/nuvem.mp4` (2,6 MB).
+- `nuvem-roxa.html` → https://claude.ai/artifact/PqDWJRCqXFVNhzQpTMZtLf · shader WebGL: o céu azul vira noite (estrelas piscando e lua fina desenhadas em código), a nuvem é pintada berinjela → Deep Purple → roxo neon com topos e bordas em ouro, laço sem emenda (dois vídeos em fusão), leve "respiração" e paralaxe, luz dourada que segue o dedo, relâmpago que acende a nuvem por dentro. Ajustes: ouro, brilho, contraste, velocidade, luz.
+- Testado em 1440px e 390px (navegador sem placa de vídeo: 26 fps no PC e 57 no celular simulado). Print: `referencias/nuvem-roxa-v1-print.png`.
+- PENDENTE: o senhor aprovar a nuvem → depois disso, abertura de 3 a 5 s (relâmpagos → raio-navalha corta a nuvem → branco com o nome).
