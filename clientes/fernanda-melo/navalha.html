@@ -1,0 +1,214 @@
+<title>Navalha Fernanda Melo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Barbearia Fernanda Melo: corte, barba e acabamento com hora marcada.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Space+Grotesk:wght@400;500;600&display=swap">
+<link rel="preload" as="image" href="midia/topo/navalha.webp" fetchpriority="high">
+<style>
+/* Layout: topo em tela cheia, 3 camadas (mármore, nome em ouro, navalha) — prévia do topo aprovado (A7). Visual único, claro, sem tema escuro. */
+:root{
+  --branco:#fbfafc;
+  --tinta:#1f0b2e;          /* texto principal, berinjela quase preto */
+  --roxo:#6B21A8;           /* Deep Purple */
+  --berinjela:#3B0A57;      /* só sombra */
+  --ouro:#FBBF24;
+  --ouro-escuro:#8a5a14;
+  --fonte-titulo:"DM Serif Display", "Didot", "Bodoni 72", Georgia, serif;
+  --fonte-texto:"Space Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme:light;
+}
+html,body{background:var(--branco);color:var(--tinta)}
+body{font-family:var(--fonte-texto);font-size:16px;overflow-x:hidden}
+*{box-sizing:border-box}
+
+/* Topo */
+.topo{position:relative;height:clamp(560px,100svh,1000px);overflow:hidden;isolation:isolate;
+  margin-top:calc(-1 * env(safe-area-inset-top,0px))}
+.camada{position:absolute;inset:0;pointer-events:none}
+.marmore img{width:100%;height:100%;object-fit:cover;transform:scale(1.02)}
+.clareia{background:radial-gradient(ellipse 62% 30% at 50% 47%,rgba(255,255,255,.72) 0%,rgba(255,255,255,.4) 45%,rgba(255,255,255,0) 100%),rgba(255,255,255,.3)}
+.vinheta{background:radial-gradient(ellipse 90% 80% at 50% 50%,rgba(255,255,255,0) 60%,rgba(59,10,87,.07) 100%)}
+
+/* Nome em ouro */
+.nome{position:absolute;left:0;right:0;top:47%;transform:translateY(-50%);margin:0;text-align:center;
+  font-family:var(--fonte-titulo);font-weight:400;line-height:1;letter-spacing:-.01em;white-space:nowrap;
+  font-size:11.6vw;z-index:2}
+.nome .estica{display:inline-block;transform:scaleY(1.55);transform-origin:50% 50%}
+.nome .janela{display:inline-block;overflow:hidden;padding:.06em .02em;vertical-align:top}
+.nome .palavra{display:inline-block;
+  background-image:
+    linear-gradient(100deg,rgba(255,250,225,0) 42%,rgba(255,252,236,.95) 50%,rgba(255,250,225,0) 58%),
+    linear-gradient(180deg,#fbe9a8 0%,#e6bd5c 20%,#b07a22 46%,#f5d77f 60%,#c79333 78%,#7d5112 100%);
+  background-size:320% 100%,100% 100%;background-position:120% 0,0 0;background-repeat:no-repeat;
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 .012em 0 #6e4710) drop-shadow(0 .05em .06em rgba(59,10,87,.16))}
+.nome .espaco{display:inline-block;width:.28em}
+.nome .linha{display:inline}
+
+/* Navalha */
+.navalha{position:absolute;left:53.2%;top:47.3%;width:min(51.6vw,90svh);aspect-ratio:792/640;
+  transform:translate(-50%,-50%);z-index:3}
+.navalha .flutua{position:absolute;inset:0}
+.navalha .peca,.navalha .sombra{position:absolute;inset:0;width:100%;height:100%}
+.navalha .sombra{filter:brightness(0) blur(14px);opacity:.2;transform:translate(3%,5%);mix-blend-mode:multiply}
+.navalha .brilho{position:absolute;inset:0;
+  -webkit-mask:url(midia/topo/navalha.webp) center/100% 100% no-repeat;mask:url(midia/topo/navalha.webp) center/100% 100% no-repeat;
+  overflow:hidden;mix-blend-mode:screen}
+.navalha .brilho i{position:absolute;top:-20%;bottom:-20%;left:0;width:22%;
+  background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.75),rgba(255,255,255,0));
+  transform:translateX(-160%) rotate(18deg)}
+
+/* Poeira */
+.poeira{z-index:4}
+
+/* Cabeçalho */
+.barra{position:absolute;top:0;left:0;right:0;z-index:6;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding-top:calc(env(safe-area-inset-top,0px) + 22px);padding-bottom:22px;
+  padding-left:max(28px,env(safe-area-inset-left,0px));padding-right:max(28px,env(safe-area-inset-right,0px))}
+.marca{font-family:var(--fonte-titulo);font-size:20px;color:var(--tinta);text-decoration:none;letter-spacing:.01em}
+.marca small{display:block;font-family:var(--fonte-texto);font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--roxo);margin-bottom:2px}
+.btn{display:inline-flex;align-items:center;gap:10px;font:600 14px/1 var(--fonte-texto);letter-spacing:.04em;
+  color:#fff;background:var(--roxo);padding:15px 22px;border-radius:999px;text-decoration:none;
+  box-shadow:0 10px 24px -10px rgba(59,10,87,.55);transition:transform .5s cubic-bezier(.16,1,.3,1),background-color .3s}
+.btn:hover{background:var(--berinjela);transform:translateY(-2px)}
+.btn:focus-visible{outline:3px solid var(--ouro);outline-offset:3px}
+.btn svg{width:16px;height:16px}
+
+/* Rodapé do topo */
+.base{position:absolute;left:0;right:0;bottom:0;z-index:6;display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  padding-bottom:calc(env(safe-area-inset-bottom,0px) + 30px);
+  padding-left:max(28px,env(safe-area-inset-left,0px));padding-right:max(28px,env(safe-area-inset-right,0px))}
+.base p{margin:0;max-width:34ch;font-size:15px;line-height:1.5;color:var(--tinta)}
+.base p b{font-weight:600;color:var(--roxo)}
+.rolar{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--tinta);opacity:.7}
+
+.depois{padding-block:96px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));text-align:center}
+.depois p{margin:0 auto;max-width:52ch;font-size:15px;line-height:1.6;color:#4a3a57}
+
+/* Celular: nome em duas linhas, navalha na diagonal por cima */
+@media (max-width:760px){
+  .nome{font-size:20.5vw;white-space:normal;top:33%;line-height:1.02}
+  .nome .linha{display:block}
+  .nome .espaco{display:none}
+  .navalha{left:50%;top:58%;width:min(82vw,46svh)}
+  .barra{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .barra .btn{padding:12px 16px;font-size:13px}
+  .marca{font-size:17px}
+  .base{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));flex-direction:column;align-items:flex-start}
+  .base .btn{width:100%;justify-content:center}
+  .rolar{display:none}
+}
+@media (prefers-reduced-motion:reduce){.btn{transition:none}}
+</style>
+
+<header class="barra">
+  <a class="marca" href="#topo"><small>Barbearia</small>Fernanda Melo</a>
+  <a class="btn" href="https://barber-pro-1f2a60f6.base44.app/agendamentocliente" target="_blank" rel="noopener">Agendar</a>
+</header>
+
+<main>
+  <section class="topo" id="topo" aria-label="Barbearia Fernanda Melo">
+    <div class="camada marmore" data-prof="6">
+      <img src="midia/topo/marmore-fundo.webp" srcset="midia/topo/marmore-fundo-768.webp 768w, midia/topo/marmore-fundo.webp 1536w" sizes="100vw" width="1536" height="864" alt="">
+    </div>
+    <div class="camada clareia"></div>
+
+    <h1 class="nome" data-prof="14">
+      <span class="estica">
+        <span class="linha"><span class="janela"><span class="palavra">FERNANDA</span></span></span><span class="espaco"></span><span class="linha"><span class="janela"><span class="palavra">MELO</span></span></span>
+      </span>
+      <span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">, barbearia</span>
+    </h1>
+
+    <div class="navalha" data-prof="30">
+      <div class="flutua">
+        <img class="sombra" src="midia/topo/navalha.webp" width="792" height="640" alt="" aria-hidden="true">
+        <img class="peca" src="midia/topo/navalha.webp" width="792" height="640" alt="Navalha de barbeiro com lâmina espelhada, cabo de mármore branco com veios de ouro e uma pedra roxa" fetchpriority="high">
+        <div class="brilho" aria-hidden="true"><i></i></div>
+      </div>
+    </div>
+
+    <canvas class="camada poeira" aria-hidden="true"></canvas>
+    <div class="camada vinheta"></div>
+
+    <div class="base">
+      <p>Corte, barba e acabamento <b>com hora marcada</b>. Escolha o horário em poucos toques.</p>
+      <a class="btn" href="https://barber-pro-1f2a60f6.base44.app/agendamentocliente" target="_blank" rel="noopener">
+        Agendar horário
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <span class="rolar" aria-hidden="true">Role</span>
+    </div>
+  </section>
+
+  <section class="depois">
+    <p>Prévia só do topo. As seções de baixo e a transformação perto do fim (o nome virando janela para o salão) vêm depois da aprovação deste topo.</p>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+(function(){
+  var calmo = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!window.gsap || calmo) return;
+
+  var q = function(s){return document.querySelector(s)};
+  var palavras = document.querySelectorAll('.nome .palavra');
+  var navalha = q('.navalha .flutua'), peca = q('.navalha .peca'), sombra = q('.navalha .sombra');
+
+  // Entrada coreografada: só assistir.
+  var tl = gsap.timeline({defaults:{ease:'expo.out'}});
+  tl.from('.marmore img',{scale:1.1,opacity:0,duration:2.6,ease:'power2.out'},0)
+    .from('.clareia',{opacity:0,duration:2},0.2)
+    .from(palavras,{yPercent:112,duration:1.7,stagger:.14},0.35)
+    .from(navalha,{y:-40,rotation:-9,scale:1.1,opacity:0,duration:2.4,ease:'power4.out'},0.75)
+    .from(sombra,{opacity:0,duration:2},1.2)
+    .add(brilhar,2.3);
+
+  // Respiro lento da navalha; a sombra fica na parede.
+  gsap.to(peca,{y:-9,rotation:1.1,duration:3.4,ease:'sine.inOut',yoyo:true,repeat:-1,delay:3});
+  gsap.to(q('.navalha .brilho'),{y:-9,rotation:1.1,duration:3.4,ease:'sine.inOut',yoyo:true,repeat:-1,delay:3});
+  gsap.to(sombra,{x:'+=6',y:'+=8',scale:1.03,opacity:.15,duration:3.4,ease:'sine.inOut',yoyo:true,repeat:-1,delay:3});
+
+  // Faixa de luz: corre pela lâmina e depois pelo nome, a cada 7 s.
+  function brilhar(){
+    var b = gsap.timeline();
+    b.fromTo('.navalha .brilho i',{xPercent:-160},{xPercent:620,duration:1.6,ease:'power2.inOut'},0)
+     .fromTo(palavras,{backgroundPosition:'120% 0, 0 0'},{backgroundPosition:'-20% 0, 0 0',duration:1.8,ease:'power2.inOut',stagger:.12},0.5);
+    gsap.delayedCall(7,brilhar);
+  }
+
+  // Profundidade com o mouse (só onde há mouse).
+  if (window.matchMedia('(pointer:fine)').matches){
+    var alvos = Array.prototype.map.call(document.querySelectorAll('[data-prof]'),function(el){
+      var p = +el.dataset.prof;
+      return {p:p,x:gsap.quickTo(el,'x',{duration:1.4,ease:'power3.out'}),y:gsap.quickTo(el,'y',{duration:1.4,ease:'power3.out'})};
+    });
+    window.addEventListener('pointermove',function(e){
+      var nx = e.clientX/innerWidth-.5, ny = e.clientY/innerHeight-.5;
+      alvos.forEach(function(a){a.x(-nx*a.p); a.y(-ny*a.p*.6)});
+    });
+  }
+
+  // Poeira dourada mínima.
+  var cv = q('.poeira'), cx = cv.getContext('2d'), dpr = Math.min(2,devicePixelRatio||1), W, H, pts = [];
+  function tam(){W = cv.clientWidth; H = cv.clientHeight; cv.width = W*dpr; cv.height = H*dpr; cx.setTransform(dpr,0,0,dpr,0,0)}
+  tam(); addEventListener('resize',tam);
+  var n = innerWidth < 760 ? 14 : 26;
+  for (var i=0;i<n;i++) pts.push({x:Math.random(),y:Math.random(),r:.5+Math.random()*1.3,v:.00006+Math.random()*.00012,f:Math.random()*6.28});
+  var vis = true;
+  new IntersectionObserver(function(e){vis = e[0].isIntersecting}).observe(cv);
+  gsap.ticker.add(function(t){
+    if(!vis) return;
+    cx.clearRect(0,0,W,H);
+    pts.forEach(function(p){
+      p.y -= p.v*16; if (p.y < -.02){p.y = 1.02; p.x = Math.random()}
+      var a = .25+.35*Math.sin(t*1.3+p.f);
+      cx.globalAlpha = Math.max(0,a);
+      cx.fillStyle = '#e9c46a';
+      cx.beginPath(); cx.arc(p.x*W + Math.sin(t*.4+p.f)*8, p.y*H, p.r, 0, 6.283); cx.fill();
+    });
+  });
+})();
+</script>
