@@ -161,3 +161,5 @@ Prints em `referencias/ref-*.png`.
 - Senhor: fundo **branco com textura sutil** (sem roxo, sem ouro) e **trabalhar a nuvem isoladamente**.
 - `nuvem.html` → https://claude.ai/artifact/9t2Cvg5F6p3j4nBfe21cqP · só a nuvem, grande, sobre branco puro com textura de pedra quase invisível (SVG de ruído em CSS). Mesma nuvem do topo v1 (respira, inclina, afunda no mouse, amassa no toque). Print: `referencias/nuvem-isolada-v1-print.png`.
 - PENDENTE: o senhor dizer o que muda na nuvem (forma, cor, material, movimento).
+- **v2 (26/11/2026):** o senhor mandou de novo a foto do cúmulo à noite: "uma nuvem assim, porém com bem menos detalhes, ocupando 25% da página". A nuvem virou **volume macio** (raymarching de densidade com sombra interna), silhueta larga com três cabeças, roxo escuro com topo iluminado, ocupando ~1/4 da tela. Mesmo link (versão 2). Print: `referencias/nuvem-isolada-v2-print.png`.
+- Ponto fraco: por dentro os rolos ficam "manchados" e pouco definidos. Plano B se o código não chegar lá: recortar um cúmulo real (foto/vídeo com licença) e pintar de roxo, como no `nuvem-roxa.html`.
