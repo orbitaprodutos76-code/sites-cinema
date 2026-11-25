@@ -117,3 +117,8 @@ Conceito: tempestade revela, pausa, raio-navalha, a nuvem se parte, branco.
 - `corte.html` → https://claude.ai/artifact/Erx2T9rdygmqXp13x5ueZk (usa `midia/nuvem.*`). Cerca de 3,6 s: relâmpago de contexto → pausa → navalha → rasgo com bordas em ouro e luz vazando → branco → o fio gira e vira o sublinhado do nome. Botões: Som, **Câmera lenta** (0,3×) e Ver de novo.
 - Quadros conferidos: `referencias/corte-v1-quadros-pc.png` e `corte-v1-quadros-celular.png`. Sem erros.
 - Observações para o senhor julgar: o rasgo ainda parece mais uma "fenda de luz" do que nuvem se rasgando; aparecem raios finos de luz no céu perto da fenda (efeito do rasgo irregular); os topos ficam dourados quando o relâmpago acende.
+
+## Fim do dia (25/11/2026)
+- Corte v1: o senhor disse **"ainda não é isso que eu quero, acho que você não entendeu ainda"**. A visão dele para a abertura ainda NÃO foi captada.
+- **Amanhã, antes de qualquer código:** pedir 1 a 3 VÍDEOS de referência (reels, sites, cenas de filme) com a sensação da abertura que ele imagina, ou ele descreve em áudio quadro a quadro; devolver em 5 linhas o que foi entendido; só construir depois do "é isso".
+- O que já serve: nuvem real colorizada (`midia/nuvem.*`, shader em `nuvem-roxa.html`), paleta e fontes.
