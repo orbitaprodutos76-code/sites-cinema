@@ -53,7 +53,8 @@ O senhor mandou a referência "Deep Purple × Gold". Interpretado como as duas c
 - Neon `#8B2CFF` só em brilho · Preto `#0A0A12`
 - Histórico: 1ª paleta medida nas fotos (roxo #5B1FD1, lavanda, dourado #FFE48A) → 2ª berinjela + amarelo #FFD91F (sem lavanda) → 3ª esta. **Nada de lavanda/tons pastel.**
 
-## Fontes (25/11/2026, aguardando escolha)
+## Fontes (25/11/2026) — ESCOLHIDA: 06 · Contraste editorial
+- **DM Serif Display** (títulos e destaques em itálico, caixa normal) + **Space Grotesk** (textos, rótulos, botões). Já aplicada no esboço.
 - Pedido: bastante roxo e amarelo, mas **branco como principal**. Regra de uso: Gold como marca-texto, linhas, aros e texto em cima do roxo; texto pequeno nunca em Gold sobre branco.
 - Mostruário: `fontes.html` (https://claude.ai/artifact/K3qP67eKYwHQKuPzVff76d) com 10 combinações.
 

@@ -1,13 +1,13 @@
 <title>Esboço Fernanda Melo</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Cormorant+Garamond:ital,wght@0,600;1,500;1,600&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&display=swap">
 <style>
 /* Esboço: história de fora pra dentro. Noite (preto + neon) → vidro → salão branco-leite com fumaça roxa e veios de ouro */
 :root{
   --leite:#ffffff; --leite2:#f6f2f9; --preto:#0a0a12; --tinta:#0a0a12; --mudo:#4a4458; --berinjela:#6b21a8; --berinjela-fundo:#3b0a57; --vinho:#4c1477;
   --roxo:#6b21a8; --roxo-claro:#4c1477; --neon:#8b2cff; --magenta:#c41dff; --azul:#2a0bff; --ouro:#fbbf24; --ouro-claro:#fbbf24; --ouro-escuro:#b7791f; --amarelo:#fbbf24;
-  --fd:'Unbounded','Arial Black',sans-serif; --fo:'Cormorant Garamond',Georgia,serif; --fb:'Inter',system-ui,sans-serif;
+  --fd:'DM Serif Display',Georgia,serif; --fo:'DM Serif Display',Georgia,serif; --fb:'Space Grotesk',system-ui,sans-serif;
   color-scheme:light;
 }
 *{box-sizing:border-box}
@@ -21,15 +21,15 @@ body{background:var(--leite);color:var(--tinta);font-family:var(--fb);margin:0}
 h1,h2,h3{margin:0}
 /* topo do esboço */
 .capa{padding-block:clamp(2rem,6vw,3.5rem) 1rem}
-.capa h1{font:700 clamp(1.4rem,3.4vw,2.2rem)/1.1 var(--fd);letter-spacing:-.01em;text-wrap:balance}
-.capa h1 em{font:italic 600 1.15em var(--fo);color:var(--roxo)}
+.capa h1{font:400 clamp(1.6rem,3.8vw,2.5rem)/1.1 var(--fd);letter-spacing:-.01em;text-wrap:balance}
+.capa h1 em{font:italic 400 1em var(--fo);color:var(--roxo)}
 .capa p{color:var(--mudo);max-width:64ch;line-height:1.6;margin:.8rem 0 0}
 /* paleta */
 .paleta{padding-block:1rem 1rem}
 .cores{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,9.5rem),1fr));gap:.8rem;margin-top:1rem}
 .cores div{display:flex;flex-direction:column;gap:.2rem;min-width:0}
 .cores i{display:block;height:4.5rem;border-radius:8px;margin-bottom:.4rem}
-.cores b{font:700 .74rem var(--fd);text-transform:uppercase}
+.cores b{font:700 .74rem var(--fb);text-transform:uppercase}
 .cores code{font:600 .74rem ui-monospace,monospace;color:var(--tinta)}
 .cores small{font-size:.74rem;color:var(--mudo)}
 /* ===== abertura em quadros ===== */
@@ -39,7 +39,7 @@ h1,h2,h3{margin:0}
 .tela{position:relative;aspect-ratio:9/13;border-radius:10px;overflow:hidden;background:#000;isolation:isolate}
 .tela img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .salao img,.espelho img,.foto-corte img,.q3 img{filter:saturate(1.35) contrast(1.08)}
-.qd b{font:700 .74rem var(--fd);letter-spacing:.04em;text-transform:uppercase}
+.qd b{font:700 .74rem var(--fb);letter-spacing:.04em;text-transform:uppercase}
 .qd span{font-size:.84rem;color:var(--mudo);line-height:1.5}
 .qd i{font-style:normal;font:600 .66rem var(--fb);letter-spacing:.18em;color:var(--roxo)}
 /* quadro 1: noite, o neon corre contornando a vitrine */
@@ -51,7 +51,7 @@ h1,h2,h3{margin:0}
 /* quadro 2: o letreiro acende */
 .q2 img{filter:brightness(.55) saturate(1.2)}
 .q2 .neon{stroke-dashoffset:0}
-.letreiro{position:absolute;left:52%;top:47.5%;transform:translate(-50%,-50%);font:900 clamp(.9rem,2.6vw,1.25rem)/1 var(--fd);color:#e8d9ff;letter-spacing:.02em;white-space:nowrap;text-shadow:0 0 6px var(--magenta),0 0 18px var(--neon),0 0 44px var(--azul);animation:pisca 3.2s steps(1) infinite}
+.letreiro{position:absolute;left:52%;top:47.5%;transform:translate(-50%,-50%);font:900 clamp(.9rem,2.6vw,1.25rem)/1 var(--fb);color:#e8d9ff;letter-spacing:.02em;white-space:nowrap;text-shadow:0 0 6px var(--magenta),0 0 18px var(--neon),0 0 44px var(--azul);animation:pisca 3.2s steps(1) infinite}
 @keyframes pisca{0%,8%{opacity:.15}9%,13%{opacity:1}14%,17%{opacity:.2}18%,100%{opacity:1}}
 /* quadro 3: a câmera atravessa o vidro */
 .q3 img{transform:scale(1.35);filter:blur(1.5px) brightness(1.05) saturate(1.35) contrast(1.08)}
@@ -67,13 +67,13 @@ h1,h2,h3{margin:0}
 @keyframes desenha{0%{stroke-dashoffset:var(--l,600)}55%,100%{stroke-dashoffset:0}}
 .nome{position:absolute;inset:auto 0 12% 0;text-align:center;z-index:3}
 .nome small{display:block;font:600 .62rem var(--fb);letter-spacing:.42em;color:var(--tinta);margin-bottom:.4rem}
-.nome strong{display:block;font:600 clamp(1.5rem,4.4vw,2.2rem)/1 var(--fo);letter-spacing:.04em;text-transform:uppercase;background:linear-gradient(100deg,var(--ouro-escuro),var(--amarelo) 35%,#f59e0b 60%,var(--amarelo));-webkit-background-clip:text;background-clip:text;color:transparent}
+.nome strong{display:block;font:400 clamp(1.7rem,4.8vw,2.5rem)/1 var(--fo);letter-spacing:0;background:linear-gradient(100deg,var(--ouro-escuro),var(--amarelo) 35%,#f59e0b 60%,var(--amarelo));-webkit-background-clip:text;background-clip:text;color:transparent}
 
 /* ===== seções do site ===== */
 .secao{position:relative;padding-block:clamp(3.5rem,9vw,6.5rem);overflow:hidden}
 .secao .rotulo{margin-bottom:1.6rem}
-.titulo{font:700 clamp(2rem,6.4vw,4.6rem)/.98 var(--fd);letter-spacing:-.02em;text-transform:uppercase;text-wrap:balance}
-.titulo em{font:italic 600 1.08em var(--fo);text-transform:none;letter-spacing:0;color:var(--roxo)}
+.titulo{font:400 clamp(2.2rem,6.6vw,4.9rem)/1 var(--fd);letter-spacing:-.01em;text-wrap:balance}
+.titulo em{font:italic 400 1em var(--fo);text-transform:none;letter-spacing:0;color:var(--roxo)}
 .cta{display:inline-flex;align-items:center;gap:.7rem;background:var(--berinjela);color:var(--leite);font:600 .78rem var(--fb);letter-spacing:.16em;text-transform:uppercase;text-decoration:none;padding:1.05em 1.8em;border-radius:99px;box-shadow:0 0 0 2px var(--amarelo),0 10px 30px rgb(107 33 168/.35);transition:transform .3s,box-shadow .3s}
 .cta:hover{transform:translateY(-2px);box-shadow:0 0 0 2px var(--amarelo),0 14px 40px rgb(107 33 168/.55)}
 .cta:focus-visible,.capsula:focus-visible{outline:2px solid var(--roxo);outline-offset:4px}
@@ -97,15 +97,15 @@ h1,h2,h3{margin:0}
 .risco{fill:none;stroke:url(#ouro2);stroke-width:5;stroke-linecap:round;filter:drop-shadow(0 0 6px rgb(251 191 36/.95));stroke-dasharray:var(--l);stroke-dashoffset:var(--l);animation:desenha 3.6s cubic-bezier(.65,0,.35,1) infinite}
 /* serviços: cápsulas com fumaça roxa */
 .capsulas{display:flex;flex-wrap:wrap;gap:.7rem;margin:2rem 0 1.4rem}
-.capsula{position:relative;overflow:hidden;isolation:isolate;border:1px solid rgb(107 33 168/.45);background:#fff;color:var(--tinta);border-radius:99px;padding:.9rem 1.6rem;font:700 .82rem var(--fd);letter-spacing:.04em;text-transform:uppercase;cursor:pointer;transition:color .3s .1s}
+.capsula{position:relative;overflow:hidden;isolation:isolate;border:1px solid rgb(107 33 168/.45);background:#fff;color:var(--tinta);border-radius:99px;padding:.9rem 1.6rem;font:700 .82rem var(--fb);letter-spacing:.04em;text-transform:uppercase;cursor:pointer;transition:color .3s .1s}
 .capsula::before{content:'';position:absolute;inset:-40%;z-index:-1;background:radial-gradient(circle at 30% 60%,var(--vinho),transparent 55%),radial-gradient(circle at 70% 40%,var(--berinjela-fundo),transparent 60%),radial-gradient(circle at 50% 50%,var(--berinjela),var(--berinjela-fundo));transform:scale(0);transition:transform .7s cubic-bezier(.16,1,.3,1);border-radius:50%}
 .capsula[aria-selected=true]{color:#fff;border-color:transparent}
 .capsula[aria-selected=true]::before{transform:scale(1.2)}
 .itens{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,14rem),1fr));border:1px solid rgb(251 191 36/.55);border-radius:10px;overflow:hidden;background:#fff}
 .item{padding:1.2rem 1.2rem 1.1rem;display:flex;flex-direction:column;gap:.4rem;min-height:8.5rem;box-shadow:inset 0 0 0 .5px rgb(251 191 36/.4)}
-.item b{font:700 .95rem/1.2 var(--fd);text-transform:uppercase}
+.item b{font:700 .95rem/1.2 var(--fb);text-transform:uppercase}
 .item small{font:600 .66rem var(--fb);letter-spacing:.16em;text-transform:uppercase;color:var(--mudo)}
-.item span{margin-top:auto;font:italic 600 1.7rem var(--fo);color:var(--roxo)}
+.item span{margin-top:auto;font:italic 400 1.75rem var(--fo);color:var(--roxo)}
 /* malévola: tela escurece, farol acende */
 .malevola{background:var(--preto);color:#f1ecf7}
 .malevola .palco{position:relative;border-radius:10px;overflow:hidden;aspect-ratio:16/10;margin-top:1.6rem;background:#000}
@@ -117,14 +117,14 @@ h1,h2,h3{margin:0}
 /* equipe */
 .equipe ol{list-style:none;margin:2rem 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
 .equipe li{border-top:1px solid rgb(29 23 36/.15);padding-top:1rem}
-.equipe .aro{width:100%;aspect-ratio:1;border-radius:50%;border:2px solid var(--ouro);display:grid;place-items:center;box-shadow:0 0 24px rgb(251 191 36/.35) inset;font:italic 600 clamp(2rem,6vw,3.6rem) var(--fo);color:var(--ouro);background:radial-gradient(circle,#fff,var(--leite2))}
-.equipe b{display:block;margin-top:1rem;font:700 clamp(.9rem,2vw,1.2rem) var(--fd);text-transform:uppercase}
+.equipe .aro{width:100%;aspect-ratio:1;border-radius:50%;border:2px solid var(--ouro);display:grid;place-items:center;box-shadow:0 0 24px rgb(251 191 36/.35) inset;font:italic 400 clamp(2rem,6vw,3.6rem) var(--fo);color:var(--ouro);background:radial-gradient(circle,#fff,var(--leite2))}
+.equipe b{display:block;margin-top:1rem;font:700 clamp(.9rem,2vw,1.2rem) var(--fb);text-transform:uppercase}
 .equipe small{color:var(--mudo);font-size:.82rem}
 /* agendar: o sistema delas, no visual novo */
 .agendar .passos{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin:2rem 0}
 .passo{background:#fff;border:1px solid rgb(251 191 36/.5);border-radius:10px;padding:1rem}
-.passo i{display:grid;place-items:center;width:2rem;height:2rem;border-radius:50%;font:700 .8rem var(--fd);font-style:normal;background:var(--roxo);color:#fff;box-shadow:0 0 0 3px rgb(251 191 36/.6)}
-.passo b{display:block;margin-top:.7rem;font:700 .82rem var(--fd);text-transform:uppercase}
+.passo i{display:grid;place-items:center;width:2rem;height:2rem;border-radius:50%;font:700 .8rem var(--fb);font-style:normal;background:var(--roxo);color:#fff;box-shadow:0 0 0 3px rgb(251 191 36/.6)}
+.passo b{display:block;margin-top:.7rem;font:700 .82rem var(--fb);text-transform:uppercase}
 .passo span{font-size:.82rem;color:var(--mudo)}
 .rodape{padding-block:2rem;border-top:1px solid rgb(29 23 36/.12);color:var(--mudo);font-size:.82rem}
 @media (max-width:760px){
