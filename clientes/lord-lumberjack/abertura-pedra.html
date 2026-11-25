@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Lord Lumberjack · Abertura</title>
 <style>
-:root{--bg:#030403}
+:root{--bg:#000}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;background:var(--bg);overflow:hidden}
 canvas{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:3}
@@ -153,7 +153,8 @@ void main(){
 
   // pedra preta texturizada
   float tone=vn(torce(w)*9.)*.6+vn(w*55.)*.4;
-  vec3 alb=vec3(.016,.017,.016)*(.6+.7*tone);                // bem mais escura que o granito
+  vec3 alb=vec3(.016,.017,.016)*(.6+.7*tone);
+  vec3 albV=alb;                                               // cor usada só onde o verde vaza
   float speck=ponto(w,1400.,.997,.16)*.35;                    // quase sem cristais: ardósia é fosca
   float g=groove(sdf);
   alb*=1.-.6*g;                                                // fundo do sulco mais escuro
@@ -165,7 +166,7 @@ void main(){
   vec3 H=normalize(L+V);
   float spec=pow(max(dot(n,H),0.),38.)*.32 + speck*pow(max(dot(n,H),0.),8.)*1.2;  // brilho acetinado das placas
   vec3 key=vec3(1.,.97,.92)*1.25*pool*uKey;
-  vec3 col=alb*dif*key + spec*key*.35 + alb*.05;
+  vec3 col=alb*dif*key*.28 + spec*key*.09;                    // preto absoluto: a pedra só aparece de raspão
 
   // luz líquida dentro do sulco
   vec2 lq=liq(w,m); float fill=lq.x, front=lq.y;
@@ -186,7 +187,7 @@ void main(){
   float spill=litN*(exp(-dOut/2.2)*.9+exp(-dOut/5.5)*.28)*smoothstep(10.2,5.5,dOut);
   vec3 sc=vec3(.32,.85,.18);
   float faceS=.35+.65*clamp(n.z,0.,1.);
-  col+=alb*sc*spill*14.*faceS + sc*spill*speck*1.5 + sc*spill*pow(max(dot(n,normalize(V+vec3(0,0,1))),0.),40.)*.25;
+  col+=albV*sc*spill*14.*faceS + sc*spill*speck*1.5 + sc*spill*pow(max(dot(n,normalize(V+vec3(0,0,1))),0.),40.)*.25;
   // paredes do sulco ainda vazias pegam o reflexo verde
   col+=sc*g*(1.-fill)*litN*.12;
 
@@ -219,7 +220,9 @@ void main(){
   c=pow(c,vec3(.95,.97,1.02))*vec3(.98,1.0,.97);              // leve grade fria/verde nas sombras
   vec2 d=vUv-.5; d.x*=uRes.x/uRes.y;
   c*=smoothstep(1.05,.25,length(d));                           // vinheta
-  c+=(h(vUv*uRes+fract(uTime*7.)*91.)-.5)*.045;                // grão
+  float lum=dot(c,vec3(.3,.59,.11));
+  c+=(h(vUv*uRes+fract(uTime*7.)*91.)-.5)*.045*smoothstep(.02,.15,lum);  // grão só onde há luz
+  c=max(c-.012,0.)*1.012;                                       // preto absoluto de verdade
   o=vec4(c,1);
 }`;
 
