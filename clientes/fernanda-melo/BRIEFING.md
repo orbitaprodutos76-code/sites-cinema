@@ -211,3 +211,9 @@ Resumo oficial do que está decidido e reprovado: `PASSAGEM-JARVIS-11.md` (raiz 
 - Prévia: `navalha.html` → https://claude.ai/artifact/7TiLwdkJs8SC15TtjwT3N2 · prints `referencias/navalha-v1-print-pc.png` e `navalha-v1-print-celular.png`.
 - Limite conhecido: a navalha tem 792 px de largura (vem da imagem da IA); em tela retina grande fica um pouco macia. Dá para refazer em resolução maior se aprovado.
 - **APROVADO pelo senhor (26/11/2026).** Próximo: seções de baixo + transformação no fim (nome vira janela para o salão).
+
+## Seções de baixo: referências (26/11/2026)
+- Estrutura aprovada: **1 Salão → 2 Serviços e preços → 3 O ofício → 4 Final (nome vira janela + Agendar)**. Material: usar o que temos (capturas atuais, marcadas como provisórias); endereço e Instagram ficam PENDENTES.
+- Imagens de referência (IA): `referencias/secao-1-salao.png`, `secao-2-servicos.png`, `secao-3-oficio.png`, `secao-4-final.png`.
+- Atenção: nas imagens, as fotos do salão, a lista de serviços e os horários são inventados pela IA. No site entram as fotos reais, os 15 serviços e preços reais do sistema e o horário real (09:00–11:00 e 13:30–18:30).
+- PENDENTE: veredito do senhor em cada seção.
