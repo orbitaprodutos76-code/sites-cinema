@@ -1,0 +1,424 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Arara Garimpados</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: uma parede escura com grade dourada sob um foco de luz; a arara atravessa a tela; a peça escolhida desce para o centro com as etiquetas de cor penduradas ao lado. */
+@font-face{font-family:"Clash Display";src:url(fonts/clash-display-600.woff2) format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Satoshi";src:url(fonts/satoshi-400.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Satoshi";src:url(fonts/satoshi-700.woff2) format("woff2");font-weight:700;font-display:swap}
+:root{
+  --parede:#070605; --parede-2:#110e09; --ouro:#d9b45a; --ouro-forte:#f1cf78; --ouro-fraco:rgba(217,180,90,.16);
+  --texto:#f3ede1; --texto-2:#a99f8c; --linha:rgba(243,237,225,.12); --ambar:#ffb020;
+  --f-titulo:"Clash Display","Arial Narrow",Impact,sans-serif; --f-texto:"Satoshi",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --base:clamp(120px,11.2vw,225px);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;background:var(--parede);color:var(--texto);font:400 15px/1.5 var(--f-texto);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--ouro);outline-offset:3px;border-radius:4px}
+
+/* parede: grade dourada + foco de luz */
+.parede{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+   radial-gradient(60% 55% at 50% 18%,rgba(241,207,120,.20),transparent 70%),
+   radial-gradient(120% 90% at 50% 40%,var(--parede-2),var(--parede) 70%)}
+.parede::after{content:"";position:absolute;inset:0;
+  background-image:linear-gradient(var(--ouro-fraco) 1px,transparent 1px),linear-gradient(90deg,var(--ouro-fraco) 1px,transparent 1px);
+  background-size:88px 88px;background-position:center top;
+  -webkit-mask:radial-gradient(70% 70% at 50% 30%,#000 20%,transparent 75%);mask:radial-gradient(70% 70% at 50% 30%,#000 20%,transparent 75%)}
+
+.topo{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding-block:18px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.marca{font:600 18px/1 var(--f-titulo);letter-spacing:.02em;text-transform:uppercase}
+.marca b{color:var(--ouro)}
+.selo{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--texto-2);border:1px solid var(--linha);padding:6px 10px;border-radius:99px;white-space:nowrap}
+
+.chamada{position:relative;z-index:2;text-align:center;padding-inline:16px;margin-top:4px}
+.chamada small{display:block;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--ouro)}
+.chamada h1{margin:6px 0 0;font:600 clamp(30px,5.4vw,64px)/.95 var(--f-titulo);text-transform:uppercase;letter-spacing:-.01em;text-wrap:balance}
+.chamada p{margin:10px auto 0;max-width:46ch;color:var(--texto-2);font-size:14px}
+
+/* arara */
+.arara-wrap{position:relative;z-index:2;margin-top:clamp(18px,4vh,40px)}
+.arara{position:relative;display:flex;align-items:flex-start;justify-content:center;gap:clamp(4px,1vw,14px);
+  padding:0 max(16px,env(safe-area-inset-left,0px)) 84px;min-height:calc(var(--base)*1.55 + 120px)}
+.barra{position:absolute;left:4%;right:4%;top:10px;height:8px;border-radius:8px;z-index:0;
+  background:linear-gradient(180deg,#fff3c8 0%,#d9b45a 35%,#7a5d22 75%,#3a2b0f 100%);
+  box-shadow:0 10px 18px rgba(0,0,0,.6),0 0 24px rgba(241,207,120,.25)}
+.barra::before,.barra::after{content:"";position:absolute;top:-6px;width:16px;height:20px;border-radius:5px;background:linear-gradient(180deg,#e9cf86,#6b511c)}
+.barra::before{left:-8px}.barra::after{right:-8px}
+
+.peca{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;flex:0 0 auto;
+  transition:transform .45s cubic-bezier(.2,.8,.2,1),filter .45s,opacity .45s;transform-origin:50% 12px}
+.peca .balanco{display:flex;flex-direction:column;align-items:center;transform-origin:50% 12px}
+.peca .roupa{display:block;height:calc(var(--base)*var(--k));width:auto;max-width:none;margin-top:-14px;
+  filter:drop-shadow(0 18px 18px rgba(0,0,0,.55));pointer-events:none;user-select:none}
+.peca .info{position:absolute;left:50%;top:calc(100% + 10px);transform:translate(-50%,6px);opacity:0;white-space:nowrap;text-align:center;transition:.3s;pointer-events:none}
+.peca .info b{display:block;font-size:13px}
+.peca .info span{font-size:12px;color:var(--ouro)}
+.pontos{display:flex;gap:4px;justify-content:center;margin-top:8px}
+.pontos i{width:9px;height:9px;border-radius:50%;background:var(--c);border:1px solid rgba(255,255,255,.35)}
+
+@media (hover:hover){
+  .arara.foco .peca{opacity:.45;filter:saturate(.6) brightness(.7)}
+  .arara.foco .peca.ativa{opacity:1;filter:none;transform:scale(1.18);z-index:5}
+  .arara.foco .peca.ativa .info{opacity:1;transform:translate(-50%,0)}
+  .arara.foco .peca.esq{transform:translateX(-14px)}
+  .arara.foco .peca.dir{transform:translateX(14px)}
+}
+
+/* celular e tablet: a arara rola com o dedo */
+@media (max-width:1000px){
+  :root{--base:min(44vw,210px)}
+  .arara{justify-content:flex-start;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;padding-left:24px;padding-right:24px;scrollbar-width:none}
+  .arara::-webkit-scrollbar{display:none}
+  .arara .barra{position:absolute;left:0;right:auto;width:var(--trilho,100%)}
+  .peca{scroll-snap-align:center}
+  .peca .info{opacity:1;transform:none;position:static;margin-top:10px;white-space:normal;width:calc(var(--base)*.95);text-wrap:balance}
+  .arara{min-height:auto}
+}
+.dica{position:relative;z-index:2;text-align:center;font-size:12px;color:var(--texto-2);margin:0 0 70px;padding-inline:16px}
+
+/* faixa */
+.faixa{position:fixed;left:0;right:0;bottom:0;z-index:4;background:var(--ouro);color:#120d03;overflow:hidden;
+  padding-bottom:env(safe-area-inset-bottom,0px)}
+.faixa div{display:flex;width:max-content;animation:corre 38s linear infinite}
+.faixa span{font:600 12px/30px var(--f-titulo);letter-spacing:.16em;text-transform:uppercase;padding-right:28px;white-space:nowrap}
+@keyframes corre{to{transform:translateX(-50%)}}
+
+/* detalhe */
+.detalhe{position:fixed;inset:0;z-index:10;display:grid;grid-template-columns:1fr minmax(0,auto) 1fr;align-items:center;
+  padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 40px max(16px,env(safe-area-inset-left,0px));
+  background:radial-gradient(55% 60% at 50% 22%,rgba(241,207,120,.18),transparent 70%),rgba(7,6,5,.985)}
+.detalhe[hidden]{display:none!important}
+.fechar{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:max(16px,env(safe-area-inset-right,0px));font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--texto-2);padding:10px 4px;z-index:3}
+.fechar:hover{color:var(--texto)}
+.lado{display:flex;align-items:center;justify-content:center;gap:14px;min-width:0;height:100%}
+.vizinha{height:calc(var(--base)*1.1);width:auto;opacity:.22;filter:blur(6px) grayscale(.4);transition:opacity .3s;pointer-events:none}
+.seta{width:46px;height:46px;border-radius:50%;border:1px solid var(--linha);display:grid;place-items:center;flex:0 0 auto;transition:border-color .2s,background .2s}
+.seta:hover{border-color:var(--ouro);background:rgba(217,180,90,.08)}
+.centro{display:flex;flex-direction:column;align-items:center;min-width:0}
+.palco{position:relative;display:flex;align-items:flex-start;gap:clamp(10px,2vw,26px)}
+.cabide{display:flex;flex-direction:column;align-items:center}
+.vista{position:relative;margin-top:-18px;transform-origin:50% 0}
+.vista img{display:block;height:min(58vh,calc(var(--base)*2.1*var(--k2,1)));width:auto;max-width:min(62vw,560px);object-fit:contain;filter:drop-shadow(0 26px 26px rgba(0,0,0,.6))}
+.vista .nova{position:absolute;inset:0;width:100%;height:100%;clip-path:inset(0 0 100% 0);visibility:hidden}
+.fio{position:absolute;left:-6%;right:-6%;height:2px;top:0;background:linear-gradient(90deg,transparent,var(--ouro-forte),transparent);box-shadow:0 0 14px var(--ouro);opacity:0;pointer-events:none}
+
+/* etiquetas */
+.etiquetas{display:flex;gap:12px;padding-top:22px}
+.etq{position:relative;display:flex;flex-direction:column;align-items:center;transform-origin:50% 0}
+.etq .corda{width:1px;height:calc(28px + var(--i)*16px);background:rgba(243,237,225,.45)}
+.etq .cartao{position:relative;width:42px;height:118px;background:var(--c);color:var(--tc);border-radius:3px;
+  clip-path:polygon(22% 0,78% 0,100% 12%,100% 100%,0 100%,0 12%);display:flex;align-items:flex-end;justify-content:center;padding-bottom:10px;
+  box-shadow:inset 0 0 0 1px var(--b);transition:transform .25s}
+.etq .cartao::before{content:"";position:absolute;top:7px;left:50%;width:7px;height:7px;margin-left:-3.5px;border-radius:50%;background:var(--parede);box-shadow:inset 0 0 0 1px rgba(255,255,255,.3)}
+.etq .cartao span{writing-mode:vertical-rl;transform:rotate(180deg);font:600 11px/1 var(--f-titulo);letter-spacing:.18em;text-transform:uppercase}
+.etq[aria-pressed="true"] .cartao{box-shadow:inset 0 0 0 1px var(--b),0 0 0 2px var(--parede),0 0 0 3px var(--ouro)}
+.etq:hover .cartao{transform:translateY(3px)}
+
+.ficha{margin-top:18px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;max-width:min(92vw,520px)}
+.ficha h2{margin:0;font:600 clamp(18px,2.4vw,26px)/1.1 var(--f-titulo);text-transform:uppercase;text-wrap:balance}
+.preco{display:flex;align-items:baseline;gap:10px;font-variant-numeric:tabular-nums}
+.preco strong{font:700 22px/1 var(--f-texto);color:var(--ouro-forte)}
+.preco s{color:var(--texto-2);font-size:13px}
+.preco em{font-style:normal;font-size:11px;font-weight:700;background:var(--ambar);color:#1b1100;padding:3px 7px;border-radius:4px}
+.lados{display:flex;border:1px solid var(--linha);border-radius:99px;padding:3px}
+.lados button{font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:7px 16px;border-radius:99px;color:var(--texto-2)}
+.lados button[aria-pressed="true"]{background:var(--texto);color:var(--parede)}
+.tamanhos{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.tamanhos span{font-size:12px;border:1px solid var(--linha);border-radius:6px;padding:4px 9px;color:var(--texto-2)}
+.comprar{display:inline-flex;align-items:center;gap:8px;background:var(--ambar);color:#1b1100;font-weight:700;text-decoration:none;padding:12px 22px;border-radius:99px;transition:transform .2s}
+.comprar:hover{transform:translateY(-2px)}
+.nota{font-size:11px;color:var(--texto-2)}
+
+@media (max-width:760px){
+  .detalhe{grid-template-columns:1fr;align-content:center;overflow-y:auto;padding-bottom:30px}
+  .lado{display:none}
+  .palco{flex-direction:column;align-items:center}
+  .vista img{height:min(46vh,92vw)}
+  .etiquetas{padding-top:6px;align-items:flex-start}
+  .etq .corda{height:calc(8px + var(--i)*6px)}
+  .etq .cartao{width:86px;height:30px;clip-path:polygon(12% 0,88% 0,100% 30%,100% 100%,0 100%,0 30%);align-items:center;padding:0}
+  .etq .cartao::before{top:4px;width:5px;height:5px;margin-left:-2.5px}
+  .etq .cartao span{writing-mode:horizontal-tb;transform:none;padding-top:6px}
+  .navcel{display:flex!important}
+}
+.navcel{display:none;gap:10px;justify-content:center}
+
+@media (prefers-reduced-motion:reduce){
+  .faixa div{animation:none}
+  .peca,.peca .info,.etq .cartao{transition:none}
+}
+</style>
+
+<div class="parede" aria-hidden="true"></div>
+
+<header class="topo">
+  <div class="marca">Garimpados <b>Shop</b></div>
+  <div class="selo">Demonstração</div>
+</header>
+
+<section class="chamada">
+  <small>Arara do drop</small>
+  <h1>Escolha a peça.<br>Depois, a cor.</h1>
+  <p>Passe o mouse pelas peças e clique em uma. No celular, arraste a arara e toque na peça.</p>
+</section>
+
+<main class="arara-wrap">
+  <div class="arara" id="arara" aria-label="Peças na arara">
+    <div class="barra" aria-hidden="true"></div>
+  </div>
+</main>
+<p class="dica">Preços vistos nas lojas em 07/11/2026 e podem mudar. A compra é feita na loja.</p>
+
+<div class="faixa" aria-hidden="true"><div id="faixa"></div></div>
+
+<section class="detalhe" id="detalhe" role="dialog" aria-modal="true" aria-labelledby="d-nome" hidden>
+  <button class="fechar" id="fechar">Fechar ✕</button>
+  <div class="lado"><button class="seta" id="ant" aria-label="Peça anterior"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 5l-7 7 7 7"/></svg></button><img class="vizinha" id="viz-ant" alt=""></div>
+  <div class="centro">
+    <div class="palco">
+      <div class="cabide" id="cabide">
+        <div id="d-gancho"></div>
+        <div class="vista" id="vista">
+          <img class="atual" id="img-atual" alt="">
+          <img class="nova" id="img-nova" alt="" aria-hidden="true">
+          <div class="fio" id="fio"></div>
+        </div>
+      </div>
+      <div class="etiquetas" id="etiquetas" role="group" aria-label="Cores"></div>
+    </div>
+    <div class="ficha">
+      <h2 id="d-nome"></h2>
+      <div class="preco" id="d-preco"></div>
+      <div class="lados" id="lados" role="group" aria-label="Lado da peça">
+        <button aria-pressed="true" data-lado="frente">Frente</button>
+        <button aria-pressed="false" data-lado="costas">Costas</button>
+      </div>
+      <div class="tamanhos" id="d-tam"></div>
+      <a class="comprar" id="d-link" href="#" target="_blank" rel="noopener sponsored">Ver na loja <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+      <div class="nota" id="d-nota"></div>
+      <div class="navcel"><button class="seta" id="ant2" aria-label="Peça anterior"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 5l-7 7 7 7"/></svg></button><button class="seta" id="prox2" aria-label="Próxima peça"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg></button></div>
+    </div>
+  </div>
+  <div class="lado"><img class="vizinha" id="viz-prox" alt=""><button class="seta" id="prox" aria-label="Próxima peça"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg></button></div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+const SHEIN = 'Shein', SHOPEE = 'Shopee';
+const PP = ['PP','P','M','G','GG','EG'];
+// k = altura relativa na arara (camiseta 1, bermuda menor, conjunto maior)
+const PECAS = [
+  {nome:'Jaqueta Corta-Vento Gótica Espinhos', tipo:'top', k:1.02, tam:PP, cores:[
+    {nome:'Branca', hex:'#ece9e2', img:'jaqueta-branca-gotica-espinhos', costas:true, preco:106.25, de:117.99, loja:SHEIN, link:'https://onelink.shein.com/59/66zvyn1u1hfh?ismg_ol=1r8rQkZNSfD_01_KOC-C'}]},
+  {nome:'Bermuda Letras em Relevo', tipo:'bottom', k:.8, tam:PP, cores:[
+    {nome:'Preta', hex:'#151515', img:'bermuda-letras-relevo-preta', preco:83.19, loja:SHEIN, link:'https://onelink.shein.com/58/668dvhgblssz?ismg_ol=HQpUtBWNWfU_01_KOC-C'},
+    {nome:'Cinza', hex:'#a9a9a6', img:'bermuda-letras-relevo-cinza', preco:115.95, loja:SHEIN, link:'https://onelink.shein.com/58/668eqi7tdk4c?ismg_ol=91ehVTuhiqR_01_KOC-C'}]},
+  {nome:'Moletom Zíper Letras em Relevo', tipo:'top', k:1.08, tam:PP, cores:[
+    {nome:'Chumbo', hex:'#4b4b4e', img:'moletom-ziper-letras-chumbo', preco:173.90, loja:SHEIN, tam:['P','M','G','GG','EG'], link:'https://onelink.shein.com/58/668c3az4rnly?ismg_ol=7x9B4WMDjeN_01_KOC-C'},
+    {nome:'Cinza', hex:'#b3b3b0', img:'moletom-ziper-letras-cinza', preco:159.26, de:176.95, loja:SHEIN, link:'https://onelink.shein.com/58/6688xyn8bqpv?ismg_ol=9RuNTAksX88_01_KOC-C'}]},
+  {nome:'Conjunto Syna Grafite', tipo:'set', k:1.45, tam:[], destaque:true, cores:[
+    {nome:'Preto', hex:'#121212', img:'conjunto-syna-preto', preco:null, loja:SHOPEE, link:'https://s.shopee.com.br/1BmQRPQd1'}]},
+  {nome:'Camiseta New York Gótico', tipo:'top', k:1, tam:PP.slice(1), cores:[
+    {nome:'Preta', hex:'#141414', img:'camiseta-new-york-vermelha', costas:true, preco:88.17, de:90.90, loja:SHEIN, link:'https://onelink.shein.com/59/66zwebcmtwjr?ismg_ol=BRi72EORlpE_01_KOC-C'}]},
+  {nome:'Bermuda Larga Assinatura Bordada', tipo:'bottom', k:.82, tam:PP, cores:[
+    {nome:'Preta', hex:'#151515', img:'bermuda-assinatura-bordada-preta', preco:122.32, de:152.90, loja:SHEIN, link:'https://onelink.shein.com/58/668elarvpr32?ismg_ol=DSZY59Ybd2I_01_KOC-C'},
+    {nome:'Cinza', hex:'#a9a9a6', img:'bermuda-assinatura-bordada-cinza', preco:118.36, de:147.95, loja:SHEIN, link:'https://onelink.shein.com/58/668ejbqrlo41?ismg_ol=9a86wYI7Dps_01_KOC-C'}]},
+  {nome:'Camiseta Oversized Chamas', tipo:'top', k:1, tam:PP, cores:[
+    {nome:'Branca', hex:'#ece9e2', img:'camiseta-chamas-branca', costas:true, preco:104.59, de:108.95, loja:SHEIN, link:'https://onelink.shein.com/59/66zw46bysdaq?ismg_ol=JuS1gdt5IwC_01_KOC-C'}]},
+  {nome:'Camiseta Oversized Streetez Grafite', tipo:'top', k:1, tam:PP.slice(1), cores:[
+    {nome:'Preta', hex:'#141414', img:'camiseta-streetez-preta', costas:true, preco:73.95, loja:SHEIN, link:'https://onelink.shein.com/59/66zwdxjgu4wn?ismg_ol=6XQDyCA7JBL_01_KOC-C'}]},
+  {nome:'Moletom Sakura Daypath', tipo:'top', k:1.04, tam:PP, cores:[
+    {nome:'Branco', hex:'#ece9e2', img:'moletom-sakura-branco', costas:true, preco:110.99, loja:SHEIN, link:'https://onelink.shein.com/59/66zvlpejgj6b?ismg_ol=5OdSAFnFQC8_01_KOC-C'}]},
+];
+
+const $ = (s, r=document) => r.querySelector(s);
+const calmo = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const temHover = matchMedia('(hover:hover)').matches;
+const brl = v => v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const src = (c, lado) => `img/${c.img}-recorte${lado==='costas' ? '-costas' : ''}.webp`;
+const claro = hex => { const n=parseInt(hex.slice(1),16); return ((n>>16)*299+((n>>8&255)*587)+((n&255)*114))/1000 > 140; };
+
+// cabides em SVG
+function gancho(tipo, larg){
+  if (tipo==='bottom') return `<svg width="${larg}" height="44" viewBox="0 0 100 44" aria-hidden="true" style="position:relative;z-index:2;margin-bottom:-12px">
+    <path d="M50 2c-6 0-8 7-3 9l3 2" fill="none" stroke="#cfc6b2" stroke-width="2.4" stroke-linecap="round"/>
+    <rect x="6" y="14" width="88" height="7" rx="3.5" fill="#2a1e10" stroke="#6b5530"/>
+    <rect x="12" y="20" width="9" height="18" rx="2" fill="#bfb6a1"/><rect x="79" y="20" width="9" height="18" rx="2" fill="#bfb6a1"/></svg>`;
+  return `<svg width="${larg}" height="44" viewBox="0 0 100 44" aria-hidden="true">
+    <path d="M50 2c-6 0-8 7-3 9l3 3" fill="none" stroke="#cfc6b2" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M50 13L8 36c-3 2-2 6 2 6h80c4 0 5-4 2-6z" fill="none" stroke="#5c4321" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M50 13L8 36c-3 2-2 6 2 6h80c4 0 5-4 2-6z" fill="none" stroke="#9a7440" stroke-width="2" stroke-linejoin="round"/></svg>`;
+}
+
+// faixa
+$('#faixa').innerHTML = Array(2).fill(['Curadoria Garimpados','Novas cores na arara','Escolha a peça, depois a cor','Compra segura na loja oficial']
+  .map(t=>`<span>${t} ✦</span>`).join('')).join('');
+
+// monta a arara
+const arara = $('#arara');
+PECAS.forEach((p, i) => {
+  const c = p.cores[0];
+  const b = document.createElement('button');
+  b.className = 'peca'; b.dataset.i = i; b.style.setProperty('--k', p.k);
+  b.setAttribute('aria-label', `${p.nome}, ${p.cores.length>1 ? p.cores.length+' cores' : c.nome}`);
+  const larg = p.tipo==='bottom' ? 'calc(var(--base)*.62)' : 'calc(var(--base)*.5)';
+  b.innerHTML = `<div class="balanco"><div style="width:${larg}">${gancho(p.tipo,'100%')}</div><img class="roupa" src="${src(c)}" alt="" loading="${i<5?'eager':'lazy'}" decoding="async"></div>
+    <div class="info"><b>${p.nome}</b><span>${p.cores.length>1 ? p.cores.length+' cores' : (c.preco ? brl(c.preco) : 'Preço na '+c.loja)}</span>
+    ${p.cores.length>1 ? `<div class="pontos">${p.cores.map(k=>`<i style="--c:${k.hex}"></i>`).join('')}</div>` : ''}</div>`;
+  arara.appendChild(b);
+});
+// trilho do celular acompanha a largura rolável
+const ajustaTrilho = () => arara.style.setProperty('--trilho', arara.scrollWidth + 'px');
+addEventListener('resize', ajustaTrilho); addEventListener('load', ajustaTrilho); ajustaTrilho();
+
+const pecasEl = [...arara.querySelectorAll('.peca')];
+
+// entrada: as peças descem para a arara
+if (!calmo && window.gsap) gsap.from(pecasEl.map(e=>e.querySelector('.balanco')), {y:-60, rotation:()=>gsap.utils.random(-6,6), duration:1.1, ease:'elastic.out(1,.55)', stagger:.07, clearProps:'transform'});
+
+// mouse: a peça cresce, as vizinhas abrem espaço e a ativa balança
+function ativa(el){
+  arara.classList.add('foco');
+  pecasEl.forEach(p => { p.classList.remove('ativa','esq','dir'); });
+  const i = pecasEl.indexOf(el);
+  el.classList.add('ativa');
+  pecasEl.forEach((p,j)=>{ if (j<i) p.classList.add('esq'); else if (j>i) p.classList.add('dir'); });
+  if (!calmo && window.gsap) gsap.fromTo(el.querySelector('.balanco'), {rotation:gsap.utils.random([-4,4])}, {rotation:0, duration:1.6, ease:'elastic.out(1,.3)', overwrite:true});
+}
+if (temHover){
+  pecasEl.forEach(el => { el.addEventListener('mouseenter', () => ativa(el)); el.addEventListener('focus', () => ativa(el)); });
+  arara.addEventListener('mouseleave', () => { arara.classList.remove('foco'); pecasEl.forEach(p=>p.classList.remove('ativa','esq','dir')); });
+}
+
+// detalhe
+const D = { el:$('#detalhe'), atual:$('#img-atual'), nova:$('#img-nova'), vista:$('#vista'), fio:$('#fio') };
+let peca = 0, cor = 0, lado = 'frente', ocupado = false, origem = null;
+
+function preenche(){
+  const p = PECAS[peca], c = p.cores[cor];
+  $('#d-nome').textContent = p.nome + (p.cores.length>1 ? '' : ' · ' + c.nome);
+  $('#d-preco').innerHTML = c.preco
+    ? `<strong>${brl(c.preco)}</strong>${c.de ? `<s>${brl(c.de)}</s><em>-${Math.round((1-c.preco/c.de)*100)}%</em>` : ''}`
+    : `<strong style="font-size:15px">Preço e tamanhos na ${c.loja}</strong>`;
+  const tam = c.tam || p.tam;
+  $('#d-tam').innerHTML = tam.map(t=>`<span>${t}</span>`).join('');
+  $('#d-tam').hidden = !tam.length;
+  const l = $('#d-link'); l.href = c.link; l.firstChild.textContent = `Ver ${p.cores.length>1 ? c.nome.toLowerCase()+' ' : ''}na ${c.loja} `;
+  $('#d-nota').textContent = p.cores.length>1 ? 'Cada cor tem o seu anúncio e o seu preço.' : (p.destaque ? 'Outras cores: entram quando as fotos chegarem.' : '');
+  $('#lados').hidden = !c.costas;
+  $('#lados').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.lado===lado));
+  // etiquetas
+  const et = $('#etiquetas');
+  et.innerHTML = p.cores.map((k,j)=>`<button class="etq" style="--c:${k.hex};--tc:${claro(k.hex)?'#16120a':'#f3ede1'};--b:${claro(k.hex)?'rgba(0,0,0,.15)':'rgba(217,180,90,.7)'};--i:${j}" aria-pressed="${j===cor}" aria-label="Cor ${k.nome}${k.preco?', '+brl(k.preco):''}"><span class="corda"></span><span class="cartao"><span>${k.nome}</span></span></button>`).join('');
+  et.querySelectorAll('.etq').forEach((b,j)=>b.addEventListener('click',()=>trocaCor(j, b)));
+  // vizinhas
+  const n = PECAS.length;
+  $('#viz-ant').src = src(PECAS[(peca-1+n)%n].cores[0]);
+  $('#viz-prox').src = src(PECAS[(peca+1)%n].cores[0]);
+  $('#d-gancho').innerHTML = gancho(p.tipo, p.tipo==='bottom' ? 150 : 120);
+  D.vista.style.setProperty('--k2', p.tipo==='bottom' ? .8 : p.tipo==='set' ? 1.25 : 1);
+}
+
+function carrega(url){ return new Promise(r=>{ const im=new Image(); im.onload=im.onerror=()=>r(); im.src=url; if (im.decode) im.decode().then(r,r); }); }
+
+async function abre(i, el){
+  peca = i; cor = 0; lado = 'frente'; origem = el;
+  preenche();
+  D.atual.src = src(PECAS[i].cores[0]);
+  await carrega(D.atual.src);
+  D.el.hidden = false; document.body.style.overflow = 'hidden';
+  $('#fechar').focus({preventScroll:true});
+  if (calmo || !window.gsap || !el) return;
+  // a peça sai da arara e vai para o centro (FLIP)
+  const de = el.querySelector('.roupa').getBoundingClientRect(), para = D.atual.getBoundingClientRect();
+  const s = de.height / para.height;
+  gsap.fromTo(D.vista, {x: de.left + de.width/2 - (para.left + para.width/2), y: de.top - para.top, scale: s, transformOrigin:'50% 0'},
+    {x:0, y:0, scale:1, duration:.75, ease:'power3.inOut'});
+  gsap.fromTo('.ficha > *, .etq', {opacity:0, y:10}, {opacity:1, y:0, duration:.45, stagger:.04, delay:.35, clearProps:'all'});
+  gsap.fromTo('.vizinha', {opacity:0}, {opacity:.22, duration:.6, delay:.4});
+  gsap.fromTo('.etq', {rotation:12}, {rotation:0, duration:1.4, ease:'elastic.out(1,.3)', stagger:.08, delay:.4});
+  el.style.visibility = 'hidden';
+}
+function fecha(){
+  D.el.hidden = true; document.body.style.overflow = '';
+  if (origem){ origem.style.visibility = ''; origem.focus({preventScroll:true}); }
+}
+
+// troca de cor: cortina de cima para baixo com um fio dourado na borda
+async function trocaCor(j, etq){
+  if (ocupado || j===cor) return;
+  const p = PECAS[peca]; ocupado = true;
+  cor = j; if (!p.cores[cor].costas) lado = 'frente';
+  const url = src(p.cores[cor], lado);
+  await carrega(url);
+  if (etq && window.gsap && !calmo) gsap.fromTo(etq, {rotation:-14}, {rotation:0, duration:1.3, ease:'elastic.out(1,.3)'});
+  const fim = () => { D.atual.src = url; D.nova.style.visibility='hidden'; D.nova.style.clipPath='inset(0 0 100% 0)'; ocupado = false; preenche(); };
+  if (calmo || !window.gsap){ fim(); return; }
+  D.nova.src = url; D.nova.style.visibility = 'visible';
+  const h = D.atual.offsetHeight;
+  const t = gsap.timeline({onComplete:()=>{ fim(); gsap.fromTo(D.vista,{rotation:1.2},{rotation:0,duration:1.2,ease:'elastic.out(1,.35)'}); }});
+  t.set(D.fio,{opacity:1,y:0})
+   .fromTo(D.nova,{clipPath:'inset(0% 0% 100% 0%)'},{clipPath:'inset(0% 0% 0% 0%)',duration:.8,ease:'power3.inOut'},0)
+   .fromTo(D.fio,{y:0},{y:h,duration:.8,ease:'power3.inOut'},0)
+   .to(D.fio,{opacity:0,duration:.2});
+  // preço e etiquetas atualizam no meio da cortina
+  t.call(()=>{ const pr=$('#d-preco'); preencheParcial(); gsap.fromTo(pr,{opacity:.2,y:6},{opacity:1,y:0,duration:.35}); }, null, .4);
+}
+function preencheParcial(){
+  const p = PECAS[peca], c = p.cores[cor];
+  $('#d-preco').innerHTML = c.preco ? `<strong>${brl(c.preco)}</strong>${c.de ? `<s>${brl(c.de)}</s><em>-${Math.round((1-c.preco/c.de)*100)}%</em>` : ''}` : '';
+  $('#etiquetas').querySelectorAll('.etq').forEach((b,k)=>b.setAttribute('aria-pressed', k===cor));
+}
+
+// frente / costas: a peça gira no cabide
+$('#lados').addEventListener('click', async e => {
+  const b = e.target.closest('button'); if (!b || ocupado || b.dataset.lado===lado) return;
+  lado = b.dataset.lado; ocupado = true;
+  const url = src(PECAS[peca].cores[cor], lado); await carrega(url);
+  $('#lados').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed', x===b));
+  if (calmo || !window.gsap){ D.atual.src = url; ocupado = false; return; }
+  gsap.timeline({onComplete:()=>ocupado=false})
+    .to(D.vista,{scaleX:0,duration:.28,ease:'power2.in'})
+    .call(()=>{ D.atual.src = url; })
+    .to(D.vista,{scaleX:1,duration:.5,ease:'back.out(1.6)'});
+});
+
+// navegar entre peças
+async function vai(d){
+  if (ocupado) return; ocupado = true;
+  const n = PECAS.length, prox = (peca+d+n)%n;
+  if (origem) origem.style.visibility = '';
+  origem = pecasEl[prox]; origem.style.visibility = 'hidden';
+  const url = src(PECAS[prox].cores[0]); await carrega(url);
+  const troca = () => { peca = prox; cor = 0; lado = 'frente'; D.atual.src = url; preenche(); };
+  if (calmo || !window.gsap){ troca(); ocupado = false; return; }
+  gsap.timeline({onComplete:()=>ocupado=false})
+    .to(D.vista,{x:-60*d,opacity:0,filter:'blur(8px)',duration:.3,ease:'power2.in'})
+    .call(troca)
+    .fromTo(D.vista,{x:60*d,opacity:0,filter:'blur(8px)'},{x:0,opacity:1,filter:'blur(0px)',duration:.5,ease:'power3.out',clearProps:'filter'})
+    .fromTo('.etq',{rotation:10},{rotation:0,duration:1.2,ease:'elastic.out(1,.3)',stagger:.08},'<');
+}
+
+pecasEl.forEach((el,i)=>el.addEventListener('click',()=>abre(i, el)));
+$('#fechar').addEventListener('click', fecha);
+['ant','ant2'].forEach(id=>$('#'+id).addEventListener('click',()=>vai(-1)));
+['prox','prox2'].forEach(id=>$('#'+id).addEventListener('click',()=>vai(1)));
+addEventListener('keydown', e => {
+  if (D.el.hidden) return;
+  if (e.key==='Escape') fecha();
+  if (e.key==='ArrowRight') vai(1);
+  if (e.key==='ArrowLeft') vai(-1);
+});
+// arrastar para os lados no celular troca de peça
+let x0 = null;
+D.vista.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, {passive:true});
+D.vista.addEventListener('touchend', e => { if (x0===null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx)>50) vai(dx<0?1:-1); x0 = null; });
+</script>
+
+</body></html>
