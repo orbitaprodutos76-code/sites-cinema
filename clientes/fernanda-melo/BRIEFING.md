@@ -216,4 +216,4 @@ Resumo oficial do que está decidido e reprovado: `PASSAGEM-JARVIS-11.md` (raiz 
 - Estrutura aprovada: **1 Salão → 2 Serviços e preços → 3 O ofício → 4 Final (nome vira janela + Agendar)**. Material: usar o que temos (capturas atuais, marcadas como provisórias); endereço e Instagram ficam PENDENTES.
 - Imagens de referência (IA): `referencias/secao-1-salao.png`, `secao-2-servicos.png`, `secao-3-oficio.png`, `secao-4-final.png`.
 - Atenção: nas imagens, as fotos do salão, a lista de serviços e os horários são inventados pela IA. No site entram as fotos reais, os 15 serviços e preços reais do sistema e o horário real (09:00–11:00 e 13:30–18:30).
-- PENDENTE: veredito do senhor em cada seção.
+- Veredito: **4 Final APROVADA**. Seções 1, 2 e 3: "não gostei do estilo" (reprovadas). PENDENTE: entender o que incomodou e refazer.
