@@ -28,6 +28,14 @@ Barbearia de nome forte na cidade. Entregar algo amador queima o senhor com o me
 - A versão LED anterior fica no histórico do git (commit "adiciona protótipo da abertura em LED"), caso o senhor queira algum pedaço dela.
 - Ainda é provisório: fonte Cinzel no lugar da logo real, e um espaço reservado onde entra a foto.
 
+## Decisões de 25/11/2026 (conversa na nuvem, depois de trazer o zip do PC)
+- Código do PC trazido para esta pasta (index = v5; `abertura.html` = LED do v9; `abertura-pedra.html` = WebGL da pedra; `img/` com logo vetorizada e 8 fotos locais).
+- **Abertura escolhida: a da PEDRA.** Ideia do senhor: *luz de LED verde escorrendo por rachaduras/frestas numa pedra preta, formando o nome LORD LUMBERJACK e o símbolo.*
+- Prioridades do site nesta rodada: tirar anel/espelho; rolagem em capítulos; cardápio de grife; produtos e barbeiros.
+- O que o senhor acha fraco hoje: faltam fotos e vídeos; seções vazias/longas; falta impacto; cara de modelo pronto. Ele vê grande potencial e pediu para pensar com calma antes de executar.
+- Regra reforçada: **pensar e perguntar antes de executar**. Perguntas em múltipla escolha com várias respostas permitidas e opção "Outro".
+- `rascunho-nuvem/abertura-verde.html`: tentativa simplificada feita na nuvem, **reprovada** (fraca). Não usar como base.
+
 ## Material pendente
 - [ ] OK do senhor para baixar as 9 imagens públicas da Lord (o v9 parou esperando isso).
 - [ ] 10 tomadas de vídeo na visita (lista em `POSTAR/TOMADAS-LORD.txt` no PC). A mais importante: **nº 01, letreiro LORD da parede, de frente**. Só filmar com autorização do dono.
