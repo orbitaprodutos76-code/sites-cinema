@@ -98,3 +98,22 @@ O senhor mandou a referência "Deep Purple × Gold". Interpretado como as duas c
 - `nuvem-roxa.html` → https://claude.ai/artifact/PqDWJRCqXFVNhzQpTMZtLf · shader WebGL: o céu azul vira noite (estrelas piscando e lua fina desenhadas em código), a nuvem é pintada berinjela → Deep Purple → roxo neon com topos e bordas em ouro, laço sem emenda (dois vídeos em fusão), leve "respiração" e paralaxe, luz dourada que segue o dedo, relâmpago que acende a nuvem por dentro. Ajustes: ouro, brilho, contraste, velocidade, luz.
 - Testado em 1440px e 390px (navegador sem placa de vídeo: 26 fps no PC e 57 no celular simulado). Print: `referencias/nuvem-roxa-v1-print.png`.
 - PENDENTE: o senhor aprovar a nuvem → depois disso, abertura de 3 a 5 s (relâmpagos → raio-navalha corta a nuvem → branco com o nome).
+
+## Roteiro da abertura APROVADO (25/11/2026) — cerca de 4,5 s
+Conceito: tempestade revela, pausa, raio-navalha, a nuvem se parte, branco.
+| Tempo | O que acontece |
+|---|---|
+| 0–0,6s | Preto, silêncio, uma estrela pisca, faixas de cinema |
+| 0,6–1,6s | Relâmpago distante revela a silhueta roxa e some; câmera começa a avançar |
+| 1,6–2,4s | 2º relâmpago, mais perto, com trovão; topos dourados aparecem |
+| 2,4–2,8s | Pausa: tudo escurece |
+| 2,8–3,0s | Raio-navalha: linha de ouro reta na diagonal |
+| 3,0–4,0s | Nuvem se parte ao longo do fio, bordas queimando em ouro, luz branca vaza e engole; faixas se abrem |
+| 4,0–4,5s | Branco; "Fernanda Melo" nasce, o fio vira o sublinhado dourado; Agendar |
+- Faixas de cinema: **sim**. Som: **desligado, com botão** (trovão, navalha e rasgo gerados em código).
+- Ordem combinada: **primeiro só o corte** (do segundo 2,4 ao 4,5), depois o começo.
+
+## Corte v1 (25/11/2026) — AGUARDANDO APROVAÇÃO
+- `corte.html` → https://claude.ai/artifact/Erx2T9rdygmqXp13x5ueZk (usa `midia/nuvem.*`). Cerca de 3,6 s: relâmpago de contexto → pausa → navalha → rasgo com bordas em ouro e luz vazando → branco → o fio gira e vira o sublinhado do nome. Botões: Som, **Câmera lenta** (0,3×) e Ver de novo.
+- Quadros conferidos: `referencias/corte-v1-quadros-pc.png` e `corte-v1-quadros-celular.png`. Sem erros.
+- Observações para o senhor julgar: o rasgo ainda parece mais uma "fenda de luz" do que nuvem se rasgando; aparecem raios finos de luz no céu perto da fenda (efeito do rasgo irregular); os topos ficam dourados quando o relâmpago acende.
