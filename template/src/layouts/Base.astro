@@ -1,0 +1,45 @@
+---
+import '../styles/global.css';
+import { site } from '../site.config';
+
+interface Props { title?: string; description?: string; image?: string }
+const { title = `${site.nome} — ${site.slogan}`, description = site.descricao, image = '/og.jpg' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(image, Astro.site);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: site.nome,
+  description: site.descricao,
+  telephone: site.telefone,
+  email: site.email,
+  url: Astro.site?.toString(),
+  address: { '@type': 'PostalAddress', streetAddress: site.endereco, addressLocality: site.cidade, addressRegion: site.estado, addressCountry: 'BR' },
+};
+---
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="pt_BR" />
+    <meta name="theme-color" content="#0b0b0c" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..600&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <slot />
+    <script>import '../scripts/motion';</script>
+  </body>
+</html>

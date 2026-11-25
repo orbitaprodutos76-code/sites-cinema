@@ -1,0 +1,62 @@
+---
+// Fundo 3D leve (shader de gradiente animado). Carrega só depois da página pronta
+// e não roda com reduced motion. Remova o componente se o cliente não precisar.
+---
+<canvas class="webgl" aria-hidden="true"></canvas>
+
+<style>
+  .webgl { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; opacity: 0; transition: opacity 1.5s; }
+  .webgl.on { opacity: 1; }
+</style>
+
+<script>
+  const canvas = document.querySelector<HTMLCanvasElement>('.webgl');
+  const reduz = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (canvas && !reduz) {
+    const iniciar = async () => {
+      const THREE = await import('three');
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true });
+      renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+      const scene = new THREE.Scene();
+      const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+      const uniforms = { uTime: { value: 0 }, uRes: { value: new THREE.Vector2() } };
+
+      const material = new THREE.ShaderMaterial({
+        uniforms,
+        vertexShader: `void main(){ gl_Position = vec4(position, 1.0); }`,
+        fragmentShader: `
+          uniform float uTime; uniform vec2 uRes;
+          void main(){
+            vec2 uv = gl_FragCoord.xy / uRes;
+            float t = uTime * 0.15;
+            float n = sin(uv.x*3.0 + t) * cos(uv.y*2.5 - t*1.3) + sin((uv.x+uv.y)*4.0 + t*0.7);
+            vec3 a = vec3(0.043, 0.043, 0.047);
+            vec3 b = vec3(0.91, 0.69, 0.29);
+            vec3 col = mix(a, b, smoothstep(0.6, 2.2, n + 1.0) * 0.35);
+            gl_FragColor = vec4(col, 1.0);
+          }`,
+      });
+      scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material));
+
+      const resize = () => {
+        const { clientWidth: w, clientHeight: h } = canvas;
+        renderer.setSize(w, h, false);
+        uniforms.uRes.value.set(w * renderer.getPixelRatio(), h * renderer.getPixelRatio());
+      };
+      resize();
+      addEventListener('resize', resize);
+
+      // Pausa quando o hero sai da tela
+      let visivel = true;
+      new IntersectionObserver(([e]) => (visivel = e.isIntersecting)).observe(canvas);
+      renderer.setAnimationLoop((t) => {
+        if (!visivel) return;
+        uniforms.uTime.value = t / 1000;
+        renderer.render(scene, camera);
+      });
+      canvas.classList.add('on');
+    };
+    'requestIdleCallback' in window ? requestIdleCallback(iniciar) : setTimeout(iniciar, 300);
+  }
+</script>

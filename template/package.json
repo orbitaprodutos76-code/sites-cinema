@@ -1,0 +1,18 @@
+{
+  "name": "site-cinema-template",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.6",
+    "astro": "^7.4.13",
+    "gsap": "^3.15.1",
+    "lenis": "^1.3.28",
+    "three": "^0.187.0"
+  }
+}

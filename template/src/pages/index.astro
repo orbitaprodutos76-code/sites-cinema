@@ -1,0 +1,115 @@
+---
+import Base from '../layouts/Base.astro';
+import HeroWebGL from '../components/HeroWebGL.astro';
+import { site, linkWhatsapp } from '../site.config';
+
+// TODO: substituir por serviços e fotos reais do cliente.
+const servicos = [
+  { titulo: 'Serviço um', texto: 'O que o cliente ganha, em uma frase.' },
+  { titulo: 'Serviço dois', texto: 'Benefício concreto, sem jargão.' },
+  { titulo: 'Serviço três', texto: 'Por que escolher vocês e não o vizinho.' },
+  { titulo: 'Serviço quatro', texto: 'Prova: número, prêmio ou depoimento.' },
+];
+---
+<Base>
+  <header class="topo container">
+    <a href="/" class="marca">{site.nome}</a>
+    <a href={linkWhatsapp} class="btn btn--sm" target="_blank" rel="noopener">Fale conosco</a>
+  </header>
+
+  <main>
+    <!-- 1. HERO -->
+    <section class="hero">
+      <HeroWebGL />
+      <div class="container hero__conteudo">
+        <p class="eyebrow" data-hero-fade>{site.cidade} · {site.estado}</p>
+        <h1 class="hero__titulo">
+          <span class="line-mask" data-hero-line><span>Uma frase</span></span>
+          <span class="line-mask" data-hero-line><span>que <em>vende</em>.</span></span>
+        </h1>
+        <p class="hero__sub" data-hero-fade>{site.slogan}</p>
+        <a href={linkWhatsapp} class="btn" data-hero-fade target="_blank" rel="noopener">Pedir orçamento →</a>
+      </div>
+    </section>
+
+    <!-- 2. MANIFESTO -->
+    <section class="manifesto container">
+      <p class="manifesto__texto" data-reveal>
+        Uma ou duas frases que contam <strong>por que</strong> essa empresa existe. É aqui que o visitante decide se continua.
+      </p>
+    </section>
+
+    <!-- 3. IMAGEM COM PARALLAX -->
+    <section class="faixa-imagem" aria-label="Ambiente">
+      <div class="faixa-imagem__img" data-parallax="12" role="img" aria-label="TODO: foto real do cliente"></div>
+    </section>
+
+    <!-- 4. SERVIÇOS EM SCROLL HORIZONTAL -->
+    <section class="horizontal" data-horizontal>
+      <div class="horizontal__trilho" data-track>
+        <div class="horizontal__intro">
+          <p class="eyebrow">O que fazemos</p>
+          <h2>Serviços</h2>
+        </div>
+        {servicos.map((s, i) => (
+          <article class="card">
+            <span class="card__num">0{i + 1}</span>
+            <h3>{s.titulo}</h3>
+            <p>{s.texto}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- 5. CTA FINAL -->
+    <section class="cta container">
+      <h2 data-reveal>Vamos conversar?</h2>
+      <a href={linkWhatsapp} class="btn" data-reveal target="_blank" rel="noopener">Chamar no WhatsApp →</a>
+    </section>
+  </main>
+
+  <footer class="rodape container">
+    <span>{site.nome} © {new Date().getFullYear()}</span>
+    <span>{site.endereco} — {site.cidade}/{site.estado}</span>
+    <a href={site.instagram} target="_blank" rel="noopener">Instagram</a>
+  </footer>
+</Base>
+
+<style>
+  .topo { position: fixed; inset: 0 0 auto; z-index: 10; display: flex; justify-content: space-between; align-items: center; padding-block: 1.25rem; }
+  .marca { font-family: var(--font-display); font-size: 1.4rem; text-decoration: none; }
+  .btn--sm { padding: 0.7em 1.2em; font-size: 0.9rem; }
+
+  .hero { position: relative; min-height: 100svh; display: grid; align-items: end; overflow: hidden; }
+  .hero__conteudo { position: relative; z-index: 1; padding-bottom: clamp(3rem, 10vh, 7rem); }
+  .hero__titulo { font-size: var(--step-hero); margin-block: 1rem 1.5rem; }
+  .hero__titulo em { color: var(--accent); }
+  .hero__sub { max-width: 32ch; color: var(--muted); margin-bottom: 2rem; }
+
+  .manifesto { padding-block: clamp(6rem, 20vh, 14rem); }
+  .manifesto__texto { font-family: var(--font-display); font-size: var(--step-1); line-height: 1.1; max-width: 22ch; margin: 0; }
+  .manifesto__texto strong { color: var(--accent); font-weight: 400; }
+
+  .faixa-imagem { height: 80svh; overflow: hidden; }
+  .faixa-imagem__img { height: 130%; margin-top: -15%; background: linear-gradient(135deg, #2a2520, #0b0b0c 60%), var(--bg-2); }
+
+  .horizontal { padding-block: 6rem; overflow: hidden; }
+  .horizontal__trilho { display: flex; gap: 2rem; padding-inline: var(--gutter); width: max-content; }
+  .horizontal__intro { width: min(80vw, 420px); display: flex; flex-direction: column; justify-content: center; }
+  .horizontal__intro h2 { font-size: var(--step-1); }
+  .card { width: min(80vw, 420px); min-height: 60svh; padding: 2rem; border: 1px solid var(--line); border-radius: 1.5rem; background: var(--bg-2); display: flex; flex-direction: column; justify-content: flex-end; }
+  .card__num { color: var(--accent); font-size: 0.85rem; margin-bottom: auto; }
+  .card h3 { font-size: 2rem; margin-bottom: 0.75rem; }
+  .card p { color: var(--muted); margin: 0; }
+
+  @media (max-width: 899px) {
+    .horizontal__trilho { flex-direction: column; width: auto; }
+    .horizontal__intro, .card { width: 100%; min-height: auto; }
+    .card { min-height: 40svh; }
+  }
+
+  .cta { padding-block: clamp(6rem, 20vh, 12rem); text-align: center; display: grid; gap: 2.5rem; justify-items: center; }
+  .cta h2 { font-size: var(--step-hero); }
+
+  .rodape { display: flex; flex-wrap: wrap; gap: 1rem 2rem; justify-content: space-between; padding-block: 2rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.875rem; }
+</style>
