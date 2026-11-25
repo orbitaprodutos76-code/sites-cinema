@@ -92,6 +92,12 @@ Pedidos do senhor sobre a v2: câmera é o que vende ("posso fechar a venda só 
 - Era a transição do Agendar presa: o visualizador do claude.ai bloqueia sair da página. Agora, dentro de visualizador (claude.ai, Instagram, WhatsApp), a agenda abre em aba nova; fora dele, se a navegação não acontecer em 2 s, a tela preta se desfaz (e um toque nela também desfaz).
 - Aparelho sem 3D (WebGL): mostra o site direto com a foto e o texto, em vez de ficar preto.
 
+## Agendamento: não fazer o cliente repetir (25/11/2026, em aberto)
+- Pergunta do senhor: como deixar claro a função do site e o cliente passar o mínimo de tempo no AppBarber.
+- Princípio: nosso site ajuda a DECIDIR (lugar, carta, barbeiro, preço, Club); o AppBarber só CONFIRMA. Nunca montar o agendamento duas vezes.
+- Caminhos: (1) link direto do AppBarber já com serviço/barbeiro, se ele aceitar; (2) se não aceitar, a transição mostra a escolha e o caminho no app ("Combos → Carlos → horário"); (3) botões dizendo "Agendar no app da Lord" + aviso "1. Escolha aqui · 2. Confirme no app em 30 s"; (4) plano B: WhatsApp com a escolha escrita.
+- Teste daqui: o AppBarber (sites.appbarber.com.br) tem bloqueio contra navegador automático (Vercel Security Checkpoint). **Não contornar.** A documentação pública não diz se existe link por serviço/barbeiro. Próximo passo: o senhor manda prints/endereços do fluxo no celular.
+
 ## Material pendente
 - [ ] OK do senhor para baixar as 9 imagens públicas da Lord (o v9 parou esperando isso).
 - [ ] 10 tomadas de vídeo na visita (lista em `POSTAR/TOMADAS-LORD.txt` no PC). A mais importante: **nº 01, letreiro LORD da parede, de frente**. Só filmar com autorização do dono.
