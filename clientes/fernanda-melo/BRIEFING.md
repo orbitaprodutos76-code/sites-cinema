@@ -79,3 +79,13 @@ O senhor mandou a referência "Deep Purple × Gold". Interpretado como as duas c
 - Técnica: fachada em SVG (sem foto), céu e nuvens em canvas, racha e cacos em canvas (os cacos são a própria imagem da vitrine congelada), fumaça em canvas de meia resolução, veios e título em SVG. Só GSAP.
 - Testado: 1440px e 390px, Pular, Ver de novo, movimento reduzido (vai direto ao quadro final). Sem erros no console e sem rolagem lateral.
 - TODO: logo é interpretação (pedir original quando vender) · textos do Topo provisórios · ainda HTML solto (vira Astro quando o site completo for aprovado).
+
+## Virada de direção (25/11/2026) — abertura v1 REPROVADA
+- Senhor: "precisamos de algo impressionante; não dá para recriar a fachada toda" (comparou com o símbolo da Lord, feito com capricho). Lição: **não recriar fachada/prédio em código; poucos elementos, detalhe máximo.**
+- Nova abertura: **3 a 5 segundos**, com uma **névoa roxa 3D (nuvem volumétrica em WebGL)**, que também será a **animação principal do site** (viva no fundo, reage à rolagem e ao dedo/mouse).
+- Elementos escolhidos: **1 · O corte** + **3 · Relâmpago de ouro**. Proposta de roteiro: relâmpagos dourados piscam dentro da névoa (a tempestade carrega) → o último raio cai reto como navalha → a névoa se abre em duas com as bordas queimando em ouro → branco com "Fernanda Melo".
+- Pó de ouro (opção 4) não foi escolhido; fica guardado.
+- Método: **laboratório da névoa primeiro** (aprovar a nuvem antes da abertura).
+- `laboratorio-nevoa.html` → https://claude.ai/artifact/KuNmLxkDYiFiCsJVcv2qbx · raymarching em WebGL 2, ruído 3D gerado no carregamento, luz dourada que segue o cursor, botão Relâmpago, ajustes (fundo, cor, densidade, quantidade, formato, contorno, tamanho, velocidade, luz, qualidade) e botão "Copiar ajustes" para o senhor mandar os valores.
+- `abertura.html` (v1 da fachada) fica no repositório só como histórico.
+- PENDENTE: o senhor testar o laboratório no PC e no celular e mandar os ajustes de que gostou.
