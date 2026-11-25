@@ -163,3 +163,11 @@ Prints em `referencias/ref-*.png`.
 - PENDENTE: o senhor dizer o que muda na nuvem (forma, cor, material, movimento).
 - **v2 (26/11/2026):** o senhor mandou de novo a foto do cúmulo à noite: "uma nuvem assim, porém com bem menos detalhes, ocupando 25% da página". A nuvem virou **volume macio** (raymarching de densidade com sombra interna), silhueta larga com três cabeças, roxo escuro com topo iluminado, ocupando ~1/4 da tela. Mesmo link (versão 2). Print: `referencias/nuvem-isolada-v2-print.png`.
 - Ponto fraco: por dentro os rolos ficam "manchados" e pouco definidos. Plano B se o código não chegar lá: recortar um cúmulo real (foto/vídeo com licença) e pintar de roxo, como no `nuvem-roxa.html`.
+
+## A VISÃO DO SENHOR, finalmente em vídeo (26/11/2026)
+- Senhor: "estamos só gastando créditos". Mudança de método: **imagem/vídeo de referência primeiro, código só para movimento**.
+- Ele mandou 2 pins ("o melhor que pude imaginar para o projeto"), quadros em `referencias/ref-pins-tinta-e-locked.jpg`:
+  1. **Tinta Deep Purple caindo na água sobre fundo branco**: a gota desce e explode numa nuvem de tinta densa, com rolos (feito com IA, marca Veo). ⇒ ESTA é a "nuvem roxa".
+  2. **"LOCKED / UNLOCKED"**: texto que se desfaz em fumaça densa e se refaz a partir dela. ⇒ o nome nasce/some na nuvem.
+- Tintas com licença livre no Mixkit (quadros em `referencias/ref-mixkit-tintas.jpg`): #3843 (tinta rosa densa em fundo preto, rolos iguais aos da referência), #149 (amarela/verde densa), #1204/#150 (preta em fundo branco, mais rala).
+- PENDENTE: escolher o caminho (vídeo real pintado de roxo / vídeo exclusivo por IA / simulação em código).
