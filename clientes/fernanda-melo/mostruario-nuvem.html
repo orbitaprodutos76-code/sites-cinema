@@ -1,0 +1,207 @@
+<title>Mostruário da Nuvem</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+/* Mostruário: a mesma nuvem 3D compacta em quatro acabamentos do salão. Cada quadro tem o nome gigante atrás. Visual único. */
+:root{
+  --branco:#FFFFFF; --roxo:#6B21A8; --berinjela:#3B0A57; --ouro:#FBBF24; --tinta:#1E0B30; --onix:#0A0A0A;
+  --fd:'DM Serif Display',Georgia,serif; --fb:'Space Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:#F4F1F8;color:var(--tinta);font-family:var(--fb);-webkit-font-smoothing:antialiased}
+.pagina{max-width:1400px;margin:0 auto;padding-block:clamp(1.5rem,4vw,3rem);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:1rem;margin-bottom:clamp(1.2rem,3vw,2rem)}
+header h1{margin:0;font:italic 400 clamp(2rem,5vw,3.4rem)/1 var(--fd);color:var(--roxo)}
+header p{margin:0;max-width:30rem;font-size:.95rem;line-height:1.55;color:#4a3a5c}
+.grade{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(10px,1.4vw,18px)}
+@media (max-width:760px){.grade{grid-template-columns:1fr}}
+.quadro{position:relative;aspect-ratio:4/3;max-width:100%;border-radius:22px;overflow:hidden;isolation:isolate}
+.quadro canvas{position:absolute;inset:0;width:100%;height:100%;z-index:2;touch-action:pan-y}
+.nome{position:absolute;inset:0;display:grid;place-items:center;z-index:1;pointer-events:none;
+  font:700 clamp(2.6rem,7.4vw,6.6rem)/.86 var(--fb);letter-spacing:-.045em;text-transform:uppercase;text-align:center}
+.legenda{position:absolute;left:16px;right:16px;bottom:14px;z-index:3;display:flex;justify-content:space-between;align-items:end;gap:1rem;pointer-events:none}
+.legenda b{display:block;font:italic 400 1.35rem/1.05 var(--fd)}
+.legenda span{font:600 .62rem/1.3 var(--fb);letter-spacing:.18em;text-transform:uppercase;opacity:.85}
+.letra{font:700 .7rem/1 var(--fb);letter-spacing:.2em;border:1.5px solid currentColor;border-radius:99px;padding:.55em .9em;white-space:nowrap}
+/* cenários */
+.q1{background:radial-gradient(120% 90% at 30% 20%,#FFFFFF 0%,#F3EEF8 60%,#E6DDF0 100%)}
+.q1 .nome{color:#E9E1F2}
+.q1 .legenda{color:var(--berinjela)}
+.q2{background:var(--roxo)}
+.q2 .nome{color:var(--ouro)}
+.q2 .legenda{color:#FFF6DA}
+.q3{background:radial-gradient(90% 80% at 50% 45%,#5B1A8E 0%,#3B0A57 55%,#1B0428 100%)}
+.q3 .nome{color:transparent;-webkit-text-stroke:1.5px rgb(251 191 36/.55)}
+.q3 .legenda{color:#F6E9FF}
+.q4{background:var(--onix)}
+.q4 .nome{color:#1a1320}
+.q4 .legenda{color:#EADFF5}
+.rodape{margin-top:1.4rem;display:flex;flex-wrap:wrap;gap:.6rem 1.4rem;font-size:.85rem;color:#4a3a5c}
+:focus-visible{outline:3px solid var(--ouro);outline-offset:3px}
+</style>
+
+<div class="pagina">
+  <header>
+    <h1>A nuvem, em quatro acabamentos</h1>
+    <p>É a mesma nuvem 3D compacta nos quatro quadros, cada um com um material tirado do salão da Fernanda. Arraste ou passe o mouse para girar. Escolha uma letra, ou misture: "forma da A com o fundo da B".</p>
+  </header>
+  <div class="grade">
+    <figure class="quadro q1" style="margin:0"><div class="nome" aria-hidden="true">Fernanda<br>Melo</div><canvas data-mat="0" aria-label="Nuvem de mármore roxo com veios de ouro"></canvas>
+      <figcaption class="legenda"><div><b>Mármore do salão</b><span>Pedra roxa polida, veios de ouro</span></div><span class="letra">A</span></figcaption></figure>
+    <figure class="quadro q2" style="margin:0"><div class="nome" aria-hidden="true">Fernanda<br>Melo</div><canvas data-mat="1" aria-label="Nuvem de vinil roxo brilhante"></canvas>
+      <figcaption class="legenda"><div><b>Vinil inflável</b><span>Roxo brilhante, reflexo de ouro</span></div><span class="letra">B</span></figcaption></figure>
+    <figure class="quadro q3" style="margin:0"><div class="nome" aria-hidden="true">Fernanda<br>Melo</div><canvas data-mat="2" aria-label="Nuvem de veludo roxo com aro de luz dourada"></canvas>
+      <figcaption class="legenda"><div><b>Veludo e espelho</b><span>Roxo fosco, aro de luz dourada atrás</span></div><span class="letra">C</span></figcaption></figure>
+    <figure class="quadro q4" style="margin:0"><div class="nome" aria-hidden="true">Fernanda<br>Melo</div><canvas data-mat="3" aria-label="Nuvem de vidro roxo com contorno de neon"></canvas>
+      <figcaption class="legenda"><div><b>Vidro e neon</b><span>Vidro roxo, contorno de neon da vitrine</span></div><span class="letra">D</span></figcaption></figure>
+  </div>
+  <p class="rodape"><span>Rascunho para escolher o caminho. A versão final ganha animação de entrada e acabamento fino.</span></p>
+</div>
+
+<script>
+(() => {
+const reduz = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const VS = `attribute vec2 p; void main(){ gl_Position = vec4(p, 0., 1.); }`;
+const FS = `precision highp float;
+uniform vec2 uRes; uniform float uT; uniform int uMat; uniform vec2 uGiro;
+float h31(vec3 p){ p = fract(p * .3183099 + .1); p *= 17.; return fract(p.x * p.y * p.z * (p.x + p.y + p.z)); }
+float vn(vec3 x){ vec3 i = floor(x), f = fract(x); f = f*f*(3.-2.*f);
+  return mix(mix(mix(h31(i), h31(i+vec3(1,0,0)), f.x), mix(h31(i+vec3(0,1,0)), h31(i+vec3(1,1,0)), f.x), f.y),
+             mix(mix(h31(i+vec3(0,0,1)), h31(i+vec3(1,0,1)), f.x), mix(h31(i+vec3(0,1,1)), h31(i+vec3(1,1,1)), f.x), f.y), f.z); }
+float fbm(vec3 p){ return .5*vn(p) + .25*vn(p*2.1) + .125*vn(p*4.3) + .0625*vn(p*8.7); }
+float smin(float a, float b, float k){ float h = clamp(.5 + .5*(b-a)/k, 0., 1.); return mix(b, a, h) - k*h*(1.-h); }
+mat2 rot(float a){ float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
+float esf(vec3 p, vec3 c, float r){ return length(p - c) - r; }
+float nuvem(vec3 p){
+  float k = .09;
+  float d = esf(p, vec3(0., .12, 0.), .5);
+  d = smin(d, esf(p, vec3(-.5, -.04, .04), .38), k);
+  d = smin(d, esf(p, vec3(.52, -.06, .02), .36), k);
+  d = smin(d, esf(p, vec3(-.2, .46, .0), .34), k);
+  d = smin(d, esf(p, vec3(.24, .42, .08), .31), k);
+  d = smin(d, esf(p, vec3(-.88, -.2, .02), .25), k);
+  d = smin(d, esf(p, vec3(.9, -.22, .03), .23), k);
+  d = smin(d, esf(p, vec3(.05, -.12, .34), .34), k);
+  d = smin(d, esf(p, vec3(-.12, -.1, -.34), .33), k);
+  d = smin(d, esf(p, vec3(-.46, .26, .26), .25), k);
+  d = smin(d, esf(p, vec3(.46, .2, -.26), .25), k);
+  d = smin(d, esf(p, vec3(.02, .66, .05), .2), k);
+  d = smin(d, esf(p, vec3(-.62, .16, -.22), .22), k);
+  d = smin(d, esf(p, vec3(.66, .1, .24), .21), k);
+  float base = -(p.y + .36);
+  d = -smin(-d, -base, .07);
+  return d;
+}
+vec3 gira(vec3 p){ p.xz = rot(uGiro.x) * p.xz; p.yz = rot(uGiro.y) * p.yz; return p; }
+float mapa(vec3 p){ return nuvem(gira(p - vec3(0., sin(uT * .9) * .035, 0.))); }
+vec3 normal(vec3 p){ vec2 e = vec2(.0015, -.0015);
+  return normalize(e.xyy*mapa(p+e.xyy) + e.yyx*mapa(p+e.yyx) + e.yxy*mapa(p+e.yxy) + e.xxx*mapa(p+e.xxx)); }
+vec3 hex(float r, float g, float b){ return vec3(r, g, b) / 255.; }
+void main(){
+  vec2 uv = (gl_FragCoord.xy - .5 * uRes) / uRes.y;
+  vec3 ro = vec3(0., .12, 4.3), rd = normalize(vec3(uv * .95, -1.6));
+  float t = 0., d; bool bateu = false;
+  for (int i = 0; i < 90; i++) { vec3 p = ro + rd * t; d = mapa(p); if (d < .0008) { bateu = true; break; } t += d * .9; if (t > 6.) break; }
+  vec3 ROXO = hex(107.,33.,168.), BER = hex(59.,10.,87.), OURO = hex(251.,191.,36.), NEON = hex(139.,44.,255.);
+  if (!bateu) {
+    // sombra suave no "chão" e, no acabamento C, o aro de luz dourada atrás
+    float a = 0.; vec3 c = vec3(0.);
+    float tg = (-.62 - ro.y) / rd.y;
+    if (tg > 0.) { vec3 g = ro + rd * tg; float s = exp(-dot(g.xz * vec2(.8, 2.2), g.xz * vec2(.8, 2.2)) * 1.6); a = s * (uMat == 3 ? .0 : .32); c = vec3(.05, .0, .08); }
+    if (uMat == 2) { float r = length(uv - vec2(0., .06)); float aro = exp(-pow((r - .36) * 60., 2.)) + .35 * exp(-pow((r - .36) * 14., 2.));
+      c = mix(c, OURO * 1.2, clamp(aro, 0., 1.)); a = max(a, clamp(aro, 0., 1.)); }
+    gl_FragColor = vec4(c * a, a); return;
+  }
+  vec3 p = ro + rd * t, n = normal(p), v = -rd, q = gira(p);
+  vec3 L = normalize(vec3(-.55, .8, .6)), Lr = normalize(vec3(.8, .25, -.6));
+  float dif = max(dot(n, L), 0.), fre = pow(1. - max(dot(n, v), 0.), 3.);
+  float ao = clamp(mapa(p + n * .06) / .06, 0., 1.) * .5 + clamp(mapa(p + n * .18) / .18, 0., 1.) * .5;
+  vec3 h = normalize(L + v); float esp = pow(max(dot(n, h), 0.), 80.);
+  vec3 rf = reflect(rd, n);
+  vec3 col;
+  if (uMat == 0) {
+    // mármore roxo com veios de ouro
+    float w = fbm(q * 2.2 + 3.1);
+    float veio = abs(sin((q.x * 1.4 + q.y * 2.3 + w * 5.5) * 2.2));
+    float fino = abs(sin((q.x * -2.1 + q.z * 1.7 + fbm(q * 4.) * 4.) * 3.1));
+    vec3 pedra = mix(BER * .8, ROXO * 1.1, smoothstep(.2, .8, fbm(q * 3.5)));
+    pedra = mix(pedra, hex(150.,70.,210.), smoothstep(.6, .95, fbm(q * 6. + 7.)) * .25);
+    float ouro = smoothstep(.07, .0, veio) + smoothstep(.04, .0, fino) * .6;
+    vec3 base = mix(pedra, OURO, clamp(ouro, 0., 1.));
+    vec3 amb = mix(BER * .5, vec3(1.), .25 + .25 * rf.y);
+    col = base * (.28 + .9 * dif) * ao + esp * vec3(1.) * .9 + fre * .35 * amb + ouro * OURO * .25 * dif;
+  } else if (uMat == 1) {
+    // vinil inflável: roxo brilhante, reflexo de ouro por baixo
+    vec3 base = ROXO * 1.05;
+    float env = smoothstep(-.2, .9, rf.y);
+    vec3 refl = mix(OURO * .9, vec3(1.), env);
+    float faixa = smoothstep(.9, .97, dot(rf, normalize(vec3(-.4, .7, .6))));
+    col = base * (.3 + .8 * dif) * ao + esp * 1.2 + faixa * .9 + fre * refl * .55 + OURO * pow(max(dot(n, Lr), 0.), 3.) * .6;
+  } else if (uMat == 2) {
+    // veludo: fosco, brilho rasante roxo, contraluz dourada
+    float wrap = max((dot(n, L) + .35) / 1.35, 0.);
+    float brilho = pow(1. - max(dot(n, v), 0.), 2.2);
+    vec3 base = mix(BER * .9, ROXO, .55);
+    col = base * (.22 + .75 * wrap) * ao + NEON * brilho * .45 + OURO * pow(max(dot(n, Lr), 0.), 2.) * .55 * (1. - ao * .3);
+    col *= .92 + .08 * vn(q * 120.);
+  } else {
+    // vidro e neon
+    float esp2 = pow(max(dot(n, h), 0.), 160.);
+    float espess = pow(max(dot(n, v), 0.), 1.4);
+    vec3 dentro = mix(NEON * 1.1, BER * .6, espess);
+    float borda = pow(1. - max(dot(n, v), 0.), 4.);
+    col = dentro * (.35 + .45 * dif) + NEON * borda * 1.6 + vec3(1., .9, 1.) * borda * .25 + esp2 * 1.4 + OURO * pow(max(dot(n, Lr), 0.), 6.) * .7;
+  }
+  col = col / (1. + col * .25);
+  col = pow(col, vec3(.95));
+  gl_FragColor = vec4(col, 1.);
+}`;
+const quadros = [];
+document.querySelectorAll('canvas[data-mat]').forEach(cv => {
+  const gl = cv.getContext('webgl', { premultipliedAlpha: true, alpha: true, antialias: false });
+  if (!gl) return;
+  const sh = (t, s) => { const o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); if (!gl.getShaderParameter(o, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o)); return o; };
+  const pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(pr); gl.useProgram(pr);
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  const l = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(l); gl.vertexAttribPointer(l, 2, gl.FLOAT, false, 0, 0);
+  const U = { r: gl.getUniformLocation(pr, 'uRes'), t: gl.getUniformLocation(pr, 'uT'), m: gl.getUniformLocation(pr, 'uMat'), g: gl.getUniformLocation(pr, 'uGiro') };
+  gl.uniform1i(U.m, +cv.dataset.mat);
+  const q = { cv, gl, U, visivel: true, gx: 0, gy: 0, tx: 0, ty: 0, arrasto: null, base: +cv.dataset.mat * 1.3 };
+  const pos = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) / r.width - .5, (e.clientY - r.top) / r.height - .5]; };
+  cv.addEventListener('pointermove', e => { const [x, y] = pos(e); if (q.arrasto) { q.base += (x - q.arrasto) * 4; q.arrasto = x; } q.ty = y * .5; q.tx = x * .6; });
+  cv.addEventListener('pointerdown', e => { q.arrasto = pos(e)[0]; });
+  addEventListener('pointerup', () => { q.arrasto = null; });
+  cv.addEventListener('pointerleave', () => { q.tx = 0; q.ty = 0; });
+  new IntersectionObserver(es => es.forEach(en => q.visivel = en.isIntersecting)).observe(cv);
+  quadros.push(q);
+});
+function tam() {
+  for (const q of quadros) {
+    const r = q.cv.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 1.5);
+    q.cv.width = Math.max(2, Math.round(r.width * dpr)); q.cv.height = Math.max(2, Math.round(r.height * dpr));
+    q.gl.viewport(0, 0, q.cv.width, q.cv.height);
+  }
+}
+addEventListener('resize', tam); tam();
+let t0 = performance.now(), ult = t0;
+function quadro(agora) {
+  const dt = Math.min(.05, (agora - ult) / 1000); ult = agora;
+  const t = reduz ? 0 : (agora - t0) / 1000;
+  for (const q of quadros) {
+    if (!q.visivel) continue;
+    if (!reduz && !q.arrasto) q.base += dt * .35;
+    q.gx += (q.tx - q.gx) * (1 - Math.exp(-dt * 4)); q.gy += (q.ty - q.gy) * (1 - Math.exp(-dt * 4));
+    q.gl.uniform2f(q.U.r, q.cv.width, q.cv.height); q.gl.uniform1f(q.U.t, t);
+    q.gl.uniform2f(q.U.g, q.base + q.gx, -.12 + q.gy);
+    q.gl.clearColor(0, 0, 0, 0); q.gl.clear(q.gl.COLOR_BUFFER_BIT);
+    q.gl.drawArrays(q.gl.TRIANGLES, 0, 3);
+  }
+  requestAnimationFrame(quadro);
+}
+requestAnimationFrame(quadro);
+})();
+</script>

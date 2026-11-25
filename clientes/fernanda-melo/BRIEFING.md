@@ -131,3 +131,9 @@ Prints em `referencias/ref-*.png`.
 - **Strop (barbearia)**: nome gigante quebrado ("STR / OP") com a foto no meio e **textura de mármore dentro das letras**; fotos encaixadas no meio do texto; tabela de preços grande, estilo placar; editorial preto e branco.
 - **Butter (pin)**: hero de cor chapada forte e tipografia enorme.
 - Leitura do JARVIS: "nuvem roxa 3D" provavelmente = **objeto de nuvem fofa roxa** (estilo DY), não céu realista. AGUARDANDO o senhor confirmar.
+
+## Nuvem = OBJETO 3D compacto (26/11/2026)
+- Senhor: **nuvem A** (estilo Daddy Yankee). "Algo bem estético, que não sei pôr em palavras. 3D bem compacto. **Esqueça tudo que parece névoa.** Tem que se encaixar no site, não pode ser genérico."
+- Névoa, céu e vídeo de nuvem real (`nuvem-roxa.html`, `corte.html`, `laboratorio-nevoa.html`) ficam só como histórico.
+- `mostruario-nuvem.html` → https://claude.ai/artifact/WZQjfk3Qp97ZRsV3TeEUjm · a mesma nuvem 3D compacta (feita em código, gira e responde ao mouse/dedo) em 4 acabamentos do salão: **A mármore roxo com veios de ouro** (fundo branco) · **B vinil inflável brilhante** (fundo Deep Purple, nome em ouro, estilo DY) · **C veludo fosco + aro de luz dourada** (o espelho do salão) · **D vidro roxo com contorno neon** (a vitrine). Print: `referencias/mostruario-nuvem-v1-print.png`.
+- PENDENTE: o senhor escolher a letra (ou misturar) antes de qualquer abertura.
