@@ -188,3 +188,6 @@ Prints em `referencias/ref-*.png`.
 - Gostou igualmente de: fita de seda roxa, veludo revelando o nome, cromo líquido — e pediu "escolha o mais moderno; não quero perder mais tempo". JARVIS escolheu **cromo líquido** no topo; **cristal prismático** guardado para uma seção abaixo. Fita/veludo descartados (tecido em código fica com cara de efeito).
 - `cromo.html` → https://claude.ai/artifact/NCPbX81CJW96ykxpXRkKhH · Three.js r128: esfera que vira metal líquido (deformação por ruído na placa de vídeo, normais calculadas no shader), metal espelhado com verniz, estúdio de luz próprio (faixas brancas, painéis Deep Purple, berinjela e ouro) refletido no cromo; gira e respira devagar, segue o mouse de leve; nome gigante em ouro atrás; fundo branco com textura sutil. Print: `referencias/cromo-v1-print.png`.
 - Próximo, se aprovado: transformação na rolagem perto do fim (o cromo se molda / derrete no botão Agendar).
+
+## Passagem para o JARVIS 11 (26/11/2026)
+Resumo oficial do que está decidido e reprovado: `PASSAGEM-JARVIS-11.md` (raiz do repositório).
