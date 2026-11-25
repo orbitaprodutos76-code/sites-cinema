@@ -122,3 +122,12 @@ Conceito: tempestade revela, pausa, raio-navalha, a nuvem se parte, branco.
 - Corte v1: o senhor disse **"ainda não é isso que eu quero, acho que você não entendeu ainda"**. A visão dele para a abertura ainda NÃO foi captada.
 - **Amanhã, antes de qualquer código:** pedir 1 a 3 VÍDEOS de referência (reels, sites, cenas de filme) com a sensação da abertura que ele imagina, ou ele descreve em áudio quadro a quadro; devolver em 5 linhas o que foi entendido; só construir depois do "é isso".
 - O que já serve: nuvem real colorizada (`midia/nuvem.*`, shader em `nuvem-roxa.html`), paleta e fontes.
+
+## Referências novas do senhor (26/11/2026) — análise
+Links: vaporgenerator.framer.website · daddyyankee.com · strop-barber.framer.website · pin "Hero animation website" (Butter, fundo amarelo). Paleta Yellow/Onyx/Magenta = **só o jeito do degradê** (fluido, saturado, cores derretendo); as cores continuam Deep Purple × Gold.
+Prints em `referencias/ref-*.png`.
+- **Daddy Yankee ("LA POSTAL")**: fundo de cor chapada, tipografia condensada GIGANTE e uma **nuvem 3D fofa, esculpida como objeto** (algodão/inflável) na frente das letras, com rastro de movimento embaixo. Entrada com tela de carregamento (%) e botão ENTER.
+- **Vapor**: nuvem macia sobre cor chapada que forma e desmancha, com a palavra aparecendo dentro dela.
+- **Strop (barbearia)**: nome gigante quebrado ("STR / OP") com a foto no meio e **textura de mármore dentro das letras**; fotos encaixadas no meio do texto; tabela de preços grande, estilo placar; editorial preto e branco.
+- **Butter (pin)**: hero de cor chapada forte e tipografia enorme.
+- Leitura do JARVIS: "nuvem roxa 3D" provavelmente = **objeto de nuvem fofa roxa** (estilo DY), não céu realista. AGUARDANDO o senhor confirmar.
