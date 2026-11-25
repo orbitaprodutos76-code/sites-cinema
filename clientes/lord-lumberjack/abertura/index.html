@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lord Lumberjack — Abertura</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root { --ambar: #ffcf8a; --bg: #050403; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: #f3eadc; font-family: Inter, system-ui, sans-serif; overflow: hidden; }
+  canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+  .ui { position: fixed; z-index: 5; display: flex; gap: .5rem; bottom: 1.25rem; right: 1.25rem; }
+  .ui button { background: rgb(255 255 255 / .06); color: #f3eadc; border: 1px solid rgb(255 255 255 / .15); border-radius: 999px; padding: .55em 1.1em; font: 600 .8rem Inter, sans-serif; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; backdrop-filter: blur(6px); }
+  .ui button:hover { background: rgb(255 207 138 / .15); }
+  .ui button:focus-visible { outline: 2px solid var(--ambar); outline-offset: 2px; }
+  /* O "site" que aparece depois da abertura (placeholder até termos a foto real da parede) */
+  .site { position: fixed; inset: 0; z-index: 2; display: grid; place-items: end start; padding: clamp(1.5rem, 6vw, 5rem); opacity: 0; pointer-events: none; transition: opacity 1.2s; }
+  .site.on { opacity: 1; pointer-events: auto; }
+  .site__parede { position: absolute; inset: 0; z-index: -1;
+    background: radial-gradient(60% 45% at 50% 30%, rgb(60 38 20 / .35) 0%, rgb(18 12 8 / .25) 55%, rgb(5 4 3 / .55) 100%); }
+  .site__parede::after { content: 'FOTO REAL DA PAREDE COM O LETREIRO ENTRA AQUI'; position: absolute; left: 50%; top: 52%; translate: -50% 0; font: 600 .65rem Inter, sans-serif; letter-spacing: .3em; color: rgb(255 255 255 / .18); white-space: nowrap; }
+  .site h1 { font: 600 clamp(2rem, 5vw, 4rem)/1 Cinzel, Georgia, serif; margin: 0 0 1rem; letter-spacing: .02em; }
+  .site p { color: #b8ab98; margin: 0 0 1.75rem; max-width: 34ch; }
+  .site a { display: inline-block; background: var(--ambar); color: #1a120a; font-weight: 600; text-decoration: none; padding: 1em 1.8em; border-radius: 999px; }
+</style>
+</head>
+<body>
+<canvas id="c" aria-label="Abertura: o letreiro Lord Lumberjack se acende em luzes de LED" role="img"></canvas>
+
+<section class="site" id="site" aria-hidden="true">
+  <div class="site__parede"></div>
+  <div>
+    <h1>Lord Lumberjack</h1>
+    <p>Barbearia de verdade, com hora marcada. Escolha o barbeiro e o horário em segundos.</p>
+    <a href="#agendar">Agendar horário</a>
+  </div>
+</section>
+
+<div class="ui">
+  <button id="som" aria-pressed="false">Som: off</button>
+  <button id="replay">Repetir</button>
+  <button id="pular">Pular</button>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  const cv = document.getElementById('c'), ctx = cv.getContext('2d');
+  const site = document.getElementById('site');
+  const reduz = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---------- Linha do tempo (segundos) ----------
+  const T = { barras: 0.0, inicio: 0.5, flare: 4.3, voa: 5.6, fim: 7.0 };
+
+  let W, H, DPR, dots = [], drops = [], sparks = [], smoke = [], grains = [], led, lctx, t0, raf, acabou = false;
+  let layout; // posição do bloco de texto
+
+  // Sprite de brilho do LED (desenhado uma vez só)
+  function sprite(r, cor) {
+    const c = document.createElement('canvas'), s = r * 2; c.width = c.height = s;
+    const x = c.getContext('2d'), g = x.createRadialGradient(r, r, 0, r, r, r);
+    g.addColorStop(0, 'rgba(255,250,235,1)'); g.addColorStop(.18, cor + '1)'); g.addColorStop(.45, cor + '.35)'); g.addColorStop(1, cor + '0)');
+    x.fillStyle = g; x.fillRect(0, 0, s, s); return c;
+  }
+  const spLed = sprite(32, 'rgba(255,190,110,');
+  const spHalo = sprite(32, 'rgba(255,150,60,');
+
+  function granulado() {
+    grains = [0, 1, 2].map(() => {
+      const c = document.createElement('canvas'); c.width = c.height = 200;
+      const x = c.getContext('2d'), im = x.createImageData(200, 200);
+      for (let i = 0; i < im.data.length; i += 4) { const v = Math.random() * 255; im.data[i] = im.data[i+1] = im.data[i+2] = v; im.data[i+3] = 255; }
+      x.putImageData(im, 0, 0); return ctx.createPattern(c, 'repeat');
+    });
+  }
+
+  // ---------- Monta os pontos de LED a partir do texto ----------
+  function montar() {
+    DPR = Math.min(devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    cv.width = W * DPR; cv.height = H * DPR; ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    led = document.createElement('canvas'); led.width = cv.width; led.height = cv.height;
+    lctx = led.getContext('2d'); lctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    granulado();
+
+    const larg = Math.min(W * .86, 1100);
+    const estreito = W < 600;
+    const fLord = larg * .30, fLumber = fLord * (estreito ? .34 : .26);
+    const step = Math.max(estreito ? 2.4 : 3.2, Math.round(larg / 230 * 10) / 10);
+    const yLord = H * .46, yLumber = yLord + fLord * .62;
+    layout = { cx: W / 2, cy: (yLord - fLord * .7 + yLumber) / 2, floor: yLumber + fLumber * .55, step };
+
+    const off = document.createElement('canvas'); off.width = W; off.height = H;
+    const o = off.getContext('2d', { willReadFrequently: true });
+    const linhas = [
+      { txt: 'LORD', font: `800 ${fLord}px Cinzel, Georgia, serif`, y: yLord, esp: fLord * .06, atraso: 0, vel: 1 },
+      { txt: 'LUMBERJACK', font: `600 ${fLumber}px Cinzel, Georgia, serif`, y: yLumber, esp: fLumber * (estreito ? .18 : .42), atraso: 1.9, vel: 1.9 }
+    ];
+    dots = [];
+    linhas.forEach((ln) => {
+      o.font = ln.font; o.textBaseline = 'alphabetic';
+      const letras = [...ln.txt], largs = letras.map((l) => o.measureText(l).width);
+      const total = largs.reduce((a, b) => a + b, 0) + ln.esp * (letras.length - 1);
+      let x = W / 2 - total / 2;
+      letras.forEach((l, li) => {
+        o.clearRect(0, 0, W, H); o.fillStyle = '#fff'; o.fillText(l, x, ln.y);
+        const x0 = Math.floor(x), x1 = Math.ceil(x + largs[li]), y0 = Math.floor(ln.y - parseFloat(ln.font.split(' ')[1]) * .8), y1 = Math.ceil(ln.y + parseFloat(ln.font.split(' ')[1]) * .3);
+        const im = o.getImageData(x0, y0, x1 - x0, y1 - y0).data, w = x1 - x0;
+        const grade = new Map(), pts = [];
+        for (let gy = 0, yy = y0; yy < y1; yy += step, gy++) for (let gx = 0, xx = x0; xx < x1; xx += step, gx++) {
+          const i = ((Math.round(yy - y0)) * w + Math.round(xx - x0)) * 4 + 3;
+          if (im[i] > 140) { const p = { x: xx, y: yy, gx, gy, d: Infinity }; grade.set(gx + ',' + gy, p); pts.push(p); }
+        }
+        if (!pts.length) { x += largs[li] + ln.esp; return; }
+        // A luz "escorre": entra pelo topo da letra e desce seguindo o traço (busca em largura na grade)
+        const topo = Math.min(...pts.map((p) => p.gy)), fila = pts.filter((p) => p.gy <= topo + 1);
+        fila.forEach((p) => (p.d = 0));
+        for (let qi = 0; qi < fila.length; qi++) {
+          const p = fila[qi];
+          for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) {
+            const n = grade.get((p.gx + dx) + ',' + (p.gy + dy));
+            if (n && n.d === Infinity) { n.d = p.d + (dy > 0 ? 1 : 1.6); fila.push(n); } // descer é mais rápido que subir
+          }
+        }
+        // pedaços soltos da letra (que não encostam no topo) acendem pela distância vertical
+        pts.forEach((p) => { if (p.d === Infinity) p.d = (p.gy - topo) * 1.1; });
+        const inicio = T.inicio + ln.atraso + li * (ln.vel === 1 ? .42 : .12);
+        pts.forEach((p) => {
+          const temBaixo = grade.has(p.gx + ',' + (p.gy + 1));
+          dots.push({
+            x: p.x, y: p.y,
+            on: inicio + p.d * (.022 / ln.vel) + Math.random() * .05,
+            pisca: Math.random() < .12,            // alguns LEDs falham antes de firmar
+            pinga: !temBaixo && Math.random() < .4, // ponta de traço solta gota de luz
+            br: .85 + Math.random() * .15, aceso: false
+          });
+        });
+        x += largs[li] + ln.esp;
+      });
+    });
+    T.flare = Math.max(T.flare, Math.max(...dots.map((d) => d.on)) + .25);
+    T.voa = T.flare + 1.2; T.fim = T.voa + 1.4;
+    smoke = Array.from({ length: 7 }, () => ({ x: Math.random() * W, y: H * (.35 + Math.random() * .5), r: 180 + Math.random() * 260, v: 6 + Math.random() * 14, f: Math.random() * 6 }));
+  }
+
+  // ---------- Som (opcional, gerado na hora) ----------
+  let ac = null, somOn = false, humGain;
+  function ligarSom(on) {
+    somOn = on;
+    document.getElementById('som').textContent = 'Som: ' + (on ? 'on' : 'off');
+    document.getElementById('som').setAttribute('aria-pressed', on);
+    if (on && !ac) {
+      ac = new (window.AudioContext || window.webkitAudioContext)();
+      humGain = ac.createGain(); humGain.gain.value = 0;
+      const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 380;
+      [60, 120, 180].forEach((f, i) => { const o = ac.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f; const g = ac.createGain(); g.gain.value = [.5, .25, .1][i]; o.connect(g).connect(lp); o.start(); });
+      lp.connect(humGain).connect(ac.destination);
+    }
+    if (ac) { ac.resume(); humGain.gain.setTargetAtTime(on ? .035 : 0, ac.currentTime, .3); }
+  }
+  let ultimoClique = 0;
+  function clique(forte) {
+    if (!somOn || !ac || ac.currentTime - ultimoClique < .03) return;
+    ultimoClique = ac.currentTime;
+    const n = ac.createBufferSource(), b = ac.createBuffer(1, 800, ac.sampleRate), d = b.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 4);
+    n.buffer = b; const g = ac.createGain(); g.gain.value = forte ? .25 : .06; n.connect(g).connect(ac.destination); n.start();
+  }
+
+  // ---------- Desenho ----------
+  const ease = (x) => 1 - Math.pow(1 - Math.min(1, Math.max(0, x)), 3);
+  const easeIO = (x) => (x = Math.min(1, Math.max(0, x)), x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+
+  function quadro(now) {
+    raf = requestAnimationFrame(quadro);
+    const t = (now - t0) / 1000;
+    const dt = 1 / 60;
+
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = '#050403'; ctx.fillRect(0, 0, W, H);
+
+    // fumaça quente, bem sutil
+    ctx.globalCompositeOperation = 'lighter';
+    smoke.forEach((s) => {
+      s.x += s.v * dt; if (s.x - s.r > W) s.x = -s.r;
+      const a = .035 + .02 * Math.sin(t * .6 + s.f);
+      const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r);
+      g.addColorStop(0, `rgba(120,80,45,${a})`); g.addColorStop(1, 'rgba(120,80,45,0)');
+      ctx.fillStyle = g; ctx.fillRect(s.x - s.r, s.y - s.r, s.r * 2, s.r * 2);
+    });
+
+    // camada dos LEDs (vai para a tela e para o reflexo)
+    lctx.clearRect(0, 0, W, H);
+    const voo = easeIO((t - T.voa) / (T.fim - T.voa));
+    const flare = t > T.flare ? Math.exp(-(t - T.flare) * 2.2) : 0;
+    lctx.save();
+    // no fim o letreiro sobe e encolhe até a posição do letreiro da parede
+    const alvoY = H * .3, esc = 1 - voo * .55;
+    lctx.translate(layout.cx, layout.cy + (alvoY - layout.cy) * voo); lctx.scale(esc, esc); lctx.translate(-layout.cx, -layout.cy);
+    lctx.globalCompositeOperation = 'lighter';
+    const r = layout.step * 1.05, rh = layout.step * 3.2;
+    for (const d of dots) {
+      let b = 0;
+      if (t >= d.on) {
+        const k = t - d.on;
+        b = ease(k / .12);
+        if (d.pisca && k < .5) b *= (Math.sin(k * 70) > .2 ? 1 : .08);
+        if (!d.aceso) {
+          d.aceso = true; clique(false);
+          if (d.pinga) drops.push({ x: d.x, y: d.y, vy: 20 + Math.random() * 40, vida: 0, dura: .8 + Math.random() * .9 });
+          if (d.pisca && Math.random() < .5) { clique(true); for (let i = 0; i < 5; i++) sparks.push({ x: d.x, y: d.y, vx: (Math.random() - .5) * 260, vy: -Math.random() * 180, vida: 0 }); }
+        }
+      }
+      // LED apagado: pontinho escuro, para mostrar a placa de LED antes de acender
+      if (b < .05) { lctx.globalAlpha = .10; lctx.drawImage(spLed, d.x - r * .6, d.y - r * .6, r * 1.2, r * 1.2); continue; }
+      const a = Math.min(1, b * d.br * (1 + flare * .8) * (.94 + .06 * Math.sin(t * 40 + d.x)));
+      lctx.globalAlpha = a * .10; lctx.drawImage(spHalo, d.x - rh, d.y - rh, rh * 2, rh * 2);
+      lctx.globalAlpha = a; lctx.drawImage(spLed, d.x - r, d.y - r, r * 2, r * 2);
+    }
+    // gotas de luz escorrendo
+    for (let i = drops.length - 1; i >= 0; i--) {
+      const g = drops[i]; g.vida += dt; g.vy += 240 * dt; g.y += g.vy * dt;
+      const a = 1 - g.vida / g.dura; if (a <= 0 || g.y > layout.floor) { drops.splice(i, 1); continue; }
+      lctx.globalAlpha = a * .9; lctx.drawImage(spLed, g.x - r * 1.2, g.y - r * 1.2, r * 2.4, r * 2.4);
+      lctx.globalAlpha = a * .35; lctx.fillStyle = '#ffcf8a'; lctx.fillRect(g.x - .6, g.y - g.vy * .08, 1.2, g.vy * .08);
+    }
+    // faíscas dos estalos
+    for (let i = sparks.length - 1; i >= 0; i--) {
+      const s = sparks[i]; s.vida += dt; s.vy += 500 * dt; s.x += s.vx * dt; s.y += s.vy * dt;
+      if (s.vida > .45) { sparks.splice(i, 1); continue; }
+      lctx.globalAlpha = 1 - s.vida / .45; lctx.drawImage(spLed, s.x - r * .8, s.y - r * .8, r * 1.6, r * 1.6);
+    }
+    lctx.restore();
+    lctx.globalAlpha = 1;
+
+    // compõe: LEDs + reflexo no chão (some ao voar)
+    ctx.drawImage(led, 0, 0, W, H);
+    const refl = (1 - voo) * .22;
+    if (refl > .01) {
+      ctx.save(); ctx.globalAlpha = refl;
+      ctx.beginPath(); ctx.rect(0, layout.floor, W, H - layout.floor); ctx.clip();
+      ctx.translate(0, layout.floor * 2); ctx.scale(1, -1); ctx.drawImage(led, 0, 0, W, H); ctx.restore();
+      ctx.globalCompositeOperation = 'source-over';
+      const gf = ctx.createLinearGradient(0, layout.floor, 0, layout.floor + H * .25);
+      gf.addColorStop(0, 'rgba(5,4,3,0)'); gf.addColorStop(1, 'rgba(5,4,3,1)');
+      ctx.fillStyle = gf; ctx.fillRect(0, layout.floor, W, H - layout.floor);
+    }
+
+    // brilho horizontal (anamórfico) quando a última letra acende
+    if (flare > .01) {
+      ctx.globalCompositeOperation = 'lighter';
+      const y = layout.cy, g = ctx.createLinearGradient(0, 0, W, 0);
+      g.addColorStop(0, 'rgba(255,190,110,0)'); g.addColorStop(.5, `rgba(255,220,170,${.55 * flare})`); g.addColorStop(1, 'rgba(255,190,110,0)');
+      ctx.fillStyle = g; ctx.fillRect(0, y - 1.5, W, 3);
+      const g2 = ctx.createRadialGradient(W / 2, y, 0, W / 2, y, W * .5);
+      g2.addColorStop(0, `rgba(255,180,100,${.18 * flare})`); g2.addColorStop(1, 'rgba(255,180,100,0)');
+      ctx.fillStyle = g2; ctx.fillRect(0, y - W * .5, W, W);
+    }
+
+    // granulado de filme
+    ctx.globalCompositeOperation = 'overlay'; ctx.globalAlpha = .08;
+    ctx.fillStyle = grains[Math.floor(t * 24) % 3]; ctx.fillRect(0, 0, W, H);
+    ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+
+    // vinheta
+    const v = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * .35, W / 2, H / 2, Math.max(W, H) * .75);
+    v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,.75)');
+    ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
+
+    // faixas pretas de cinema: entram no começo, abrem no fim
+    const barra = H * .11 * ease(t / .8) * (1 - voo);
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, barra); ctx.fillRect(0, H - barra, W, barra);
+
+    if (t > T.voa + .6 && !acabou) { acabou = true; site.classList.add('on'); site.setAttribute('aria-hidden', 'false'); }
+    if (t > T.fim + .5 && somOn) humGain.gain.setTargetAtTime(.012, ac.currentTime, .8);
+  }
+
+  function estatico() {
+    // movimento reduzido: tudo aceso, sem animação
+    cancelAnimationFrame(raf);
+    t0 = performance.now() - (T.flare + 3) * 1000;
+    dots.forEach((d) => { d.pisca = false; d.pinga = false; d.aceso = true; });
+    T.voa = 9999; T.fim = 10000;
+    quadro(performance.now()); cancelAnimationFrame(raf);
+    site.classList.add('on'); site.setAttribute('aria-hidden', 'false');
+  }
+
+  function começar() {
+    cancelAnimationFrame(raf);
+    acabou = false; drops = []; sparks = []; site.classList.remove('on'); site.setAttribute('aria-hidden', 'true');
+    T.inicio = .5;
+    montar();
+    if (reduz) return estatico();
+    t0 = performance.now(); raf = requestAnimationFrame(quadro);
+  }
+
+  document.getElementById('replay').onclick = começar;
+  document.getElementById('pular').onclick = () => { t0 = performance.now() - (T.fim + .6) * 1000; dots.forEach((d) => (d.aceso = true)); };
+  document.getElementById('som').onclick = () => ligarSom(!somOn);
+  let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(começar, 250); });
+
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(começar);
+})();
+</script>
+</body>
+</html>
