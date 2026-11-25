@@ -196,6 +196,37 @@ html.livre .caps{display:block}
 .lanterna.on{opacity:1}
 .foto-barbeiro{position:fixed;left:0;top:0;z-index:9;width:min(22vw,260px);aspect-ratio:4/5;border-radius:6px;overflow:hidden;pointer-events:none;opacity:0;transform:scale(.85);transition:opacity .35s,transform .5s var(--sai);box-shadow:0 0 0 1px rgb(109 187 58/.5),0 0 60px rgb(109 187 58/.3)}
 .foto-barbeiro.on{opacity:1;transform:none}.foto-barbeiro img{width:100%;height:100%;object-fit:cover}
+.escolha{padding-top:clamp(4rem,12vh,8rem)}
+.rot0{font:700 .7rem var(--fb);letter-spacing:.32em;text-transform:uppercase;color:var(--verde);margin-bottom:1rem}
+.tit-esc{font:400 clamp(2.6rem,8vw,6.4rem)/.95 var(--fd);text-transform:uppercase;margin-bottom:clamp(2rem,5vh,3rem)}
+.tit-esc em{font-family:var(--fh);font-style:italic;font-weight:500;text-transform:none;color:var(--verde)}
+.capsulas{display:flex;flex-wrap:wrap;gap:.8rem}
+.capsula{position:relative;overflow:hidden;isolation:isolate;border:1px solid rgb(109 187 58/.6);border-radius:99px;background:transparent;color:var(--led);padding:1.05rem 2rem;cursor:pointer;font:400 clamp(1.1rem,2vw,1.5rem) var(--fd);text-transform:uppercase;letter-spacing:.04em;transition:color .25s .15s,box-shadow .4s}
+.capsula b{position:relative;z-index:2;font-weight:400}
+.capsula:hover{box-shadow:0 0 26px rgb(109 187 58/.35)}
+.capsula[aria-selected=true]{color:#000}
+.capsula:focus-visible{outline:2px solid var(--verde);outline-offset:4px}
+.liq{position:absolute;inset:0;z-index:1;transform:translateY(105%)}
+.liq::before{content:'';position:absolute;left:0;right:0;top:12%;bottom:0;background:var(--verde)}
+.liq::after{content:'';position:absolute;left:0;right:0;top:calc(12% - 6px);height:7px;background:radial-gradient(circle at 50% 100%,var(--verde) 5px,transparent 5.6px) 0 0/14px 7px repeat-x;animation:onda-l .9s linear infinite}
+@keyframes onda-l{to{background-position:14px 0}}
+.paineis{position:relative;margin-top:1.6rem;min-height:2rem}
+.painel{position:relative;border-radius:8px;overflow:hidden}
+.painel .tinta{position:absolute;inset:0;background:var(--verde);z-index:2;pointer-events:none;clip-path:circle(0% at var(--ox,10%) 0%)}
+.estilos{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,15rem),1fr));border:1px solid rgb(109 187 58/.35);border-radius:8px;overflow:hidden}
+.estilos .estilo{box-shadow:inset 0 0 0 .5px rgb(109 187 58/.25)}
+.estilo{display:grid;grid-template-rows:auto auto 1fr auto;gap:.35rem;padding:1.4rem 1.3rem 1.2rem;background:#000;color:var(--led);text-decoration:none;min-height:11rem;transition:background .3s}
+.estilo:hover,.estilo:focus-visible{background:#071006}
+.estilo .en{font:400 1.45rem/1.05 var(--fd);text-transform:uppercase}
+.estilo small{font:600 .66rem var(--fb);letter-spacing:.18em;text-transform:uppercase;color:rgb(244 251 239/.45)}
+.estilo .ep{align-self:end;font:400 2.1rem var(--fd);color:var(--verde);text-shadow:0 0 18px rgb(109 187 58/.4)}
+.estilo .ep i{font:600 .75rem var(--fb);font-style:normal;color:rgb(244 251 239/.5);margin-left:.3rem;text-shadow:none}
+.estilo .ep.c{font:italic 500 1.2rem var(--fh);color:rgb(244 251 239/.6);text-shadow:none}
+.estilo .ea{font:700 .64rem var(--fb);letter-spacing:.2em;text-transform:uppercase;color:var(--verde);opacity:.7}
+.estilo:hover .ea{opacity:1}
+.nome .mini{display:none;width:3.4rem;height:auto;aspect-ratio:4/5;object-fit:cover;border-radius:4px;border:1px solid rgb(109 187 58/.5)}
+@media (hover:none){.nome{grid-template-columns:2.2rem 3.4rem 1fr}.nome .mini{display:block}.nome .a{grid-column:3}}
+@media (max-width:760px){.capsula{padding:.85rem 1.4rem}.estilo{min-height:9rem}}
 /* transição de agendar: linha de LED */
 .vai{position:fixed;inset:0;z-index:50;background:#000;display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .25s}
 .vai.on{opacity:1;pointer-events:auto}
@@ -216,6 +247,7 @@ html.livre .caps{display:block}
   .colunas{columns:1}
   .item .ag{display:inline;font:700 .62rem var(--fb);letter-spacing:.16em;text-transform:uppercase;color:var(--verde);margin-left:.6rem}
   .nome{grid-template-columns:2.2rem 1fr}.nome .a{grid-column:2}
+  @media (hover:none){.nome{grid-template-columns:2.2rem 3.4rem 1fr}.nome .a{grid-column:3}}
 }
 @media (prefers-reduced-motion:reduce){.quadro img{transform:none}.conta .barra i,.barras i::after{transition:none}}
 </style>
@@ -243,6 +275,14 @@ html.livre .caps{display:block}
   <a class="cta" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda>Agendar horário</a>
 </main>
 <div class="caps" id="caps">
+<section class="cap escolha" id="escolha" aria-labelledby="h-esc">
+  <p class="rot0">Por onde começar</p>
+  <h2 id="h-esc" class="tit-esc">O que vai ser <em>hoje?</em></h2>
+  <div class="capsulas" role="tablist" aria-label="Serviços"><button class="capsula" role="tab" aria-selected="false" aria-controls="p-corte" id="c-corte"><span class="liq" aria-hidden="true"></span><b>Corte</b></button><button class="capsula" role="tab" aria-selected="false" aria-controls="p-barba" id="c-barba"><span class="liq" aria-hidden="true"></span><b>Barba</b></button><button class="capsula" role="tab" aria-selected="false" aria-controls="p-combos" id="c-combos"><span class="liq" aria-hidden="true"></span><b>Combos</b></button><button class="capsula" role="tab" aria-selected="false" aria-controls="p-quimica" id="c-quimica"><span class="liq" aria-hidden="true"></span><b>Química</b></button><button class="capsula" role="tab" aria-selected="false" aria-controls="p-club" id="c-club"><span class="liq" aria-hidden="true"></span><b>Club Lord</b></button></div>
+  <div class="paineis"><div class="painel" id="p-corte" role="tabpanel" hidden><div class="tinta"></div><div class="estilos"><a class="estilo" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda><span class="en">Corte</span><span class="ep">R$ 55</span><span class="ea">Agendar →</span></a><a class="estilo" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda><span class="en">Corte infantil</span><span class="ep">R$ 55</span><span class="ea">Agendar →</span></a><a class="estilo" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda><span class="en">Pezinho</span><span class="ep">R$ 20</span><span class="ea">Agendar →</span></a><a class="estilo" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda><span class="en">Penteado</span><small>a partir de</small><span class="ep">R$ 20</span><span class="ea">Agendar →</span></a></div></div><div class="painel" id="p-barba" role="tabpanel" hidden><div class="tinta"></div><div class="estilos"><a class="estilo" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda><span class="en">Barba</span><span class="ep">R$ 50</span><span class="ea">Agendar →</span></a><a class="estilo" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda><span class="en">Barba express</span><span class="ep">R$ 40</span><span class="ea">Agendar →</span></a><a class="estilo" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda><span class="en">Barba na cera</span><span class="ep">R$ 70</span><span class="ea">Agendar →</span></a><a class="estilo" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda><span class="en">Barba na linha</span><span class="ep c">Consultar</span><span class="ea">Agendar →</span></a></div></div><div class="painel" id="p-combos" role="tabpanel" hidden><div class="tinta"></div><div class="estilos"><a class="estilo" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda><span class="en">Corte + barba</span><small>60 min</small><span class="ep">R$ 105</span><span class="ea">Agendar →</span></a><a class="estilo" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda><span class="en">Corte + barba express</span><small>60 min</small><span class="ep">R$ 95</span><span class="ea">Agendar →</span></a><a class="estilo" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda><span class="en">Corte + barba + sobrancelha</span><small>60 min</small><span class="ep">R$ 125</span><span class="ea">Agendar →</span></a><a class="estilo" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda><span class="en">Corte + barba express + sobrancelha</span><small>60 min</small><span class="ep">R$ 115</span><span class="ea">Agendar →</span></a><a class="estilo" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda><span class="en">Corte + sobrancelha</span><span class="ep">R$ 75</span><span class="ea">Agendar →</span></a></div></div><div class="painel" id="p-quimica" role="tabpanel" hidden><div class="tinta"></div><div class="estilos"><a class="estilo" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda><span class="en">Platinado</span><small>a partir de</small><span class="ep">R$ 200</span><span class="ea">Agendar →</span></a><a class="estilo" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda><span class="en">Progressiva</span><small>a partir de</small><span class="ep">R$ 100</span><span class="ea">Agendar →</span></a><a class="estilo" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda><span class="en">Relaxamento</span><small>a partir de</small><span class="ep">R$ 50</span><span class="ea">Agendar →</span></a><a class="estilo" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda><span class="en">Luzes</span><span class="ep c">Consultar</span><span class="ea">Agendar →</span></a><a class="estilo" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda><span class="en">Tintura</span><span class="ep c">Consultar</span><span class="ea">Agendar →</span></a><a class="estilo" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda><span class="en">Hidratação</span><span class="ep c">Consultar</span><span class="ea">Agendar →</span></a></div></div><div class="painel" id="p-club" role="tabpanel" hidden><div class="tinta"></div><div class="estilos">
+<a class="estilo" href="https://wa.me/5564999319087?text=Quero%20saber%20do%20Club%20Lord"><span class="en">Club VIP</span><small>Corte e pezinho ilimitados</small><span class="ep">R$ 119,90<i>/mês</i></span><span class="ea">Quero assinar →</span></a>
+<a class="estilo" href="https://wa.me/5564999319087?text=Quero%20saber%20do%20Club%20Lord"><span class="en">Club Premium</span><small>Corte e barba ilimitados</small><span class="ep">R$ 159,90<i>/mês</i></span><span class="ea">Quero assinar →</span></a></div></div></div>
+</section>
 <section class="cap amb" id="ambiente" aria-labelledby="h-amb">
   <div class="cab"><span class="num">01</span><span class="rot">O ambiente <i></i></span><h2 id="h-amb">Não é só cortar o cabelo. <em>É o seu tempo.</em></h2></div>
   <div class="pino"><div class="trilho" id="trilho">
@@ -263,7 +303,7 @@ html.livre .caps{display:block}
 </div></section>
 <section class="cap equipe" id="equipe" aria-labelledby="h-eq">
   <div class="cab"><span class="num">03</span><span class="rot">A equipe <i></i></span><h2 id="h-eq">Escolha quem vai cuidar de você.</h2></div>
-  <ol><li><a class="nome" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda><span class="n">01</span><span class="t">Carlos</span><span class="a">Agendar com ele →</span></a></li><li><a class="nome" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda><span class="n">02</span><span class="t">Felipe Silva</span><span class="a">Agendar com ele →</span></a></li><li><a class="nome" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda><span class="n">03</span><span class="t">Joaquim</span><span class="a">Agendar com ele →</span></a></li><li><a class="nome" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda><span class="n">04</span><span class="t">Júlio César</span><span class="a">Agendar com ele →</span></a></li></ol>
+  <ol><li><a class="nome" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda data-foto="img/barbeiros/d-violao.jpg"><span class="n">01</span><img class="mini" src="img/barbeiros/d-violao.jpg" alt="Foto de Carlos" width="564" height="705" loading="lazy"><span class="t">Carlos</span><span class="a">Agendar com ele →</span></a></li><li><a class="nome" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda data-foto="img/barbeiros/a-barba-camiseta-preta.jpg"><span class="n">02</span><img class="mini" src="img/barbeiros/a-barba-camiseta-preta.jpg" alt="Foto de Felipe Silva" width="564" height="705" loading="lazy"><span class="t">Felipe Silva</span><span class="a">Agendar com ele →</span></a></li><li><a class="nome" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda data-foto="img/barbeiros/c-polo-verde-pulseira.jpg"><span class="n">03</span><img class="mini" src="img/barbeiros/c-polo-verde-pulseira.jpg" alt="Foto de Joaquim" width="564" height="705" loading="lazy"><span class="t">Joaquim</span><span class="a">Agendar com ele →</span></a></li><li><a class="nome" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr" data-agenda data-foto="img/barbeiros/b-cacheado-polo-verde.jpg"><span class="n">04</span><img class="mini" src="img/barbeiros/b-cacheado-polo-verde.jpg" alt="Foto de Júlio César" width="564" height="705" loading="lazy"><span class="t">Júlio César</span><span class="a">Agendar com ele →</span></a></li></ol>
 </section>
 <section class="cap" id="club" aria-labelledby="h-club">
   <div class="cab"><span class="num">04</span><span class="rot">Assinatura <i></i></span><h2 id="h-club">Club <em>Lord</em></h2></div>
@@ -754,6 +794,36 @@ window.iniciaSite=function(){
       a.addEventListener('pointermove',e=>{ xT(e.clientX+30); yT(e.clientY-box.offsetHeight/2); });
     });
   };
+  // ---------- cápsulas: a escolhida enche de líquido verde e derrama abrindo os estilos ----------
+  (()=>{
+    const caps=[...document.querySelectorAll('.capsula')], area=document.querySelector('.paineis'); if(!caps.length) return;
+    let atual=null, ocupado=false, tocou=false;
+    const g=()=>window.gsap;
+    const abrir=(btn,manual)=>{
+      if(ocupado||btn===atual) return; if(manual) tocou=true;
+      const G=g(), painel=document.getElementById(btn.getAttribute('aria-controls'));
+      const ant=atual; atual=btn;
+      caps.forEach(c=>c.setAttribute('aria-selected',c===btn));
+      const mostra=()=>{ document.querySelectorAll('.painel').forEach(x=>x.hidden=x!==painel); };
+      if(!G||reduz){ if(ant) ant.querySelector('.liq').style.transform='translateY(105%)'; btn.querySelector('.liq').style.transform='none'; mostra(); return; }
+      ocupado=true;
+      if(ant) G.to(ant.querySelector('.liq'),{y:0,yPercent:105,duration:.5,ease:'power2.in'});      // a anterior esvazia
+      const r=btn.getBoundingClientRect(), ra=area.getBoundingClientRect();
+      const ox=((r.left+r.width/2-ra.left)/ra.width*100).toFixed(1)+'%';
+      const t=G.timeline({onComplete:()=>{ ocupado=false; }});
+      t.fromTo(btn.querySelector('.liq'),{y:0,yPercent:105},{y:0,yPercent:0,duration:.55,ease:'power2.inOut'})          // enche
+       .add(()=>{ mostra(); painel.style.setProperty('--ox',ox); })
+       .fromTo(painel.querySelector('.tinta'),{clipPath:`circle(0% at ${ox} 0%)`},{clipPath:`circle(160% at ${ox} 0%)`,duration:.5,ease:'power2.out'}) // derrama
+       .fromTo(painel.querySelectorAll('.estilo'),{opacity:0,y:26},{opacity:1,y:0,duration:.5,stagger:.06,ease:'expo.out'},'-=.05')
+       .to(painel.querySelector('.tinta'),{clipPath:`inset(100% 0% 0% 0%)`,duration:.6,ease:'power3.inOut'},'<')        // escorre e revela
+       .add(()=>painel.querySelectorAll('.estilo').forEach((el,k)=>{ const p=el.querySelector('.ep'); if(!p) return;
+          G.timeline({delay:k*.05}).to(p,{opacity:.2,duration:.05}).to(p,{opacity:1,duration:.06}).to(p,{opacity:.4,duration:.04}).to(p,{opacity:1,duration:.08}); }),'<');
+    };
+    caps.forEach(c=>c.addEventListener('click',()=>abrir(c,true)));
+    const padrao=document.getElementById('c-combos');
+    if('IntersectionObserver' in window){ const io=new IntersectionObserver(en=>{ if(en.some(e=>e.isIntersecting)){ io.disconnect(); if(!tocou) setTimeout(()=>abrir(padrao),250); } },{threshold:.35}); io.observe(area.parentElement); }
+    else abrir(padrao);
+  })();
   const inicia=()=>{
     const g=window.gsap, ST=window.ScrollTrigger;
     const tudo=()=>{ document.querySelectorAll('.conta .barra i,.barras i').forEach(i=>i.style.setProperty('--w',getComputedStyle(i).getPropertyValue('--alvo')||'0%')); };

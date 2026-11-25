@@ -108,6 +108,12 @@ Pedidos do senhor sobre a v2: câmera é o que vende ("posso fechar a venda só 
 - Foto do barbeiro ao passar o mouse no nome: mecanismo pronto (`data-foto` em cada `.nome`), **faltam as fotos** (o senhor autorizou, mas o AppBarber bloqueia download automático).
 - Ficaram de fora de propósito (exagero): anel 3D da loja, cartão girando do Club, menu em tela cheia.
 
+## Cápsulas e fotos da equipe (25/11/2026)
+- Ideia do senhor: opções principais na 2ª tela, em cápsulas ("Barba" → modelos de barba; "Corte" → modelos de corte). Feito: seção "O que vai ser hoje?" logo após o topo, com cápsulas Corte, Barba, Combos, Química e Club Lord. Cada uma abre os itens com **nome e preço reais** e link de agendar. Combos abre sozinho na primeira vez que a seção aparece.
+- **Animação de assinatura (escolhida):** a cápsula enche de líquido verde (com ondinha na superfície), o verde derrama pelo painel a partir dela, escorre revelando os itens em cascata, e os preços piscam como LED. A anterior esvazia.
+- **Falta:** a lista de ESTILOS que a Lord faz (degradê, social, navalhado… e de barba). O senhor precisa dizer quais; não inventar. Entram na cápsula Corte/Barba com o preço do serviço base.
+- Fotos dos 4 barbeiros recortadas dos prints do AppBarber (`img/barbeiros/`): Carlos = violão, Felipe Silva = barba/camiseta preta, **Joaquim = polo verde/pulseira/capinha branca**, **Júlio César = cacheado/capinha cinza** (confirmado pelo print da lista). Provisórias: o senhor disse que devem mudar se o projeto fechar. No computador a foto segue o mouse sobre o nome; no celular aparece miniatura ao lado do nome.
+
 ## Material pendente
 - [ ] OK do senhor para baixar as 9 imagens públicas da Lord (o v9 parou esperando isso).
 - [ ] 10 tomadas de vídeo na visita (lista em `POSTAR/TOMADAS-LORD.txt` no PC). A mais importante: **nº 01, letreiro LORD da parede, de frente**. Só filmar com autorização do dono.
