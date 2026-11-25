@@ -1,0 +1,237 @@
+<title>Tinta Fernanda Melo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&display=swap">
+<style>
+/* Teste da tinta: simulação de fluido em tempo real. Tinta Deep Purple que avança para a tela sobre branco-leite. Visual único (claro). */
+:root{--branco:#FFFFFF;--roxo:#6B21A8;--berinjela:#3B0A57;--ouro:#FBBF24;--fb:'Space Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif;color-scheme:light}
+*{box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{margin:0;background:var(--branco);color:var(--berinjela);font-family:var(--fb)}
+#tinta{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+.ui{position:fixed;left:0;right:0;bottom:calc(18px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;align-items:center;gap:.8rem;flex-wrap:wrap;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));pointer-events:none}
+.ui span{font:600 .64rem/1 var(--fb);letter-spacing:.22em;text-transform:uppercase;opacity:.65}
+.ui button{pointer-events:auto;font:600 .66rem/1 var(--fb);letter-spacing:.16em;text-transform:uppercase;cursor:pointer;border-radius:99px;padding:.85em 1.3em;
+  color:var(--berinjela);background:rgb(255 255 255/.85);border:1.5px solid rgb(59 10 87/.25);backdrop-filter:blur(6px);transition:border-color .3s}
+.ui button:hover{border-color:var(--roxo)}
+:focus-visible{outline:3px solid var(--ouro);outline-offset:3px}
+.aviso{position:fixed;inset:0;display:none;place-items:center;text-align:center;padding:2rem}
+</style>
+
+<canvas id="tinta" aria-label="Tinta roxa avançando em direção à tela. Mexa o dedo ou o mouse para mexer na tinta."></canvas>
+<div class="ui"><span>Mexa o dedo ou o mouse na tinta</span><button id="denovo" type="button">Ver de novo</button></div>
+<p class="aviso" id="aviso">Este navegador não conseguiu rodar a simulação. Abra no Chrome, Safari ou Edge atualizados.</p>
+
+<script>
+(() => {
+const cv = document.getElementById('tinta');
+const reduz = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const leve = matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+const gl = cv.getContext('webgl2', { alpha: false, antialias: false, depth: false, stencil: false });
+function falha() { document.getElementById('aviso').style.display = 'grid'; }
+if (!gl) return falha();
+if (!gl.getExtension('EXT_color_buffer_float') && !gl.getExtension('EXT_color_buffer_half_float')) return falha();
+
+const CFG = { simRes: leve ? 96 : 128, dyeRes: leve ? 512 : 896, pressIter: 22, curl: 18, velDiss: .985, dyeDiss: .9985, pressao: .8 };
+
+/* ---------- shaders ---------- */
+const VS = `#version 300 es
+in vec2 aPos; uniform vec2 texelSize; out vec2 vUv, vL, vR, vT, vB;
+void main(){ vUv = aPos * .5 + .5; vL = vUv - vec2(texelSize.x, 0.); vR = vUv + vec2(texelSize.x, 0.); vT = vUv + vec2(0., texelSize.y); vB = vUv - vec2(0., texelSize.y); gl_Position = vec4(aPos, 0., 1.); }`;
+const cab = '#version 300 es\nprecision highp float; precision highp sampler2D;\nin vec2 vUv, vL, vR, vT, vB; out vec4 o;\n';
+const FS = {
+  splat: cab + `uniform sampler2D uTarget; uniform float aspect, radius; uniform vec3 color; uniform vec2 point;
+    void main(){ vec2 p = vUv - point; p.x *= aspect; o = vec4(texture(uTarget, vUv).xyz + exp(-dot(p, p) / radius) * color, 1.); }`,
+  advect: cab + `uniform sampler2D uVelocity, uSource; uniform vec2 texelSize; uniform float dt, dissipation;
+    void main(){ vec2 c = vUv - dt * texture(uVelocity, vUv).xy * texelSize; o = dissipation * texture(uSource, c); }`,
+  divergence: cab + `uniform sampler2D uVelocity;
+    void main(){ float L = texture(uVelocity, vL).x, R = texture(uVelocity, vR).x, T = texture(uVelocity, vT).y, B = texture(uVelocity, vB).y; vec2 C = texture(uVelocity, vUv).xy;
+      if (vL.x < 0.) L = -C.x; if (vR.x > 1.) R = -C.x; if (vT.y > 1.) T = -C.y; if (vB.y < 0.) B = -C.y;
+      o = vec4(.5 * (R - L + T - B), 0., 0., 1.); }`,
+  curl: cab + `uniform sampler2D uVelocity;
+    void main(){ float L = texture(uVelocity, vL).y, R = texture(uVelocity, vR).y, T = texture(uVelocity, vT).x, B = texture(uVelocity, vB).x; o = vec4(.5 * (R - L - T + B), 0., 0., 1.); }`,
+  vorticity: cab + `uniform sampler2D uVelocity, uCurl; uniform float curl, dt;
+    void main(){ float L = texture(uCurl, vL).x, R = texture(uCurl, vR).x, T = texture(uCurl, vT).x, B = texture(uCurl, vB).x, C = texture(uCurl, vUv).x;
+      vec2 f = .5 * vec2(abs(T) - abs(B), abs(R) - abs(L)); f /= length(f) + .0001; f *= curl * C; f.y *= -1.;
+      o = vec4(clamp(texture(uVelocity, vUv).xy + f * dt, -1000., 1000.), 0., 1.); }`,
+  pressure: cab + `uniform sampler2D uPressure, uDivergence;
+    void main(){ float L = texture(uPressure, vL).x, R = texture(uPressure, vR).x, T = texture(uPressure, vT).x, B = texture(uPressure, vB).x;
+      o = vec4((L + R + B + T - texture(uDivergence, vUv).x) * .25, 0., 0., 1.); }`,
+  gradient: cab + `uniform sampler2D uPressure, uVelocity;
+    void main(){ float L = texture(uPressure, vL).x, R = texture(uPressure, vR).x, T = texture(uPressure, vT).x, B = texture(uPressure, vB).x;
+      o = vec4(texture(uVelocity, vUv).xy - vec2(R - L, T - B), 0., 1.); }`,
+  clear: cab + `uniform sampler2D uTexture; uniform float value; void main(){ o = value * texture(uTexture, vUv); }`,
+  display: cab + `uniform sampler2D uDye; uniform vec2 dyeTexel; uniform float zoom;
+    void main(){
+      vec2 uv = .5 + (vUv - .5) / zoom;
+      vec2 e = dyeTexel * 1.5;
+      float d = texture(uDye, uv).r;
+      float dl = texture(uDye, uv - vec2(e.x, 0.)).r, dr = texture(uDye, uv + vec2(e.x, 0.)).r;
+      float db = texture(uDye, uv - vec2(0., e.y)).r, dt = texture(uDye, uv + vec2(0., e.y)).r;
+      vec3 n = normalize(vec3((dl - dr) * 3.5, (db - dt) * 3.5, 1.));
+      float dif = clamp(dot(n, normalize(vec3(-.45, .6, .65))), 0., 1.);
+      float a = 1. - exp(-d * 1.05);
+      vec3 fino = vec3(139., 70., 220.) / 255., claro = vec3(107., 33., 168.) / 255., fundo = vec3(36., 4., 62.) / 255.;
+      vec3 tinta = mix(fino, claro, smoothstep(.15, .9, d));
+      tinta = mix(tinta, fundo, smoothstep(1.2, 3.6, d));
+      tinta *= .55 + .7 * dif;
+      tinta += vec3(.7, .5, 1.) * pow(dif, 10.) * .16 * a;
+      vec3 col = mix(vec3(1.), tinta, a);
+      if (uv.x < 0. || uv.x > 1. || uv.y < 0. || uv.y > 1.) col = vec3(1.);
+      o = vec4(col, 1.);
+    }`
+};
+function compila(tipo, src) { const s = gl.createShader(tipo); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; }
+const vsh = compila(gl.VERTEX_SHADER, VS);
+const P = {};
+for (const k in FS) {
+  const pr = gl.createProgram(); gl.attachShader(pr, vsh); gl.attachShader(pr, compila(gl.FRAGMENT_SHADER, FS[k]));
+  gl.bindAttribLocation(pr, 0, 'aPos'); gl.linkProgram(pr);
+  if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(pr));
+  const U = {}; const n = gl.getProgramParameter(pr, gl.ACTIVE_UNIFORMS);
+  for (let i = 0; i < n; i++) { const nome = gl.getActiveUniform(pr, i).name; U[nome] = gl.getUniformLocation(pr, nome); }
+  P[k] = { pr, U };
+}
+gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, -1, 1, 1, 1, 1, -1]), gl.STATIC_DRAW);
+gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
+gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([0, 1, 2, 0, 2, 3]), gl.STATIC_DRAW);
+gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0); gl.enableVertexAttribArray(0);
+function desenha(alvo) {
+  if (alvo) { gl.viewport(0, 0, alvo.w, alvo.h); gl.bindFramebuffer(gl.FRAMEBUFFER, alvo.fb); }
+  else { gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight); gl.bindFramebuffer(gl.FRAMEBUFFER, null); }
+  gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
+}
+function usa(p) { gl.useProgram(p.pr); return p.U; }
+
+/* ---------- texturas ---------- */
+function fbo(w, h, ifmt, fmt) {
+  gl.activeTexture(gl.TEXTURE0);
+  const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texImage2D(gl.TEXTURE_2D, 0, ifmt, w, h, 0, fmt, gl.HALF_FLOAT, null);
+  const fb = gl.createFramebuffer(); gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, t, 0);
+  if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) throw new Error('fbo');
+  gl.viewport(0, 0, w, h); gl.clearColor(0, 0, 0, 1); gl.clear(gl.COLOR_BUFFER_BIT);
+  return { t, fb, w, h, tx: 1 / w, ty: 1 / h, liga(u) { gl.activeTexture(gl.TEXTURE0 + u); gl.bindTexture(gl.TEXTURE_2D, t); return u; } };
+}
+function duplo(w, h, ifmt, fmt) { let a = fbo(w, h, ifmt, fmt), b = fbo(w, h, ifmt, fmt); return { get r() { return a; }, get w() { return b; }, troca() { [a, b] = [b, a]; } }; }
+function res(base) { const asp = gl.drawingBufferWidth / gl.drawingBufferHeight; const a = asp < 1 ? 1 / asp : asp; const mn = Math.round(base), mx = Math.round(base * a); return asp > 1 ? [mx, mn] : [mn, mx]; }
+let vel, dye, div, curlT, press;
+function cria() {
+  const [sw, sh] = res(CFG.simRes), [dw, dh] = res(CFG.dyeRes);
+  vel = duplo(sw, sh, gl.RG16F, gl.RG); dye = duplo(dw, dh, gl.R16F, gl.RED);
+  div = fbo(sw, sh, gl.R16F, gl.RED); curlT = fbo(sw, sh, gl.R16F, gl.RED); press = duplo(sw, sh, gl.R16F, gl.RED);
+}
+function tam() {
+  const dpr = Math.min(devicePixelRatio || 1, leve ? 1.5 : 2);
+  cv.width = Math.round(innerWidth * dpr); cv.height = Math.round(innerHeight * dpr);
+}
+
+/* ---------- física ---------- */
+function splat(x, y, dx, dy, tinta, raio) {
+  let U = usa(P.splat);
+  gl.uniform1i(U.uTarget, vel.r.liga(0)); gl.uniform1f(U.aspect, cv.width / cv.height);
+  gl.uniform2f(U.point, x, y); gl.uniform3f(U.color, dx, dy, 0); gl.uniform1f(U.radius, raio);
+  desenha(vel.w); vel.troca();
+  if (tinta > 0) {
+    gl.uniform1i(U.uTarget, dye.r.liga(0)); gl.uniform3f(U.color, tinta, 0, 0); gl.uniform1f(U.radius, raio * .9);
+    desenha(dye.w); dye.troca();
+  }
+}
+function passo(dt) {
+  let U = usa(P.curl); gl.uniform2f(U.texelSize, vel.r.tx, vel.r.ty); gl.uniform1i(U.uVelocity, vel.r.liga(0)); desenha(curlT);
+  U = usa(P.vorticity); gl.uniform2f(U.texelSize, vel.r.tx, vel.r.ty); gl.uniform1i(U.uVelocity, vel.r.liga(0)); gl.uniform1i(U.uCurl, curlT.liga(1));
+  gl.uniform1f(U.curl, CFG.curl); gl.uniform1f(U.dt, dt); desenha(vel.w); vel.troca();
+  U = usa(P.divergence); gl.uniform2f(U.texelSize, vel.r.tx, vel.r.ty); gl.uniform1i(U.uVelocity, vel.r.liga(0)); desenha(div);
+  U = usa(P.clear); gl.uniform1i(U.uTexture, press.r.liga(0)); gl.uniform1f(U.value, CFG.pressao); desenha(press.w); press.troca();
+  U = usa(P.pressure); gl.uniform2f(U.texelSize, vel.r.tx, vel.r.ty); gl.uniform1i(U.uDivergence, div.liga(0));
+  for (let i = 0; i < CFG.pressIter; i++) { gl.uniform1i(U.uPressure, press.r.liga(1)); desenha(press.w); press.troca(); }
+  U = usa(P.gradient); gl.uniform2f(U.texelSize, vel.r.tx, vel.r.ty); gl.uniform1i(U.uPressure, press.r.liga(0)); gl.uniform1i(U.uVelocity, vel.r.liga(1)); desenha(vel.w); vel.troca();
+  U = usa(P.advect); gl.uniform2f(U.texelSize, vel.r.tx, vel.r.ty);
+  gl.uniform1i(U.uVelocity, vel.r.liga(0)); gl.uniform1i(U.uSource, vel.r.liga(0)); gl.uniform1f(U.dt, dt); gl.uniform1f(U.dissipation, CFG.velDiss); desenha(vel.w); vel.troca();
+  gl.uniform1i(U.uVelocity, vel.r.liga(0)); gl.uniform1i(U.uSource, dye.r.liga(1)); gl.uniform1f(U.dissipation, CFG.dyeDiss); desenha(dye.w); dye.troca();
+}
+function mostra() {
+  const U = usa(P.display);
+  gl.uniform2f(U.texelSize, 1 / cv.width, 1 / cv.height);
+  gl.uniform1i(U.uDye, dye.r.liga(0)); gl.uniform2f(U.dyeTexel, dye.r.tx, dye.r.ty); gl.uniform1f(U.zoom, zoom);
+  desenha(null);
+}
+
+/* ---------- coreografia: a tinta nasce no fundo e avança para a tela ---------- */
+let zoom = .5, relogio = 0, fila = [];
+const R = (a, b) => a + Math.random() * (b - a);
+function explosao(forca, raio, n, tinta, espalha) {
+  const cx = .5 + R(-.01, .01), cy = .5 + R(-.01, .01);
+  splat(cx, cy, 0, 0, tinta * 1.4, raio * 2.2);
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * Math.PI * 2 + R(-.3, .3), r = R(0, espalha);
+    const asp = cv.width / cv.height;
+    const x = cx + Math.cos(a) * r / asp, y = cy + Math.sin(a) * r;
+    const f = forca * R(.55, 1.15);
+    splat(x, y, Math.cos(a) * f, Math.sin(a) * f, tinta * R(.5, 1), raio * R(.5, 1.2));
+  }
+}
+function roteiro() {
+  fila = [
+    { t: .0, f: () => explosao(900, .00035, 10, 3.2, .01) },
+    { t: .35, f: () => explosao(1500, .0006, 14, 2.6, .025) },
+    { t: .8, f: () => explosao(2200, .0009, 18, 2.2, .05) },
+    { t: 1.35, f: () => explosao(2800, .0012, 20, 1.6, .08) },
+    { t: 2.0, f: () => explosao(2400, .0014, 16, 1.1, .12) }
+  ];
+  relogio = 0; zoom = .45;
+}
+function limpa() { cria(); }
+let proxAmbiente = 4.5;
+function ambiente() {
+  const a = R(0, Math.PI * 2), r = R(.06, .2), asp = cv.width / cv.height;
+  const x = .5 + Math.cos(a) * r / asp, y = .5 + Math.sin(a) * r;
+  const t = a + Math.PI / 2 * (Math.random() < .5 ? 1 : -1);
+  splat(x, y, Math.cos(t) * 260, Math.sin(t) * 260, .25, .0012);
+}
+
+/* ---------- dedo / mouse ---------- */
+const ponteiro = { x: 0, y: 0, ativo: false };
+function noPonteiro(e) {
+  const r = cv.getBoundingClientRect();
+  const x = (e.clientX - r.left) / r.width, y = 1 - (e.clientY - r.top) / r.height;
+  // converte da tela para o espaço da tinta (por causa do zoom)
+  const tx = .5 + (x - .5) / zoom, ty = .5 + (y - .5) / zoom;
+  if (ponteiro.ativo) {
+    const dx = (tx - ponteiro.x) * 5200, dy = (ty - ponteiro.y) * 5200;
+    if (Math.abs(dx) + Math.abs(dy) > .5) splat(tx, ty, dx, dy, .12, .0009 / zoom);
+  }
+  ponteiro.x = tx; ponteiro.y = ty; ponteiro.ativo = true;
+}
+cv.addEventListener('pointermove', noPonteiro);
+cv.addEventListener('pointerdown', e => { ponteiro.ativo = false; noPonteiro(e); });
+cv.addEventListener('pointerleave', () => { ponteiro.ativo = false; });
+document.getElementById('denovo').addEventListener('click', () => { limpa(); roteiro(); });
+
+/* ---------- laço ---------- */
+let ult = performance.now();
+function quadro(agora) {
+  const dt = Math.min(.033, (agora - ult) / 1000); ult = agora;
+  relogio += dt;
+  while (fila.length && fila[0].t <= relogio) fila.shift().f();
+  // a câmera "recebe" a tinta: começa longe e a tinta vem para a tela
+  const alvo = cv.width > cv.height ? 1.2 : .9, k = 1 - Math.exp(-dt * .55);
+  zoom += (alvo - zoom) * k;
+  if (relogio > proxAmbiente) { ambiente(); proxAmbiente = relogio + R(1.6, 3); }
+  passo(dt); mostra();
+  requestAnimationFrame(quadro);
+}
+tam(); cria(); roteiro();
+if (reduz) {
+  for (let i = 0; i < 200; i++) { relogio += 1 / 60; while (fila.length && fila[0].t <= relogio) fila.shift().f(); zoom = 1.1; passo(1 / 60); }
+  mostra();
+} else requestAnimationFrame(quadro);
+addEventListener('resize', () => { tam(); cria(); roteiro(); });
+})();
+</script>

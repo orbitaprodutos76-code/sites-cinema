@@ -171,3 +171,6 @@ Prints em `referencias/ref-*.png`.
   2. **"LOCKED / UNLOCKED"**: texto que se desfaz em fumaça densa e se refaz a partir dela. ⇒ o nome nasce/some na nuvem.
 - Tintas com licença livre no Mixkit (quadros em `referencias/ref-mixkit-tintas.jpg`): #3843 (tinta rosa densa em fundo preto, rolos iguais aos da referência), #149 (amarela/verde densa), #1204/#150 (preta em fundo branco, mais rala).
 - PENDENTE: escolher o caminho (vídeo real pintado de roxo / vídeo exclusivo por IA / simulação em código).
+- Senhor escolheu **C · simulação em código** e esclareceu: **a tinta AVANÇA PARA A TELA, não cai**.
+- `tinta.html` → https://claude.ai/artifact/61Ef7quAU5Vgxr4yHtz97C · simulação de fluido em WebGL 2 (estilo stable fluids: advecção, pressão, vorticidade). A tinta Deep Purple nasce pequena no centro, explode em ondas e cresce com a "câmera" se aproximando (zoom), sobre branco. Rolos com sombra (relevo pela densidade), tons do roxo claro ao berinjela. O dedo/mouse mexe na tinta; depois ela continua viva com redemoinhos lentos. Botão "Ver de novo". Quadros: `referencias/tinta-v1-quadros.png`.
+- Fica para depois: o nome "FERNANDA MELO" nascendo da tinta (estilo vídeo LOCKED).
