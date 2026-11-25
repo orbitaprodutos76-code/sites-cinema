@@ -21,11 +21,12 @@ Barbearia de nome forte na cidade. Entregar algo amador queima o senhor com o me
 3. **Assinatura**: no fim, o letreiro voa e **encaixa no letreiro LORD real da parede** (foto), virando a barbearia de verdade.
 4. Depois de aprovada a abertura: rolagem com capítulos (01 O Ambiente, 02 A Carta…), cardápio de serviços "de grife", espaços para vídeos.
 
-## Protótipo da abertura (25/11/2026, feito na nuvem)
-- Pasta `abertura/` (HTML único). Link privado: https://claude.ai/artifact/GYrvrYwMEkKRo7gCz8s2wh
-- Já tem: painel de LED; luz que entra pelo topo de cada letra e escorre pelo traço; LEDs que falham e estalam com faísca; gotas de luz pingando; fumaça quente; granulado de filme; faixas de cinema; reflexo no chão; brilho horizontal quando acende a última letra; letreiro que sobe e encolhe até a posição do letreiro da parede; site aparece por baixo. Som opcional (zumbido elétrico e estalos, gerados no navegador). Botões Pular e Repetir. Com "reduzir movimento", aparece tudo aceso e parado.
-- **Ainda é provisório:** as letras usam a fonte Cinzel, e não a logo real (falta o vetor). O fundo final é um placeholder até chegar a foto da parede (tomada nº 01).
-- Duração: ~4,5 s até acender tudo, ~7,5 s até o site.
+## Abertura atual (v2, 25/11/2026): simples, verde forte e preto absoluto
+- O senhor cansou da versão LED cheia de efeitos e pediu **algo mais simples, com verde bem forte e preto absoluto**.
+- Pasta `abertura/`. Link privado: https://claude.ai/artifact/GYrvrYwMEkKRo7gCz8s2wh
+- Roteiro (~3 s): uma linha verde corta a tela preta → a linha vira fresta e revela **LORD** em verde (#00ff5e) com brilho → LUMBERJACK entra em branco, fechando o espaçamento → a tela sobe e mostra o site. Botão Pular. Com "reduzir movimento", vai direto pro site.
+- A versão LED anterior fica no histórico do git (commit "adiciona protótipo da abertura em LED"), caso o senhor queira algum pedaço dela.
+- Ainda é provisório: fonte Cinzel no lugar da logo real, e um espaço reservado onde entra a foto.
 
 ## Material pendente
 - [ ] OK do senhor para baixar as 9 imagens públicas da Lord (o v9 parou esperando isso).
