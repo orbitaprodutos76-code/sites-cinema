@@ -176,3 +176,8 @@ Prints em `referencias/ref-*.png`.
 - Fica para depois: o nome "FERNANDA MELO" nascendo da tinta (estilo vídeo LOCKED).
 - **v2 (26/11/2026):** senhor pediu "**algo mais sólido, que avança devagar, menos interativo**". Agora: fonte contínua no centro empurrando por igual para fora durante ~10 s (4 s no celular), pouca vorticidade (rolos grossos, sem marmorizado fino), tinta opaca com relevo macio, zoom só de aproximação (1 → 1,35). Mouse só empurra de leve, sem pingar tinta; sem a frase "mexa o dedo". Mesmo link (versão 2). Quadros: `referencias/tinta-v2-quadros.png`.
 - Ponto fraco: no começo a forma sai com 4 lóbulos (simetria das fontes); no celular a tinta passa das bordas.
+
+## Tinta + nuvem = FUMAÇA (26/11/2026)
+- Senhor: "não quero tinta literal; é a animação principal do site; tinta + nuvem puxado para fumaça". 5 confirmações: **bem densa e escultural · fundo branco · uma massa no centro · câmera lenta · fumaça NA FRENTE do nome** (o nome grande parado, a fumaça rola na frente escondendo e revelando partes).
+- Método: vídeo real + código (simulação não chega no nível). Mostruário `fumacas.html` → https://claude.ai/artifact/M51yECgRVejsU3bA5AtHxf · 6 vídeos do Mixkit (licença livre), cortados em 8 s, pintados de Deep Purple por shader, máscara de "massa no centro", 0,5× de velocidade, na frente de "FERNANDA MELO" em ouro: A #99928 · B #99922 · C #99925 · D #3843 · E #100016 · F #100014. Arquivos em `midia/fumaca/`. Print: `referencias/fumacas-v1-print.png`.
+- PENDENTE: o senhor escolher a letra.

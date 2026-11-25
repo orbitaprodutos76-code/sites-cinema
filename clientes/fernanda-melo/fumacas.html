@@ -1,0 +1,108 @@
+<title>Fumaças Fernanda Melo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+/* Mostruário: seis fumaças reais, pintadas de Deep Purple, em câmera lenta, na frente do nome, sobre branco. Visual único (claro). */
+:root{--branco:#FFFFFF;--roxo:#6B21A8;--berinjela:#3B0A57;--ouro:#FBBF24;--tinta:#1E0B30;
+  --fd:'DM Serif Display',Georgia,serif;--fb:'Space Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:#F6F4F8;color:var(--tinta);font-family:var(--fb);-webkit-font-smoothing:antialiased}
+.pagina{max-width:1400px;margin:0 auto;padding-block:clamp(1.4rem,4vw,2.8rem);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:1rem;margin-bottom:1.5rem}
+header h1{margin:0;font:italic 400 clamp(2rem,5vw,3.2rem)/1 var(--fd);color:var(--roxo)}
+header p{margin:0;max-width:32rem;font-size:.95rem;line-height:1.55;color:#4a3a5c}
+.grade{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(10px,1.3vw,16px)}
+@media (max-width:1000px){.grade{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.grade{grid-template-columns:1fr}}
+figure{margin:0;position:relative;aspect-ratio:4/3;max-width:100%;border-radius:20px;overflow:hidden;background:var(--branco);isolation:isolate}
+.nome{position:absolute;inset:0;display:grid;place-items:center;z-index:1;pointer-events:none;
+  font:400 clamp(2.6rem,6.4vw,5.6rem)/.86 var(--fd);text-transform:uppercase;text-align:center;letter-spacing:-.02em;
+  background:linear-gradient(176deg,#FFE7A0 0%,#F7B92A 30%,#C98712 55%,#9A6510 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+canvas{position:absolute;inset:0;width:100%;height:100%;z-index:2;display:block}
+figcaption{position:absolute;left:14px;right:14px;bottom:12px;z-index:3;display:flex;justify-content:space-between;align-items:center;gap:.6rem;
+  font:600 .62rem/1.2 var(--fb);letter-spacing:.18em;text-transform:uppercase;color:var(--berinjela)}
+.letra{font:700 .72rem/1 var(--fb);border:1.5px solid currentColor;border-radius:99px;padding:.5em .85em;background:rgb(255 255 255/.8)}
+.rodape{margin-top:1.2rem;font-size:.85rem;color:#4a3a5c;line-height:1.5}
+video{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+</style>
+
+<div class="pagina">
+  <header>
+    <h1>Seis fumaças, uma escolha</h1>
+    <p>São fumaças e tintas reais, filmadas em câmera, pintadas de Deep Purple sobre branco e passando em câmera lenta na frente do nome. Aponte a letra que chegou mais perto, ou a mistura ("o volume da B com o ritmo da E").</p>
+  </header>
+  <div class="grade" id="grade"></div>
+  <p class="rodape">Rascunho de escolha: cada vídeo tem 8 segundos em laço. Na versão final, a escolhida ganha laço sem emenda, acabamento de cor e a composição do site. Vídeos do Mixkit, licença livre para uso comercial.</p>
+</div>
+
+<script>
+(() => {
+const LISTA = [
+  ['A', 'f99928', 'Nuvem de tinta que sobe e se espalha'],
+  ['B', 'f99922', 'Colunas densas que viram uma massa'],
+  ['C', 'f99925', 'Coluna grossa e pesada'],
+  ['D', 'f3843', 'Rolos grandes e macios'],
+  ['E', 'f100016', 'Jato denso que se abre'],
+  ['F', 'f100014', 'Fluxo que desce e enche']
+];
+const reduz = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const grade = document.getElementById('grade');
+const FS = `precision highp float;
+uniform sampler2D uV; uniform vec2 uRes, uVid;
+void main(){
+  vec2 uv0 = gl_FragCoord.xy / uRes;
+  float ra = uRes.x / uRes.y, rv = uVid.x / uVid.y;
+  vec2 s = ra > rv ? vec2(1., rv / ra) : vec2(ra / rv, 1.);
+  vec2 uv = (uv0 - .5) * s + .5; uv.y = 1. - uv.y;
+  vec3 c = texture2D(uV, uv).rgb;
+  float d = max(c.r, max(c.g, c.b));
+  // massa no centro: as bordas do quadro se dissolvem no branco
+  vec2 q = (uv0 - .5) * vec2(ra, 1.);
+  float massa = smoothstep(.78, .28, length(q * vec2(.85, 1.05)));
+  float a = smoothstep(.05, .3, d) * massa;
+  vec3 escuro = vec3(30., 4., 52.) / 255., meio = vec3(107., 33., 168.) / 255., claro = vec3(158., 92., 236.) / 255.;
+  vec3 col = mix(escuro, meio, smoothstep(.12, .55, d));
+  col = mix(col, claro, smoothstep(.6, 1., d) * .8);
+  gl_FragColor = vec4(col * a, a);
+}`;
+const qs = [];
+for (const [letra, arq, legenda] of LISTA) {
+  const fig = document.createElement('figure');
+  fig.innerHTML = `<div class="nome" aria-hidden="true">Fernanda<br>Melo</div><canvas aria-label="Fumaça ${letra}: ${legenda}"></canvas>
+    <figcaption><span>${legenda}</span><span class="letra">${letra}</span></figcaption>
+    <video muted playsinline loop preload="auto"><source src="midia/fumaca/${arq}.webm" type="video/webm"><source src="midia/fumaca/${arq}.mp4" type="video/mp4"></video>`;
+  grade.appendChild(fig);
+  const cv = fig.querySelector('canvas'), v = fig.querySelector('video');
+  const gl = cv.getContext('webgl', { premultipliedAlpha: true, alpha: true, antialias: false });
+  if (!gl) continue;
+  const sh = (t, src) => { const o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; };
+  const pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, 'attribute vec2 p; void main(){ gl_Position = vec4(p, 0., 1.); }')); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(pr); gl.useProgram(pr);
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  const l = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(l); gl.vertexAttribPointer(l, 2, gl.FLOAT, false, 0, 0);
+  const tx = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tx);
+  for (const [k, val] of [[gl.TEXTURE_MIN_FILTER, gl.LINEAR], [gl.TEXTURE_MAG_FILTER, gl.LINEAR], [gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE], [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE]]) gl.texParameteri(gl.TEXTURE_2D, k, val);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, 1, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 0]));
+  const q = { cv, v, gl, uR: gl.getUniformLocation(pr, 'uRes'), uV: gl.getUniformLocation(pr, 'uVid'), vis: true };
+  v.addEventListener('loadedmetadata', () => { v.playbackRate = .5; if (reduz) v.currentTime = 4; else { const p = v.play(); if (p) p.catch(() => {}); } });
+  new IntersectionObserver(es => es.forEach(e => { q.vis = e.isIntersecting; if (!reduz) { if (q.vis) { const p = v.play(); if (p) p.catch(() => {}); } else v.pause(); } })).observe(fig);
+  qs.push(q);
+}
+function tam() { for (const q of qs) { const r = q.cv.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 1.5); q.cv.width = Math.max(2, r.width * d | 0); q.cv.height = Math.max(2, r.height * d | 0); q.gl.viewport(0, 0, q.cv.width, q.cv.height); } }
+addEventListener('resize', tam); tam();
+addEventListener('pointerdown', () => { for (const q of qs) if (q.v.paused && q.vis && !reduz) { const p = q.v.play(); if (p) p.catch(() => {}); } }, { once: true });
+function quadro() {
+  for (const q of qs) {
+    if (!q.vis || q.v.readyState < 2) continue;
+    const gl = q.gl;
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, q.v);
+    gl.uniform2f(q.uR, q.cv.width, q.cv.height); gl.uniform2f(q.uV, q.v.videoWidth, q.v.videoHeight);
+    gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.drawArrays(gl.TRIANGLES, 0, 3);
+  }
+  requestAnimationFrame(quadro);
+}
+requestAnimationFrame(quadro);
+})();
+</script>
