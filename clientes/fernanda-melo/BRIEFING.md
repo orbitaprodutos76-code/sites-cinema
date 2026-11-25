@@ -156,3 +156,8 @@ Prints em `referencias/ref-*.png`.
 - `topo.html` → https://claude.ai/artifact/A8WXtYzKBQQYHHmUQ5MW6K · mármore gerado em código (fumaça roxa + veios de ouro), "FERNANDA MELO" em DM Serif Display com degradê de ouro, nuvem 3D em código (corpo largo + cúpulas, roxo fosco-acetinado, sombra no mármore). Respira; com o mouse ela inclina e afunda onde o cursor passa; no toque ela amassa e volta com balanço.
 - Print: `referencias/topo-v1-print.png`. Testado em 1440px e 390px, sem erros.
 - Pontos fracos conhecidos: o mármore ainda parece "mapa de relevo" em alguns trechos e tem poucos veios de ouro; a forma da nuvem pode ganhar mais personalidade.
+
+## Nuvem isolada (26/11/2026)
+- Senhor: fundo **branco com textura sutil** (sem roxo, sem ouro) e **trabalhar a nuvem isoladamente**.
+- `nuvem.html` → https://claude.ai/artifact/9t2Cvg5F6p3j4nBfe21cqP · só a nuvem, grande, sobre branco puro com textura de pedra quase invisível (SVG de ruído em CSS). Mesma nuvem do topo v1 (respira, inclina, afunda no mouse, amassa no toque). Print: `referencias/nuvem-isolada-v1-print.png`.
+- PENDENTE: o senhor dizer o que muda na nuvem (forma, cor, material, movimento).
