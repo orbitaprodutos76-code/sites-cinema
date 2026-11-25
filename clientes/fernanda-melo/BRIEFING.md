@@ -45,14 +45,13 @@ Depende de: quem fez/controla esse app.
 - O senhor escolheu a abertura **2 + 1** (neon → atravessa o vidro → fumaça roxa e veios de ouro no branco-leite) e pediu um **esboço do site** antes de construir.
 - `esboco.html` (link: https://claude.ai/artifact/BifDc1g3yVS2F9WDW7aw1B): abertura em 4 quadros-chave + 7 seções (Topo com espelho dourado, Salão, Cortes com o risco redesenhado em ouro, Serviços em cápsulas com fumaça roxa e preços reais do sistema, Momento Malévola, Equipe, Agendar em 4 passos). Fontes provisórias: Unbounded + Cormorant itálico + Inter.
 
-## Paleta oficial (25/11/2026, revisada) — cores fortes e marcantes
-Pedido do senhor: roxos mais escuros (berinjela), amarelo forte #FFD91F, **nada de lavanda/tons claros**.
+## Paleta oficial (25/11/2026, 3ª revisão) — Deep Purple × Gold
+O senhor mandou a referência "Deep Purple × Gold". Interpretado como as duas cores principais (confirmar se era só inspiração).
 - Branco `#FFFFFF` (fundo dominante)
-- Berinjela `#3B0A57` (roxo principal) · Berinjela fundo `#24063A` · Vinho roxo `#5C0F6B` (moto, medido #5E2C6A)
-- Neon `#8B2CFF` — só em brilho (vitrine, letreiro)
-- Amarelo `#FFD91F` (substitui o dourado claro: aro dos espelhos, nome, veios, bordas) · sombra do amarelo `#B88A00`
-- Preto `#0A0A12` · texto secundário `#4A4458`
-- Fotos com saturação +35% e contraste +8%.
+- **Deep Purple `#6B21A8`** (roxo principal) · Berinjela `#3B0A57` (sombra/fumaça densa) · `#4C1477` (meio-tom da fumaça)
+- **Gold `#FBBF24`** (destaques: aro dos espelhos, nome, veios, bordas) · sombra `#B7791F` · brilho `#F59E0B`
+- Neon `#8B2CFF` só em brilho · Preto `#0A0A12`
+- Histórico: 1ª paleta medida nas fotos (roxo #5B1FD1, lavanda, dourado #FFE48A) → 2ª berinjela + amarelo #FFD91F (sem lavanda) → 3ª esta. **Nada de lavanda/tons pastel.**
 
 ## Plano em etapas (cada uma aprovada pelo senhor antes da próxima)
 0. **Material e acessos** (antes de qualquer design): fotos em alta (salão, moto, espelhos, equipe), logo, cidade/endereço, Instagram, horário oficial, lista de serviços revisada, quem controla o Base44.
