@@ -210,4 +210,4 @@ Resumo oficial do que está decidido e reprovado: `PASSAGEM-JARVIS-11.md` (raiz 
 - Celular: nome em duas linhas, navalha menor cruzando a base de "MELO".
 - Prévia: `navalha.html` → https://claude.ai/artifact/7TiLwdkJs8SC15TtjwT3N2 · prints `referencias/navalha-v1-print-pc.png` e `navalha-v1-print-celular.png`.
 - Limite conhecido: a navalha tem 792 px de largura (vem da imagem da IA); em tela retina grande fica um pouco macia. Dá para refazer em resolução maior se aprovado.
-- PENDENTE: veredito do senhor.
+- **APROVADO pelo senhor (26/11/2026).** Próximo: seções de baixo + transformação no fim (nome vira janela para o salão).
