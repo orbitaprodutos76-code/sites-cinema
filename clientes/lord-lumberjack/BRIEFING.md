@@ -71,6 +71,9 @@ Pedidos do senhor sobre a v2: câmera é o que vende ("posso fechar a venda só 
 ## Preto absoluto (25/11/2026)
 - Pedido do senhor: "manda um preto absoluto". Fundo medido em RGB 0,0,0. A pedra quase não tem cor própria; só aparece de raspão na luz rasante e onde o verde vaza perto das fendas. Granulado de filme só onde há luz.
 
+## Sem textura (25/11/2026)
+- Pedido do senhor: "esqueça as texturas, põe só o preto". A pedra não aparece mais em nada: só existe como molde invisível das fendas, para o líquido ter forma e reflexo. O brilho em volta das letras virou halo de luz no ar (bloom), com os cantos em RGB 0,0,0.
+
 ## Material pendente
 - [ ] OK do senhor para baixar as 9 imagens públicas da Lord (o v9 parou esperando isso).
 - [ ] 10 tomadas de vídeo na visita (lista em `POSTAR/TOMADAS-LORD.txt` no PC). A mais importante: **nº 01, letreiro LORD da parede, de frente**. Só filmar com autorização do dono.

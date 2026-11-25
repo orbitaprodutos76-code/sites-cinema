@@ -136,7 +136,7 @@ vec2 liq(vec2 w,vec4 m){
   return vec2(fill, exp(-max(tl,0.)*9.)*fill);
 }
 // o líquido tem volume: sobe dentro do sulco e faz menisco na ponta
-float height(vec2 w){ vec4 m=mapAt(w); vec2 l=liq(w,m); float g=groove(m.x); return stoneH(w)*.0016*(1.-.85*g) - g*.0062 + l.x*.0047*(1.+.5*l.y); } // dentro da fenda o líquido fica liso
+float height(vec2 w){ vec4 m=mapAt(w); vec2 l=liq(w,m); float g=groove(m.x); return - g*.0062 + l.x*.0047*(1.+.5*l.y); } // dentro da fenda o líquido fica liso
 
 void main(){
   vec2 q=(vUv*2.-1.)*vec2(uRes.x/uRes.y,1.);
@@ -191,6 +191,7 @@ void main(){
   // paredes do sulco ainda vazias pegam o reflexo verde
   col+=sc*g*(1.-fill)*litN*.12;
 
+  col=vec3(0.);                                               // só o preto: nenhuma textura de pedra, só a luz verde
   col+=em;
   col*=smoothstep(.015,.16,-rd.z);
   o=vec4(col,dist);
@@ -214,7 +215,7 @@ void main(){
   vec4 s=texture(uScene,vUv), b=texture(uBlur,vUv), b2=texture(uBlur2,vUv);
   float coc=clamp(abs(s.a-uFocus)*uDof,0.,1.);
   vec3 c=mix(s.rgb,b.rgb,coc);
-  vec3 bloom=max(b.rgb-.55,0.)*.9 + max(b2.rgb-.3,0.)*.55;
+  vec3 bloom=max(b.rgb-.3,0.)*1.0 + max(b2.rgb-.08,0.)*1.1;   // halo de luz no ar (no lugar do brilho que vinha da pedra)
   c+=bloom;
   c=aces(c*uExpo);
   c=pow(c,vec3(.95,.97,1.02))*vec3(.98,1.0,.97);              // leve grade fria/verde nas sombras
