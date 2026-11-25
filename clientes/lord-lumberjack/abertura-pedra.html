@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Lord Lumberjack · Pedra</title>
+<style>
+:root{--bg:#030403}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:var(--bg);overflow:hidden}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas>
+<script>
+(() => {
+'use strict';
+const Q=new URLSearchParams(location.search);
+const cv=document.getElementById('gl');
+const gl=cv.getContext('webgl2',{antialias:false,alpha:false,preserveDrawingBuffer:true});
+if(!gl){ document.body.style.background='#000'; return; }
+const HDR=!!gl.getExtension('EXT_color_buffer_float');
+gl.getExtension('OES_texture_float_linear');
+
+// ---------- shaders ----------
+const VS=`#version 300 es
+in vec2 p; out vec2 vUv; void main(){ vUv=p*.5+.5; gl_Position=vec4(p,0,1); }`;
+
+const SCENE=`#version 300 es
+precision highp float;
+in vec2 vUv; out vec4 o;
+uniform sampler2D uMap; uniform vec2 uRes; uniform vec3 uCam,uTgt; uniform float uFov,uT,uTime;
+uniform vec2 uSpot;
+const float MH=0.82759;            // altura do mapa (largura = 1)
+float h21(vec2 p){ p=fract(p*vec2(123.34,456.21)); p+=dot(p,p+45.32); return fract(p.x*p.y); }
+float vn(vec2 p){ vec2 i=floor(p),f=fract(p); f=f*f*(3.-2.*f);
+  return mix(mix(h21(i),h21(i+vec2(1,0)),f.x),mix(h21(i+vec2(0,1)),h21(i+vec2(1,1)),f.x),f.y); }
+float fbm(vec2 p){ float a=.5,s=0.; for(int i=0;i<5;i++){ s+=a*vn(p); p=p*2.03+17.1; a*=.5; } return s; }
+// pedra: relevo grosso + poros finos
+float stoneH(vec2 w){ return fbm(w*34.)*.65 + fbm(w*150.)*.35 - step(.985,h21(floor(w*900.)))*.6; }
+vec4 mapAt(vec2 w){
+  vec2 uv=vec2(w.x+.5,(MH*.5-w.y)/MH);
+  if(any(lessThan(uv,vec2(0)))||any(greaterThan(uv,vec2(1)))) return vec4(-99.,99.,0.,0.);
+  vec4 m=texture(uMap,uv);
+  float edge=smoothstep(0.,.04,min(min(uv.x,1.-uv.x),min(uv.y,1.-uv.y)));
+  return vec4((m.r*255.-128.)/12., mix(99.,m.g*5.,edge), m.b, edge);   // sdf (px da logo), chegada (s), semente
+}
+float groove(float sdf){ return smoothstep(-.4,2.4,sdf); }          // 0 = pedra, 1 = fundo do sulco
+float height(vec2 w){ vec4 m=mapAt(w); return stoneH(w)*.0016 - groove(m.x)*.0062; }
+
+void main(){
+  vec2 q=(vUv*2.-1.)*vec2(uRes.x/uRes.y,1.);
+  vec3 f=normalize(uTgt-uCam), r=normalize(cross(f,vec3(0,0,1))), u=cross(r,f);
+  vec3 rd=normalize(f + (q.x*r + q.y*u)*tan(uFov*.5));
+  if(rd.z>=-.0001){ o=vec4(0,0,0,10.); return; }
+  float dist=-uCam.z/rd.z; vec3 P=uCam+rd*dist; vec2 w=P.xy;
+
+  vec4 m=mapAt(w); float sdf=m.x, arr=m.y, sd=m.z;
+  float e=.0009;
+  float h0=height(w), hx=height(w+vec2(e,0)), hy=height(w+vec2(0,e));
+  vec3 n=normalize(vec3(-(hx-h0)/e,-(hy-h0)/e,1.));
+  vec3 V=-rd;
+
+  // pedra preta texturizada
+  float tone=fbm(w*22.)*.6+fbm(w*90.)*.4;
+  vec3 alb=vec3(.030,.033,.031)*(.55+.9*tone);
+  float speck=step(.993,h21(floor(w*1400.)));                 // cristais do granito
+  float g=groove(sdf);
+  alb*=1.-.6*g;                                                // fundo do sulco mais escuro
+
+  // luz rasante (chave) num foco de luz sobre a pedra
+  vec3 L=normalize(vec3(-.78,.52,.34));
+  float pool=smoothstep(.85,.05,length(w-uSpot));
+  float dif=max(dot(n,L),0.);
+  vec3 H=normalize(L+V);
+  float spec=pow(max(dot(n,H),0.),70.)*.55 + speck*pow(max(dot(n,H),0.),8.)*2.2;
+  vec3 key=vec3(1.,.97,.92)*1.25*pool;
+  vec3 col=alb*dif*key + spec*key*.35 + alb*.05;
+
+  // luz líquida dentro do sulco
+  float tl=uT-arr;
+  float wob=(vn(w*420.+vec2(0,uTime*1.5))-.5)*.08;
+  float lit=smoothstep(0.,.09,tl+wob);
+  float fill=smoothstep(.15,1.3,sdf)*lit;
+  float core=smoothstep(.8,4.5,sdf);
+  float shimmer=.88+.12*vn(w*260.+vec2(uTime*.7,-uTime*1.3));
+  vec3 em=mix(vec3(.18,.62,.10),vec3(1.,1.,.92),core)*3.2*fill*shimmer;
+  float front=exp(-max(tl,0.)*7.)*fill;                        // ponta quente que avança
+  em+=vec3(1.,1.,.95)*front*3.;
+
+  // a luz vaza e acende a textura da pedra em volta
+  float dOut=max(-sdf,0.);
+  float litN=smoothstep(0.,.35,tl)*m.w;
+  float spill=litN*(exp(-dOut/5.)*.9+exp(-dOut/28.)*.22);
+  vec3 sc=vec3(.32,.85,.18);
+  float faceS=.35+.65*clamp(n.z,0.,1.);
+  col+=alb*sc*spill*14.*faceS + sc*spill*speck*1.5 + sc*spill*pow(max(dot(n,normalize(V+vec3(0,0,1))),0.),40.)*.25;
+  // paredes do sulco ainda vazias pegam o reflexo verde
+  col+=sc*g*(1.-fill)*litN*.12;
+
+  col+=em;
+  o=vec4(col,dist);
+}`;
+
+const COPY=`#version 300 es
+precision highp float; in vec2 vUv; out vec4 o; uniform sampler2D uTex; uniform vec2 uTexel;
+void main(){ vec4 s=vec4(0); for(int i=-1;i<=1;i++) for(int j=-1;j<=1;j++) s+=texture(uTex,vUv+vec2(i,j)*uTexel); o=s/9.; }`;
+
+const BLUR=`#version 300 es
+precision highp float; in vec2 vUv; out vec4 o; uniform sampler2D uTex; uniform vec2 uDir;
+void main(){ float w[5]=float[](.227,.195,.122,.054,.016); vec4 s=texture(uTex,vUv)*w[0];
+  for(int i=1;i<5;i++){ s+=texture(uTex,vUv+uDir*float(i))*w[i]; s+=texture(uTex,vUv-uDir*float(i))*w[i]; } o=s; }`;
+
+const FINAL=`#version 300 es
+precision highp float; in vec2 vUv; out vec4 o;
+uniform sampler2D uScene,uBlur,uBlur2; uniform float uFocus,uDof,uTime,uExpo; uniform vec2 uRes;
+float h(vec2 p){ return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453); }
+vec3 aces(vec3 x){ return clamp((x*(2.51*x+.03))/(x*(2.43*x+.59)+.14),0.,1.); }
+void main(){
+  vec4 s=texture(uScene,vUv), b=texture(uBlur,vUv), b2=texture(uBlur2,vUv);
+  float coc=clamp(abs(s.a-uFocus)*uDof,0.,1.);
+  vec3 c=mix(s.rgb,b.rgb,coc);
+  vec3 bloom=max(b.rgb-.55,0.)*.9 + max(b2.rgb-.3,0.)*.55;
+  c+=bloom;
+  c=aces(c*uExpo);
+  c=pow(c,vec3(.95,.97,1.02))*vec3(.98,1.0,.97);              // leve grade fria/verde nas sombras
+  vec2 d=vUv-.5; d.x*=uRes.x/uRes.y;
+  c*=smoothstep(1.05,.25,length(d));                           // vinheta
+  c+=(h(vUv*uRes+fract(uTime*7.)*91.)-.5)*.045;                // grão
+  o=vec4(c,1);
+}`;
+
+function sh(t,s){ const x=gl.createShader(t); gl.shaderSource(x,s); gl.compileShader(x);
+  if(!gl.getShaderParameter(x,gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(x)); return x; }
+function prog(fs){ const p=gl.createProgram(); gl.attachShader(p,sh(gl.VERTEX_SHADER,VS)); gl.attachShader(p,sh(gl.FRAGMENT_SHADER,fs));
+  gl.bindAttribLocation(p,0,'p'); gl.linkProgram(p); if(!gl.getProgramParameter(p,gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
+  const U={}; const n=gl.getProgramParameter(p,gl.ACTIVE_UNIFORMS); for(let i=0;i<n;i++){ const a=gl.getActiveUniform(p,i); U[a.name]=gl.getUniformLocation(p,a.name); }
+  return {p,U}; }
+const P={scene:prog(SCENE),copy:prog(COPY),blur:prog(BLUR),final:prog(FINAL)};
+const vb=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,vb); gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0,2,gl.FLOAT,false,0,0);
+
+function target(w,h){ const t=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,t);
+  gl.texImage2D(gl.TEXTURE_2D,0,HDR?gl.RGBA16F:gl.RGBA8,w,h,0,gl.RGBA,HDR?gl.HALF_FLOAT:gl.UNSIGNED_BYTE,null);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  const f=gl.createFramebuffer(); gl.bindFramebuffer(gl.FRAMEBUFFER,f); gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,t,0);
+  return {t,f,w,h}; }
+
+let W,H,RT={}, scale=1;
+function resize(){
+  const dpr=Math.min(devicePixelRatio||1,2)*scale;
+  W=Math.round(innerWidth*dpr); H=Math.round(innerHeight*dpr); cv.width=W; cv.height=H;
+  RT.scene=target(W,H);
+  const qw=Math.max(1,W>>2), qh=Math.max(1,H>>2);
+  RT.a=target(qw,qh); RT.b=target(qw,qh);
+  RT.c=target(Math.max(1,W>>4),Math.max(1,H>>4)); RT.d=target(Math.max(1,W>>4),Math.max(1,H>>4));
+}
+
+// ---------- mapa das letras ----------
+const mapTex=gl.createTexture();
+const img=new Image();
+img.onload=()=>{ gl.bindTexture(gl.TEXTURE_2D,mapTex); gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);
+  gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA8,gl.RGBA,gl.UNSIGNED_BYTE,img);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  start(); };
+img.src='img/pedra-mapa.png';
+
+// ---------- câmera do quadro parado ----------
+const SHOT={ cam:[.30,-.58,.27], tgt:[.0,-.12,0], fov:38*Math.PI/180, spot:[-.05,-.02], dof:5.5, expo:1.0 };
+
+function pass(pr,rt){ gl.useProgram(pr.p); gl.bindFramebuffer(gl.FRAMEBUFFER,rt?rt.f:null); gl.viewport(0,0,rt?rt.w:W,rt?rt.h:H); }
+function tex(pr,name,t,unit){ gl.activeTexture(gl.TEXTURE0+unit); gl.bindTexture(gl.TEXTURE_2D,t); gl.uniform1i(pr.U[name],unit); }
+function blurPair(src,tmp,dst,w,h,k){
+  pass(P.blur,tmp); tex(P.blur,'uTex',src.t,0); gl.uniform2f(P.blur.U.uDir,k/w,0); gl.drawArrays(gl.TRIANGLES,0,3);
+  pass(P.blur,dst); tex(P.blur,'uTex',tmp.t,0); gl.uniform2f(P.blur.U.uDir,0,k/h); gl.drawArrays(gl.TRIANGLES,0,3);
+}
+
+function draw(T,time,S){
+  const cam=S.cam, tgt=S.tgt;
+  let s=P.scene; pass(s,RT.scene); tex(s,'uMap',mapTex,0);
+  gl.uniform2f(s.U.uRes,W,H); gl.uniform3fv(s.U.uCam,cam); gl.uniform3fv(s.U.uTgt,tgt);
+  gl.uniform1f(s.U.uFov,S.fov); gl.uniform1f(s.U.uT,T); gl.uniform1f(s.U.uTime,time); gl.uniform2fv(s.U.uSpot,S.spot);
+  gl.drawArrays(gl.TRIANGLES,0,3);
+  // 1/4 e 1/16 de resolução: desfoque (profundidade de campo) e bloom
+  pass(P.copy,RT.a); tex(P.copy,'uTex',RT.scene.t,0); gl.uniform2f(P.copy.U.uTexel,1/W,1/H); gl.drawArrays(gl.TRIANGLES,0,3);
+  blurPair(RT.a,RT.b,RT.a,RT.a.w,RT.a.h,1.4);
+  pass(P.copy,RT.c); tex(P.copy,'uTex',RT.a.t,0); gl.uniform2f(P.copy.U.uTexel,1/RT.a.w,1/RT.a.h); gl.drawArrays(gl.TRIANGLES,0,3);
+  blurPair(RT.c,RT.d,RT.c,RT.c.w,RT.c.h,1.6);
+  const d=Math.hypot(tgt[0]-cam[0],tgt[1]-cam[1],tgt[2]-cam[2]);
+  const f=P.final; pass(f,null);
+  tex(f,'uScene',RT.scene.t,0); tex(f,'uBlur',RT.a.t,1); tex(f,'uBlur2',RT.c.t,2);
+  gl.uniform1f(f.U.uFocus,d); gl.uniform1f(f.U.uDof,S.dof); gl.uniform1f(f.U.uTime,time); gl.uniform1f(f.U.uExpo,S.expo); gl.uniform2f(f.U.uRes,W,H);
+  gl.drawArrays(gl.TRIANGLES,0,3);
+}
+
+function start(){
+  resize();
+  const T=Q.has('t')?parseFloat(Q.get('t')):1.9;
+  if(Q.has('t')){ draw(T,1.3,SHOT); return; }       // quadro parado
+  const t0=performance.now();
+  const loop=now=>{ draw(T,(now-t0)/1000,SHOT); requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+}
+addEventListener('resize',()=>{ if(mapTex) { resize(); } });
+})();
+</script>
+</body>
+</html>

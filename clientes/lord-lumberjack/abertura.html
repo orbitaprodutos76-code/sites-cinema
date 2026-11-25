@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Lord Lumberjack · Abertura</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#040504;--green2:#6dbb3a;--led:#f4fbef;--ink:#f1ede4;--mute:#8f948c;--ff-display:'Bodoni Moda',Georgia,serif;--ff-label:'Manrope',system-ui,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:var(--bg);color:var(--ink);overflow:hidden;font-family:var(--ff-label)}
+
+/* ===== ABERTURA ===== */
+.intro{position:fixed;inset:0;overflow:hidden;background:var(--bg);isolation:isolate}
+.intro canvas,.intro .lyr{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.i-photo{object-fit:cover;object-position:22% 26%;opacity:0;transform-origin:50% 50%;filter:saturate(.85) contrast(1.08) brightness(.82)}
+.i-grade{background:linear-gradient(180deg,rgba(4,5,4,.25),rgba(4,5,4,0) 30%,rgba(4,5,4,.55) 78%,rgba(4,5,4,.92));opacity:0}
+.i-floor{background:linear-gradient(180deg,transparent 0,transparent 62%,rgba(20,26,18,.55) 63%,rgba(8,10,8,.9) 100%)}
+.i-refl{filter:blur(3px);opacity:.2}
+.i-bloom{filter:blur(14px) saturate(1.25) brightness(1.25);mix-blend-mode:screen;opacity:.95}
+.i-fog{inset:-20% -40% !important;width:180% !important;height:140% !important;mix-blend-mode:screen;opacity:0;will-change:transform,opacity}
+.i-flare{position:absolute;left:0;right:0;height:120px;margin-top:-60px;pointer-events:none;opacity:0;mix-blend-mode:screen;
+  background:radial-gradient(closest-side,rgba(255,255,255,.95),rgba(225,255,215,.5) 12%,rgba(120,200,90,.15) 45%,transparent 70%);
+  transform:scaleY(.035) scaleX(.3)}
+.i-flare::after{content:"";position:absolute;left:50%;top:50%;width:90px;height:90px;margin:-45px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.9),rgba(200,255,180,.25) 35%,transparent 70%);transform:scaleY(28)}
+.i-vig{background:radial-gradient(ellipse 75% 70% at 50% 46%,transparent 40%,rgba(0,0,0,.55) 75%,rgba(0,0,0,.92) 100%)}
+.i-grain{inset:-50% !important;width:200% !important;height:200% !important;opacity:.085;background-repeat:repeat}
+.i-bar{position:absolute;left:0;right:0;height:11vh;background:#000;z-index:5}
+.i-bar.t{top:0;transform:translateY(-100%)}.i-bar.b{bottom:0;transform:translateY(100%)}
+
+.i-ui{position:absolute;z-index:8;bottom:max(18px,env(safe-area-inset-bottom));right:16px;display:flex;gap:8px}
+.i-btn{appearance:none;border:1px solid rgba(241,237,228,.22);background:rgba(4,5,4,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  color:var(--ink);font:700 11px/1 var(--ff-label);letter-spacing:.24em;text-transform:uppercase;padding:12px 16px;border-radius:999px;cursor:pointer;
+  transition:border-color .25s,background .25s,opacity .4s}
+.i-btn:hover{border-color:var(--green2);background:rgba(109,187,58,.12)}
+.i-btn:focus-visible{outline:2px solid var(--green2);outline-offset:3px}
+.i-btn svg{width:14px;height:14px;vertical-align:-3px}
+.i-btn.snd{padding:10px 12px}
+.i-done .i-ui .skip{opacity:0;pointer-events:none}
+
+/* tela de aprovação (só no teste) */
+.stage-end{position:fixed;left:16px;bottom:max(18px,env(safe-area-inset-bottom));z-index:9;opacity:0;transform:translateY(10px);transition:opacity .8s,transform .8s;max-width:min(560px,calc(100% - 32px))}
+.stage-end.on{opacity:1;transform:none}
+.stage-end small{display:block;font:700 10px/1 var(--ff-label);letter-spacing:.32em;text-transform:uppercase;color:var(--green2);margin-bottom:10px}
+.stage-end p{font:italic 400 clamp(20px,3.2vw,30px)/1.15 var(--ff-display);margin-bottom:14px}
+@media (max-width:600px){.i-ui{top:max(14px,env(safe-area-inset-top));bottom:auto}}
+</style>
+</head>
+<body>
+
+<div class="intro" id="intro" aria-label="Abertura animada: o letreiro Lord Lumberjack acende em LED">
+  <img class="lyr i-photo" id="iPhoto" src="img/foto-1757354912336.jpg" alt="Salão da Lord Lumberjack com o letreiro LORD na parede">
+  <div class="lyr i-grade" id="iGrade"></div>
+  <div class="lyr i-floor" id="iFloor"></div>
+  <canvas class="i-refl" id="iRefl"></canvas>
+  <canvas class="i-fog lyr" id="iFog1"></canvas>
+  <canvas id="iLed"></canvas>
+  <canvas class="i-bloom" id="iBloom"></canvas>
+  <canvas class="i-fog lyr" id="iFog2"></canvas>
+  <div class="i-flare" id="iFlare"></div>
+  <div class="lyr i-vig"></div>
+  <div class="lyr i-grain" id="iGrain"></div>
+  <div class="i-bar t" id="iBarT"></div><div class="i-bar b" id="iBarB"></div>
+  <div class="i-ui">
+    <button class="i-btn snd" id="iSnd" aria-pressed="false" aria-label="Ligar som da abertura">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 9h4l5-4v14l-5-4H4z"/><path id="iSndWave" d="M17 9l4 6M21 9l-4 6"/></svg>
+    </button>
+    <button class="i-btn skip" id="iSkip">Pular</button>
+  </div>
+</div>
+
+<div class="stage-end" id="stageEnd">
+  <small>Etapa 1 · Abertura</small>
+  <p>O letreiro de LED encaixa no letreiro de verdade.</p>
+  <button class="i-btn" id="again">Ver de novo</button>
+</div>
+
+<div id="logoSrc" style="position:absolute;left:-9999px;top:0;width:300px;height:250px;visibility:hidden" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 218" fill="#fff" fill-rule="evenodd"><g id="mono"><path d="M134.2,4.8 L130.8,8.0 L130.8,8.8 L133.8,11.8 L133.8,15.5 L133.0,16.2 L90.5,16.2 L89.8,17.5 L90.0,18.5 L89.8,34.2 L90.5,35.2 L93.5,35.0 L94.0,34.5 L94.0,32.8 L95.0,29.2 L97.0,26.0 L100.2,23.0 L105.0,20.8 L107.8,20.2 L124.5,20.2 L125.2,21.0 L125.2,25.8 L125.8,26.2 L133.0,23.2 L133.8,23.8 L133.8,31.0 L133.5,31.5 L128.8,33.8 L127.5,34.0 L125.8,35.5 L125.2,36.5 L125.2,43.2 L125.5,43.5 L127.5,43.0 L132.2,40.8 L133.2,40.8 L133.8,41.2 L133.8,47.5 L132.2,48.8 L131.0,49.0 L126.8,51.0 L125.8,52.0 L125.2,53.2 L125.2,59.5 L125.8,60.0 L127.0,59.8 L132.8,57.0 L133.8,57.5 L133.8,64.0 L133.0,64.8 L127.0,67.2 L125.2,69.5 L125.2,76.0 L125.8,76.5 L132.8,73.5 L133.8,74.0 L133.8,80.5 L132.0,81.8 L130.8,82.0 L130.2,82.5 L126.5,84.0 L125.2,86.0 L125.2,92.5 L125.5,92.8 L126.8,92.8 L132.5,90.0 L133.2,90.0 L133.8,90.5 L133.8,97.5 L133.0,98.5 L128.8,100.2 L123.2,100.2 L122.8,99.5 L122.8,32.2 L121.8,29.5 L119.8,27.5 L117.0,26.2 L102.8,26.0 L101.5,26.5 L101.2,27.5 L101.5,29.8 L102.0,30.0 L107.8,30.0 L108.8,30.8 L108.8,61.0 L105.0,65.0 L105.0,65.5 L108.8,69.2 L108.8,99.5 L108.0,100.2 L96.5,100.2 L96.0,100.8 L96.0,103.8 L96.5,104.2 L133.0,104.2 L133.8,105.0 L133.8,108.8 L130.8,112.0 L130.8,112.5 L134.0,115.5 L134.8,115.5 L138.0,112.5 L137.5,111.2 L135.0,108.8 L135.0,105.0 L135.8,104.2 L178.2,104.2 L179.0,103.2 L179.0,86.2 L178.0,85.2 L175.2,85.5 L174.8,86.0 L174.8,87.8 L173.8,91.2 L172.0,94.2 L168.2,97.8 L166.0,99.0 L163.0,100.0 L161.5,100.2 L143.8,100.2 L143.0,99.5 L142.8,94.5 L140.8,95.0 L136.8,97.0 L135.8,97.2 L135.0,96.5 L135.0,89.5 L135.8,88.8 L137.8,87.8 L141.2,86.5 L143.0,85.0 L143.5,84.0 L143.5,77.2 L142.5,77.0 L136.0,80.0 L135.0,79.2 L135.0,73.2 L135.2,72.8 L136.8,71.8 L141.8,69.8 L143.5,67.5 L143.5,61.0 L143.2,60.8 L142.0,60.8 L136.0,63.5 L135.0,63.0 L135.0,56.8 L135.2,56.2 L141.8,53.2 L142.8,52.5 L143.5,51.0 L143.5,44.5 L143.2,44.2 L142.0,44.2 L141.5,44.8 L138.0,46.0 L136.2,47.0 L135.5,47.0 L135.0,46.5 L135.0,40.2 L135.2,39.8 L136.2,39.0 L137.5,38.8 L142.2,36.5 L143.5,34.5 L143.5,28.0 L143.2,27.8 L141.5,28.0 L136.2,30.5 L135.5,30.5 L135.0,30.0 L135.0,23.0 L135.8,22.0 L140.0,20.2 L145.5,20.2 L146.0,21.0 L146.0,88.2 L146.8,90.5 L148.0,92.2 L149.2,93.2 L152.8,94.5 L166.5,94.5 L167.2,94.0 L167.5,93.2 L167.5,91.5 L166.8,90.5 L160.8,90.5 L160.0,89.5 L160.0,59.5 L163.8,55.8 L163.5,54.8 L160.0,51.2 L160.0,21.0 L160.8,20.2 L172.2,20.2 L172.8,19.8 L172.8,16.8 L172.2,16.2 L135.8,16.2 L135.0,15.5 L135.0,11.8 L138.0,8.8 L138.0,8.0 L135.0,5.0 Z"/></g><g id="lord"><path d="M5.8,129.8 L5.5,131.5 L6.0,132.5 L12.0,132.5 L12.8,132.8 L14.0,134.0 L14.2,134.8 L14.2,153.0 L10.2,157.2 L10.2,158.0 L14.2,162.2 L14.2,180.8 L13.8,181.8 L12.2,182.8 L5.2,182.8 L4.8,183.5 L5.0,185.5 L5.8,186.0 L6.2,185.8 L56.5,185.8 L56.8,186.0 L57.5,185.8 L58.0,185.2 L58.0,165.2 L57.5,164.8 L55.5,164.8 L55.0,165.2 L54.8,171.5 L53.8,176.0 L51.8,179.8 L49.5,181.5 L47.0,182.2 L42.2,182.8 L28.2,182.8 L27.2,182.2 L26.2,180.8 L26.0,179.8 L26.0,141.2 L26.2,141.0 L26.0,135.8 L26.5,134.0 L27.8,132.8 L34.5,132.5 L35.0,131.5 L34.8,129.8 L34.5,129.5 L6.2,129.5 Z"/><path d="M91.2,128.0 L86.2,129.0 L80.8,131.0 L74.8,135.0 L70.2,140.0 L67.2,145.5 L65.5,152.2 L65.2,161.2 L66.0,165.8 L68.0,171.5 L71.0,176.2 L74.5,180.0 L79.8,183.8 L86.0,186.2 L91.0,187.2 L99.5,187.5 L104.8,186.8 L109.0,185.5 L115.0,182.5 L117.0,181.0 L121.5,176.5 L123.5,173.5 L125.8,168.8 L127.0,163.8 L127.5,159.5 L127.5,155.5 L126.8,150.0 L124.8,144.0 L121.5,138.8 L117.2,134.5 L113.8,132.0 L109.5,130.0 L103.0,128.2 L98.0,128.0 L97.8,127.8 Z"/><path d="M93.5,131.0 L99.0,131.0 L102.2,131.8 L105.0,133.0 L107.8,135.0 L110.2,138.0 L112.0,141.8 L113.0,145.2 L114.0,151.0 L114.2,160.0 L114.0,160.2 L113.8,166.0 L113.0,168.5 L112.8,171.0 L110.5,176.8 L109.8,178.0 L106.2,181.5 L104.2,182.8 L100.8,184.0 L97.0,184.5 L93.2,184.2 L89.5,183.2 L86.8,181.8 L83.8,179.0 L82.2,177.0 L80.8,173.8 L79.0,166.8 L78.5,162.0 L78.8,150.2 L79.8,144.8 L81.0,140.8 L82.8,137.5 L85.5,134.5 L88.5,132.5 Z"/><path d="M95.8,153.8 L92.5,157.0 L92.2,157.8 L95.8,161.5 L96.5,161.8 L100.2,158.0 L100.2,157.2 L96.8,153.8 Z"/><path d="M132.8,129.8 L132.5,131.8 L133.0,132.5 L139.0,132.5 L139.8,132.8 L141.2,134.5 L141.2,176.2 L141.5,176.5 L141.5,179.5 L141.0,181.5 L139.5,182.8 L133.2,182.8 L132.5,183.5 L132.5,185.0 L133.0,185.8 L133.8,186.0 L134.0,185.8 L162.2,185.8 L162.8,185.2 L162.8,183.2 L162.2,182.8 L155.2,182.8 L154.2,182.2 L153.2,180.8 L153.0,179.5 L153.0,160.5 L153.8,159.2 L155.0,159.0 L158.8,159.5 L161.2,160.2 L164.0,161.8 L165.8,163.5 L168.8,169.0 L172.8,181.5 L175.0,185.2 L177.5,187.8 L182.0,190.0 L187.0,190.5 L190.0,189.5 L192.5,187.5 L192.2,186.8 L188.8,185.0 L185.0,180.8 L183.0,176.5 L180.5,168.8 L177.5,163.0 L174.5,160.0 L172.8,159.0 L170.8,158.5 L169.8,157.8 L170.2,157.0 L171.5,156.8 L174.5,155.2 L178.0,152.8 L179.8,150.8 L181.2,148.0 L182.0,144.8 L181.8,139.5 L180.2,136.0 L178.0,133.5 L173.5,131.0 L169.8,130.0 L165.2,129.5 L133.2,129.5 Z"/><path d="M154.0,132.5 L161.8,132.8 L164.8,133.8 L166.8,135.0 L168.8,137.0 L170.0,139.0 L170.8,141.8 L170.8,144.5 L169.8,148.2 L168.0,151.2 L165.5,153.8 L161.8,155.8 L158.5,156.2 L154.2,156.2 L153.0,155.0 L153.0,136.2 L153.2,136.0 L153.0,133.5 Z"/><path d="M198.0,129.8 L197.8,131.8 L198.2,132.5 L204.2,132.5 L205.0,132.8 L206.5,134.5 L206.5,155.8 L206.8,156.0 L206.8,180.2 L206.0,181.8 L204.5,182.8 L198.5,182.8 L198.0,183.0 L197.8,185.0 L198.2,185.8 L199.0,186.0 L199.2,185.8 L235.0,185.8 L237.0,185.5 L244.8,183.5 L249.8,180.8 L253.5,177.5 L255.8,174.5 L257.8,170.5 L258.8,167.5 L259.8,162.0 L263.5,158.2 L263.5,157.2 L259.8,153.2 L258.8,147.5 L257.5,144.0 L254.8,139.2 L251.8,136.0 L249.0,134.0 L245.2,132.0 L242.5,131.0 L236.5,129.8 L234.0,129.8 L233.8,129.5 L198.2,129.5 Z"/><path d="M219.2,132.5 L232.5,132.8 L236.5,133.8 L238.5,134.8 L241.2,137.2 L242.8,139.2 L244.8,143.0 L246.0,147.0 L247.0,153.2 L247.0,161.5 L246.0,167.5 L243.8,174.0 L241.8,177.2 L239.5,179.8 L236.2,181.8 L230.8,182.8 L220.5,182.8 L219.5,182.2 L218.5,180.8 L218.5,133.2 Z"/></g><g id="lumber"><path d="M35.0,199.8 L34.8,200.2 L34.8,212.8 L35.2,213.5 L42.8,213.5 L43.2,213.2 L43.5,212.2 L42.8,211.8 L37.2,211.8 L36.5,210.8 L36.5,200.2 L36.0,199.8 Z"/><path d="M55.0,199.8 L54.5,200.2 L54.5,209.8 L55.2,211.8 L57.0,213.2 L58.8,213.8 L61.0,213.5 L63.2,211.8 L64.0,210.0 L64.0,200.2 L63.8,199.8 L62.8,199.8 L62.2,200.2 L62.0,210.2 L60.2,211.8 L58.2,211.8 L56.8,210.5 L56.2,209.2 L56.2,200.2 L55.8,199.8 Z"/><path d="M87.5,199.8 L87.0,199.5 L85.8,200.5 L83.2,206.5 L82.2,208.0 L81.2,207.2 L78.2,200.2 L77.8,199.8 L76.2,200.0 L76.2,213.0 L76.8,213.5 L77.5,213.5 L78.0,212.5 L78.0,206.0 L78.5,205.5 L80.0,208.0 L81.0,210.8 L81.8,211.5 L82.8,211.2 L84.8,206.5 L85.5,205.5 L86.2,206.8 L86.0,209.2 L86.2,213.0 L86.8,213.5 L87.8,213.2 L88.0,212.2 L88.0,200.5 Z"/><path d="M100.8,199.8 L100.2,200.2 L100.2,213.0 L101.0,213.5 L106.8,213.5 L108.5,212.8 L109.8,211.0 L109.8,208.5 L108.2,206.8 L109.8,203.8 L109.8,202.8 L109.0,201.0 L107.2,199.8 Z"/><path d="M102.0,202.2 L102.5,201.5 L103.2,201.2 L106.5,201.5 L107.8,202.8 L107.8,204.2 L106.5,205.5 L102.8,205.5 L102.0,204.5 Z"/><path d="M102.0,208.0 L102.8,207.2 L106.2,207.2 L107.8,208.2 L108.0,210.0 L106.2,211.8 L102.8,211.8 L102.0,211.0 Z"/><path d="M130.0,199.8 L129.2,199.5 L122.2,199.8 L121.8,200.2 L121.8,213.0 L122.2,213.5 L129.8,213.5 L130.2,213.2 L130.5,212.5 L129.8,211.8 L124.2,211.8 L123.5,211.0 L123.5,208.2 L124.2,207.5 L128.8,207.5 L129.2,207.0 L129.2,206.2 L128.8,205.8 L124.2,205.8 L123.5,205.0 L123.5,202.2 L124.2,201.5 L129.5,201.5 L130.5,200.5 Z"/><path d="M142.5,199.8 L142.0,200.5 L142.0,212.5 L142.5,213.5 L143.8,213.2 L144.0,208.2 L145.0,207.5 L146.2,207.5 L147.5,208.5 L149.5,212.8 L150.2,213.5 L151.2,213.5 L151.5,212.2 L149.2,208.0 L149.5,207.2 L151.0,205.8 L151.5,204.5 L151.5,202.5 L150.8,201.0 L149.0,199.8 Z"/><path d="M143.8,202.5 L144.5,201.5 L148.2,201.5 L149.0,202.0 L149.5,203.0 L149.5,204.2 L148.2,205.8 L144.5,205.8 L144.0,205.2 Z"/><path d="M169.2,199.8 L168.0,200.0 L168.0,209.2 L167.8,210.2 L166.2,211.8 L164.5,211.8 L164.0,211.2 L163.0,211.2 L162.5,211.8 L162.5,212.5 L164.0,213.5 L165.5,213.8 L167.0,213.5 L168.0,213.0 L169.5,211.0 L169.8,210.2 L169.8,200.2 Z"/><path d="M186.0,199.8 L185.0,201.5 L181.8,211.0 L181.0,212.2 L181.0,213.0 L181.5,213.5 L182.2,213.5 L184.2,210.5 L189.0,210.5 L189.8,211.2 L190.2,212.8 L191.0,213.5 L191.8,213.5 L192.0,212.0 L188.0,201.0 L187.2,199.8 Z"/><path d="M186.2,203.2 L187.2,204.0 L188.5,208.0 L187.8,208.8 L185.5,208.8 L184.8,208.0 L184.8,207.0 Z"/><path d="M206.2,199.5 L204.8,200.0 L203.0,201.8 L202.5,203.0 L202.2,205.0 L202.5,209.8 L203.2,211.8 L204.2,212.8 L205.8,213.5 L207.5,213.8 L210.0,212.8 L211.5,211.0 L211.5,209.8 L211.0,209.5 L210.2,209.8 L208.0,211.8 L205.8,211.5 L205.0,210.8 L204.2,209.0 L204.5,203.2 L205.2,202.0 L206.8,201.2 L208.8,201.8 L210.2,203.5 L211.5,203.5 L211.5,202.2 L210.8,201.0 L209.5,200.0 L208.2,199.5 Z"/><path d="M232.5,199.8 L232.0,199.5 L231.2,199.8 L226.5,205.8 L225.8,205.8 L225.2,204.8 L225.5,200.5 L225.0,199.8 L223.8,200.0 L223.5,200.5 L223.5,212.5 L224.2,213.5 L225.2,213.0 L225.5,209.5 L227.2,207.2 L228.0,207.2 L228.5,207.8 L231.5,213.0 L232.2,213.5 L233.5,213.2 L233.5,212.5 L229.2,205.2 L230.0,203.8 L232.8,200.5 Z"/></g></svg></div>
+
+<script>
+(() => {
+'use strict';
+const Q = new URLSearchParams(location.search);
+const $ = id => document.getElementById(id);
+const clamp = (v,a=0,b=1) => v<a?a:v>b?b:v;
+const lerp = (a,b,t) => a+(b-a)*t;
+const ease = t => t<.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2;
+const easeOut = t => 1-Math.pow(1-t,3);
+const hash = n => { n = Math.sin(n*127.1+311.7)*43758.5453; return n-Math.floor(n); };
+
+// ---- tempos (s) ----
+const T = { end:5.1, lumEnd:3.25, flare:3.22, pulse:[3.4,4.0], cut:[4.0,4.7], fadeLed:[4.68,5.1] };
+if(Q.has('nofade')) T.fadeLed=[98,99];
+
+// ---- letreiro real na foto 600x600 (medido em px) ----
+const PHOTO = { w:600, h:600, posX:.22, posY:.26 };
+const TARGET = {
+  mono:   {x0:183,  y0:115, x1:228,   y1:206},
+  lord:   {x0:139.5,y0:214.5,x1:265,  y1:265.5},
+  lumber: {x0:155.5,y0:275, x1:251,   y1:288}
+};
+
+const intro = $('intro'), cv = $('iLed'), ctx = cv.getContext('2d');
+const bloom = $('iBloom'), bctx = bloom.getContext('2d');
+const refl = $('iRefl'), rctx = refl.getContext('2d');
+const photo = $('iPhoto'), grade = $('iGrade'), floorEl = $('iFloor');
+const fog1 = $('iFog1'), fog2 = $('iFog2'), flare = $('iFlare'), grain = $('iGrain');
+const barT = $('iBarT'), barB = $('iBarB');
+
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let lite = Q.has('lite');
+let W=0,H=0,DPR=1, leds=[], drips=[], tubes=[], groups={}, layout=null;
+
+// ---- sprite de brilho ----
+const glow = (() => { const c=document.createElement('canvas'); c.width=c.height=64; const g=c.getContext('2d');
+  const r=g.createRadialGradient(32,32,0,32,32,32);
+  r.addColorStop(0,'rgba(255,255,250,1)'); r.addColorStop(.14,'rgba(240,255,232,.95)');
+  r.addColorStop(.38,'rgba(150,220,110,.38)'); r.addColorStop(1,'rgba(109,187,58,0)');
+  g.fillStyle=r; g.fillRect(0,0,64,64); return c; })();
+
+// ---- grão de filme ----
+(() => { const c=document.createElement('canvas'); c.width=c.height=256; const g=c.getContext('2d');
+  const d=g.createImageData(256,256);
+  for(let i=0;i<d.data.length;i+=4){ const v=Math.random()*255|0; d.data[i]=d.data[i+1]=d.data[i+2]=v; d.data[i+3]=255; }
+  g.putImageData(d,0,0); grain.style.backgroundImage=`url(${c.toDataURL()})`; })();
+
+// ---- névoa (bolhas suaves pré-renderizadas) ----
+function paintFog(c, seed){
+  c.width=640; c.height=360; const g=c.getContext('2d');
+  for(let i=0;i<46;i++){
+    const x=hash(seed+i)*640, y=120+hash(seed+i*3.1)*220, r=40+hash(seed+i*7.7)*120;
+    const gr=g.createRadialGradient(x,y,0,x,y,r);
+    gr.addColorStop(0,`rgba(150,200,130,${.025+hash(i+seed)*.035})`); gr.addColorStop(1,'rgba(150,200,130,0)');
+    g.fillStyle=gr; g.fillRect(x-r,y-r,r*2,r*2);
+  }
+}
+paintFog(fog1,1); paintFog(fog2,9);
+
+// ---- logo vetorizada → contornos ----
+const src = $('logoSrc');
+const VB = src.querySelector('svg').viewBox.baseVal;
+function readGroup(id){
+  const paths=[...src.querySelectorAll(`#${id} path`)];
+  const boxes=paths.map(p=>p.getBBox());
+  // letra = contornos que se contêm (buracos ficam com a letra de fora)
+  const letter=boxes.map((b,i)=>{ let o=i; boxes.forEach((c,j)=>{ if(j!==i && c.x<=b.x+.5 && c.y<=b.y+.5 && c.x+c.width>=b.x+b.width-.5 && c.y+c.height>=b.y+b.height-.5 && c.width*c.height>boxes[o].width*boxes[o].height) o=j; }); return o; });
+  const outers=[...new Set(letter)].sort((a,b)=>boxes[a].x-boxes[b].x);
+  let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+  boxes.forEach(b=>{x0=Math.min(x0,b.x);y0=Math.min(y0,b.y);x1=Math.max(x1,b.x+b.width);y1=Math.max(y1,b.y+b.height);});
+  return { paths, boxes, letterIdx: letter.map(o=>outers.indexOf(o)), nLetters: outers.length, outerBox: o=>boxes[outers[o]], box:{x0,y0,x1,y1} };
+}
+['mono','lord','lumber'].forEach(id => groups[id]=readGroup(id));
+
+// ---- mapeamento da foto (object-fit: cover) ----
+function photoMap(u,v,S=1){
+  const sc=Math.max(W/PHOTO.w,H/PHOTO.h), iw=PHOTO.w*sc, ih=PHOTO.h*sc;
+  const x=(W-iw)*PHOTO.posX+u*sc, y=(H-ih)*PHOTO.posY+v*sc;
+  return [W/2+(x-W/2)*S, H/2+(y-H/2)*S];
+}
+
+// ---- monta os LEDs pro tamanho da tela ----
+function build(){
+  W=innerWidth; H=innerHeight; DPR=Math.min(devicePixelRatio||1,2);
+  cv.width=W*DPR; cv.height=H*DPR; cv.style.width=W+'px'; cv.style.height=H+'px';
+  bloom.width=Math.ceil(W/4); bloom.height=Math.ceil(H/4); bloom.style.width=W+'px'; bloom.style.height=H+'px';
+  refl.width=Math.ceil(W/2); refl.height=Math.ceil(H/2); refl.style.width=W+'px'; refl.style.height=H+'px';
+  const s=Math.min(Math.min(W*.8,820)/VB.width, H*.52/VB.height);
+  const cx=W/2, cy=H*.47;
+  const ox=cx-VB.width*s/2, oy=cy-VB.height*s/2;
+  const mirrorY=oy+VB.height*s+10;
+  layout={s,cx,cy,ox,oy,mirrorY};
+  refl.style.webkitMaskImage=refl.style.maskImage=`linear-gradient(180deg,transparent ${(mirrorY/H*100).toFixed(1)}%,#000 ${(mirrorY/H*100+1).toFixed(1)}%,transparent ${Math.min(100,mirrorY/H*100+22).toFixed(1)}%)`;
+  const sp=(lite?6:3)/s;   // espaçamento em unidades do SVG (a linha é contínua)
+  leds=[]; drips=[]; tubes=[];
+  let n=0, pc=0;
+  for(const id of ['mono','lord','lumber']){
+    const G=groups[id], B=G.box, tb=TARGET[id];
+    G.k={ sx:(tb.x1-tb.x0)/(B.x1-B.x0), sy:(tb.y1-tb.y0)/(B.y1-B.y0) };
+    G.paths.forEach((p,pi)=>{
+      const L=p.getTotalLength(), cnt=Math.max(4,Math.round(L/sp));
+      const li=G.letterIdx[pi], LB=G.outerBox(li);
+      let pts=[]; const po=hash(++pc*5.1)*.05;
+      for(let i=0;i<cnt;i++){
+        const q=p.getPointAtLength(i/cnt*L);
+        const yN=(q.y-B.y0)/(B.y1-B.y0), xN=(q.x-B.x0)/(B.x1-B.x0), lyN=(q.y-LB.y)/LB.height;
+        let a;   // hora em que a luz chega neste ponto: contínua ao longo do contorno = luz escorrendo
+        if(id==='mono') a=.42+yN*.52+po;                 // desce de cima pra baixo
+        else if(id==='lord') a=1.0+li*.3+lyN*.44+po;     // letra a letra, escorrendo
+        else a=2.62+xN*.52+po*.4;                        // esquerda → direita
+        const led={sx:q.x, sy:q.y, a, g:id, seed:hash(n*3.3)};
+        pts.push(led); leds.push(led); n++;
+      }
+      tubes.push({pts, g:id, first:Math.min(...pts.map(l=>l.a)), seed:hash(pc*7.3)});
+      // gotas: pontos mais baixos de cada contorno (só L e LORD)
+      if(id!=='lumber' && !lite){
+        pts.slice().sort((u,v)=>v.sy-u.sy).slice(0, id==='mono'?2:1).forEach((d,k)=>{
+          if(hash(n+k*9)<.55) drips.push({led:d, len:(18+hash(n+k)*42), dur:.7+hash(n*k+2)*.6});
+        });
+      }
+    });
+  }
+}
+
+// posição na tela de um ponto do SVG, com câmera e corte
+function place(l, cam, cut, S){
+  const {s,cx,cy,ox,oy}=layout;
+  let x=ox+l.sx*s, y=oy+l.sy*s;
+  x=cx+(x-cx)*cam; y=cy+(y-cy)*cam;
+  if(cut>0){
+    const G=groups[l.g], B=G.box, tb=TARGET[l.g];
+    const [tx,ty]=photoMap(tb.x0+(l.sx-B.x0)*G.k.sx, tb.y0+(l.sy-B.y0)*G.k.sy, S);
+    x=lerp(x,tx,cut); y=lerp(y,ty,cut);
+  }
+  return [x,y];
+}
+
+// ---- som (WebAudio, desligado por padrão) ----
+let AC=null, hum=null, soundOn=false, lastTick=0, noiseBuf=null;
+function soundStart(){
+  AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+  AC.resume();
+  if(!noiseBuf){ noiseBuf=AC.createBuffer(1,AC.sampleRate*.02,AC.sampleRate); const d=noiseBuf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*(1-i/d.length); }
+  if(!hum){
+    const g=AC.createGain(); g.gain.value=0; const lp=AC.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=400;
+    [[60,.6],[120,.35],[180,.08]].forEach(([f,v])=>{ const o=AC.createOscillator(), og=AC.createGain(); o.frequency.value=f; og.gain.value=v; o.connect(og).connect(lp); o.start(); });
+    lp.connect(g).connect(AC.destination); hum=g;
+  }
+}
+function tick(){
+  if(!soundOn||!AC) return; const now=AC.currentTime; if(now-lastTick<.035) return; lastTick=now;
+  const s=AC.createBufferSource(); s.buffer=noiseBuf; const bp=AC.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=2600+Math.random()*900; bp.Q.value=4;
+  const g=AC.createGain(); g.gain.value=.11*(.5+Math.random()*.5); s.connect(bp).connect(g).connect(AC.destination); s.start();
+}
+$('iSnd').addEventListener('click', e=>{
+  soundOn=!soundOn; e.currentTarget.setAttribute('aria-pressed',soundOn); e.currentTarget.setAttribute('aria-label',soundOn?'Desligar som':'Ligar som da abertura');
+  $('iSndWave').setAttribute('d', soundOn?'M16 9a4 4 0 010 6M19 6a8 8 0 010 12':'M17 9l4 6M21 9l-4 6');
+  if(soundOn) soundStart(); else if(hum) hum.gain.setTargetAtTime(0,AC.currentTime,.05);
+});
+
+// ---- laço ----
+let t0=0, raf=0, frames=0, fpsT=0, done=false, pausedAt=0;
+const lit=new Uint8Array(200000);
+
+function render(t){
+  const {s,mirrorY}=layout;
+  const cam=1+.06*easeOut(clamp(t/4.2));
+  const cut=ease(clamp((t-T.cut[0])/(T.cut[1]-T.cut[0])));
+  const Sph=lerp(1.07,1,easeOut(clamp((t-T.cut[0])/1.2)));
+  const pulse=t>T.pulse[0]&&t<T.pulse[1] ? Math.sin(Math.PI*(t-T.pulse[0])/(T.pulse[1]-T.pulse[0])) : 0;
+  const ledFade=1-.86*easeOut(clamp((t-T.fadeLed[0])/(T.fadeLed[1]-T.fadeLed[0])));
+  const gain=(1+.5*pulse)*ledFade;
+
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  ctx.globalCompositeOperation='source-over';
+  ctx.clearRect(0,0,W,H);
+  ctx.globalCompositeOperation='lighter';
+  // ---- tubos de LED: linha contínua que acende escorrendo pelo contorno ----
+  const lw=clamp(s/2.4,.75,1.5)*(1+.25*pulse)*(1-.4*cut);
+  const base=14*lw;
+  let newly=0, bright=0, idx=0;
+  ctx.lineJoin='round'; ctx.lineCap='round';
+  const PASS=[[7.5,'rgba(109,187,58,',.16],[3.2,'rgba(175,232,145,',.5],[1.25,'rgba(250,255,246,',1]];
+  for(const tb of tubes){
+    const P=tb.pts, N=P.length, xy=new Array(N), kk=new Float32Array(N);
+    let any=false;
+    for(let i=0;i<N;i++){
+      const dt=t-P[i].a; let k=clamp(dt/.14); k=k*k*(3-2*k); kk[i]=k;
+      if(k>0){ any=true; bright+=k; if(!lit[idx+i]){ lit[idx+i]=1; newly++; } }
+    }
+    if(any){
+      for(let i=0;i<N;i++) xy[i]=place(P[i],cam,cut,Sph);
+      // partida do neon: o tubo inteiro gagueja nos primeiros instantes
+      const since=t-tb.first, flick = since<.34 ? (Math.random()<.4 ? .15 : 1) : 1;
+      const breathe=.95+.05*Math.sin(t*8+tb.seed*30);
+      const A=gain*flick*breathe;
+      // trechos acesos (k≈1) num traço só; a borda que está acendendo vai com alfa parcial
+      for(const [w,col,al] of PASS){
+        ctx.lineWidth=w*lw;
+        ctx.strokeStyle=col+Math.min(1,al*A).toFixed(3)+')';
+        ctx.beginPath(); let open=false;
+        for(let i=0;i<=N;i++){
+          const a=i%N, b=(i+1)%N;
+          if(i<N && kk[a]>=.98 && kk[b]>=.98){ if(!open){ ctx.moveTo(xy[a][0],xy[a][1]); open=true; } ctx.lineTo(xy[b][0],xy[b][1]); }
+          else open=false;
+        }
+        ctx.stroke();
+        for(let i=0;i<N;i++){
+          const b=(i+1)%N, k=Math.min(kk[i],kk[b]);
+          if(k>0 && k<.98){ ctx.globalAlpha=k; ctx.beginPath(); ctx.moveTo(xy[i][0],xy[i][1]); ctx.lineTo(xy[b][0],xy[b][1]); ctx.stroke(); ctx.globalAlpha=1; }
+        }
+      }
+      // gota de luz na ponta que avança (o "escorrer")
+      for(let i=0;i<N;i++){
+        const dt=t-P[i].a;
+        if(dt>0 && dt<.22 && (i%3===0)){
+          const f=1-dt/.22, sz=base*(.8+.9*f);
+          ctx.globalAlpha=Math.min(1,f*A*.9); ctx.drawImage(glow,xy[i][0]-sz/2,xy[i][1]-sz/2,sz,sz);
+        }
+      }
+      ctx.globalAlpha=1;
+    }
+    idx+=N;
+  }
+  // gotas que escorrem
+  for(const d of drips){
+    const dt=t-d.led.a-.1; if(dt<=0||dt>d.dur) continue;
+    const p=dt/d.dur, fall=d.len*s/2.6*easeOut(p), [x,y]=place(d.led,cam,cut,Sph);
+    const steps=6;
+    for(let j=0;j<steps;j++){
+      const f=fall*(j/(steps-1)); const a=(1-p)*(.25+.75*(j/(steps-1)))*gain;
+      const sz=base*(.35+.4*(j/(steps-1)));
+      ctx.globalAlpha=a*.9; ctx.drawImage(glow,x-sz/2,y+f-sz/2,sz,sz);
+    }
+  }
+  ctx.globalAlpha=1;
+  if(newly && t<T.lumEnd+.2){ for(let j=0;j<Math.min(newly,3);j++) if(Math.random()<.35) tick(); }
+
+  const B=clamp(bright/leds.length)*(1+.4*pulse);
+
+  // bloom e reflexo (cópias em baixa resolução)
+  if(!lite){
+    bctx.globalCompositeOperation='copy'; bctx.drawImage(cv,0,0,bloom.width,bloom.height);
+    bloom.style.opacity=(.95*ledFade+.05).toFixed(3);
+  }
+  rctx.setTransform(1,0,0,1,0,0); rctx.clearRect(0,0,refl.width,refl.height);
+  const rs=refl.width/W;
+  rctx.setTransform(rs,0,0,-rs,0,2*mirrorY*rs);
+  rctx.drawImage(cv,0,0,W,H);
+  const floorA=1-clamp((t-T.cut[0])/.45);
+  refl.style.opacity=(.22*floorA).toFixed(3); floorEl.style.opacity=floorA.toFixed(3);
+
+  // névoa iluminada pelo LED
+  if(!lite){
+    const fo=(.03+.42*B)*(1-cut);
+    fog1.style.opacity=fo.toFixed(3); fog2.style.opacity=(fo*.7).toFixed(3);
+    fog1.style.transform=`translate3d(${(-t*14)%400}px,0,0)`; fog2.style.transform=`translate3d(${(t*22)%400-200}px,${Math.sin(t*.7)*6}px,0)`;
+  }
+
+  // flare anamórfico na última letra
+  const fp=(t-T.flare)/.8;
+  if(fp>0&&fp<1){
+    const last=leds[leds.length-1], [, fy]=place(last,cam,cut,Sph);
+    flare.style.top=fy+'px';
+    flare.style.opacity=(Math.sin(Math.PI*fp)).toFixed(3);
+    flare.style.transform=`scaleY(.035) scaleX(${(.3+.9*easeOut(fp)).toFixed(3)})`;
+  } else flare.style.opacity=0;
+
+  // foto, barras de cinema
+  const ph=clamp((t-4.12)/.6);
+  photo.style.opacity=ease(ph).toFixed(3);
+  photo.style.transform=`scale(${Sph.toFixed(4)})`;
+  grade.style.opacity=ph.toFixed(3);
+  const barIn=easeOut(clamp(t/.5)), barOut=ease(clamp((t-T.cut[0])/.6));
+  barT.style.transform=`translateY(${(-100+100*barIn+(-100)*barOut).toFixed(2)}%)`;
+  barB.style.transform=`translateY(${(100-100*barIn+100*barOut).toFixed(2)}%)`;
+
+  // som acompanha o brilho
+  if(soundOn&&hum) hum.gain.setTargetAtTime(Math.min(.05,.012+.04*B)*(t<T.end?1:0),AC.currentTime,.08);
+}
+
+function grainJitter(){ grain.style.transform=`translate3d(${(Math.random()*-50)|0}%,${(Math.random()*-50)|0}%,0)`; }
+
+function loop(now){
+  const t=(now-t0)/1000;
+  frames++;
+  if(frames===6) fpsT=now;
+  if(frames===36 && !lite){ const fps=30000/(now-fpsT); if(fps<40){ lite=true; intro.classList.add('lite'); fog1.style.display=fog2.style.display=bloom.style.display='none'; build(); lit.fill(0);} }
+  if(frames%2===0) grainJitter();
+  render(Math.min(t,T.end+2));
+  if(t>=T.end && !done){ done=true; intro.classList.add('i-done'); finish(); }
+  if(t<T.end+2) raf=requestAnimationFrame(loop);
+  else idle();
+}
+
+// depois do corte: o letreiro respira bem de leve
+function idle(){
+  let last=0;
+  const f=now=>{ if(now-last>66){ last=now; render(T.end+2+Math.sin(now/900)*.0); grainJitter(); } raf=requestAnimationFrame(f); };
+  raf=requestAnimationFrame(f);
+}
+
+function finish(){
+  try{ sessionStorage.setItem('lordIntro','1'); }catch(e){}
+  if(hum&&AC) hum.gain.setTargetAtTime(0,AC.currentTime,.3);
+  $('stageEnd').classList.add('on');
+}
+
+function play(){
+  cancelAnimationFrame(raf); lit.fill(0); frames=0; done=false; intro.classList.remove('i-done'); $('stageEnd').classList.remove('on');
+  t0=performance.now(); raf=requestAnimationFrame(loop);
+}
+function skip(){ t0=performance.now()-T.end*1000; if(!raf) raf=requestAnimationFrame(loop); }
+
+$('iSkip').addEventListener('click', skip);
+$('again').addEventListener('click', play);
+document.addEventListener('keydown', e=>{ if(e.key==='Escape' && !done) skip(); });
+document.addEventListener('visibilitychange', ()=>{
+  if(document.hidden){ pausedAt=performance.now(); cancelAnimationFrame(raf); raf=0; }
+  else if(pausedAt){ t0+=performance.now()-pausedAt; pausedAt=0; raf=requestAnimationFrame(loop); }
+});
+let rz; addEventListener('resize', ()=>{ clearTimeout(rz); rz=setTimeout(()=>{ build(); if(done) render(T.end+2); },120); });
+
+build();
+if(lite){ fog1.style.display=fog2.style.display=bloom.style.display='none'; }
+// regra do site final: toca 1x por sessão; ?intro força. Nesta página de teste toca sempre.
+const alreadySeen = (()=>{ try{ return sessionStorage.getItem('lordIntro')==='1'; }catch(e){ return false; } })();
+const isTestPage = true;
+if(Q.has('t')){ const ft=parseFloat(Q.get('t')); for(let x=0;x<=ft;x+=.05) render(x); render(ft); }   // quadro congelado (revisão)
+else if(reduced || (alreadySeen && !isTestPage && !Q.has('intro'))){ skip(); }
+else play();
+window.__intro={get lite(){return lite}, get n(){return leds.length}, skip, play};
+})();
+</script>
+</body>
+</html>

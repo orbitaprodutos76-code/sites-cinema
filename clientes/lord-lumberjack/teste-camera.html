@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teste câmera 3D · Lord</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Barlow+Condensed:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0e0d;--ink:#f1ede4;--green:#86b85a}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:"Barlow Condensed",sans-serif;overflow:hidden}
+.stage{position:fixed;inset:0;overflow:hidden;perspective:900px}
+/* borda expandida: a mesma foto, esticada e desfocada, preenche a tela larga */
+.fill{position:absolute;inset:-10%;background:var(--u) center/cover;filter:blur(40px) brightness(.55) saturate(.8);transform:scale(1.2)}
+/* a foto real, quadrada, centralizada e grande */
+.photo{position:absolute;left:50%;top:50%;width:min(100vh,100vw);aspect-ratio:1;translate:-50% -50%;
+  -webkit-mask:radial-gradient(closest-side,#000 78%,transparent 100%);mask:radial-gradient(closest-side,#000 78%,transparent 100%)}
+.photo.wide{width:max(100vh,100vw)}
+.layer{position:absolute;inset:0;background:var(--u) center/cover;will-change:transform}
+/* 3 faixas da mesma foto: fundo (parede), meio, frente (chão/poltronas) */
+.l-back {-webkit-mask:linear-gradient(#000 0 40%,transparent 58%);mask:linear-gradient(#000 0 40%,transparent 58%)}
+.l-mid  {-webkit-mask:linear-gradient(transparent 30%,#000 46% 66%,transparent 80%);mask:linear-gradient(transparent 30%,#000 46% 66%,transparent 80%)}
+.l-front{-webkit-mask:linear-gradient(transparent 60%,#000 74%);mask:linear-gradient(transparent 60%,#000 74%)}
+.base{position:absolute;inset:0;background:var(--u) center/cover}
+.vig{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 40%,rgba(13,14,13,.85) 100%),linear-gradient(transparent 55%,rgba(13,14,13,.9))}
+.txt{position:absolute;left:0;right:0;bottom:9vh;text-align:center;pointer-events:none}
+.txt p{letter-spacing:.3em;text-transform:uppercase;font-size:13px;color:var(--green)}
+.txt h1{font:600 clamp(44px,9vw,110px)/1 "Cormorant Garamond",serif;margin-top:10px}
+.txt h1 em{color:var(--green)}
+.ui{position:fixed;top:14px;left:14px;right:14px;display:flex;gap:8px;flex-wrap:wrap;z-index:5}
+.ui button{background:rgba(20,22,20,.8);color:var(--ink);border:1px solid #333;border-radius:99px;padding:9px 14px;font:600 13px "Barlow Condensed";letter-spacing:.15em;text-transform:uppercase;cursor:pointer}
+.ui button.on{background:var(--ink);color:#111}
+</style>
+</head>
+<body>
+<div class="ui">
+  <button id="bCam" class="on">Câmera 3D</button>
+  <button id="bFlat">Sem efeito</button>
+  <button id="bWide">Foto esticada</button>
+</div>
+<div class="stage" id="stage" style="--u:url('https://img-appbarber-appbeleza.s3.amazonaws.com/lordlumberjackb-nxpr%2Festablishment-images%2F1757354912336')">
+  <div class="fill"></div>
+  <div class="photo" id="photo">
+    <div class="base" id="base"></div>
+    <div class="layer l-back"  id="lb"></div>
+    <div class="layer l-mid"   id="lm"></div>
+    <div class="layer l-front" id="lf"></div>
+  </div>
+  <div class="vig"></div>
+  <div class="txt"><p>Lord Lumberjack · Mineiros</p><h1>Seu corte em <em>outro nível.</em></h1></div>
+</div>
+<script>
+const lb=document.getElementById('lb'),lm=document.getElementById('lm'),lf=document.getElementById('lf'),base=document.getElementById('base'),photo=document.getElementById('photo');
+let on=true,mx=0,my=0,tx=0,ty=0;
+const t0=performance.now();
+addEventListener('pointermove',e=>{mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5});
+addEventListener('deviceorientation',e=>{if(e.gamma!=null){mx=Math.max(-.5,Math.min(.5,e.gamma/40));my=Math.max(-.5,Math.min(.5,(e.beta-45)/40))}});
+function frame(now){
+  const t=(now-t0)/1000;
+  // movimento automático: "dolly" lento pra frente e órbita suave
+  const auto=Math.sin(t*.35)*.5;
+  tx+=(mx+auto*.6-tx)*.05; ty+=(my-ty)*.05;
+  const dolly=1.06+.04*Math.sin(t*.22);
+  if(on){
+    base.style.transform=`scale(${dolly}) translate(${tx*-6}px,${ty*-4}px)`;
+    lb.style.transform=`scale(${dolly}) translate(${tx*-6}px,${ty*-4}px)`;
+    lm.style.transform=`scale(${dolly*1.015}) translate(${tx*-14}px,${ty*-8}px)`;
+    lf.style.transform=`scale(${dolly*1.035}) translate(${tx*-26}px,${ty*-14}px)`;
+  }else{[base,lb,lm,lf].forEach(l=>l.style.transform='none')}
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+const btn=id=>document.getElementById(id);
+btn('bCam').onclick=()=>{on=true;btn('bCam').classList.add('on');btn('bFlat').classList.remove('on')};
+btn('bFlat').onclick=()=>{on=false;btn('bFlat').classList.add('on');btn('bCam').classList.remove('on')};
+btn('bWide').onclick=()=>{photo.classList.toggle('wide');btn('bWide').classList.toggle('on')};
+</script>
+</body>
+</html>
