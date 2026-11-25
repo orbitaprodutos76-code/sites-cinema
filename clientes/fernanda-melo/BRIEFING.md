@@ -71,4 +71,11 @@ O senhor mandou a referência "Deep Purple × Gold". Interpretado como as duas c
 - Senhor pediu uma abertura que arranque "UAU". Opções apresentadas: 1 vidro racha em ouro · 2 navalha risca a noite · 3 através do espelho · 4 Malévola acorda · 5 quem vê acende.
 - **ESCOLHIDA: 1 · O vidro racha em ouro.** Noite → neon contorna a vitrine → letreiro acende → câmera avança → **o vidro racha em veios dourados (kintsugi = mármore do salão)** → estilhaça em cacos de luz → fumaça Deep Purple invade o branco → veios escrevem "Fernanda Melo".
 - Ideia 2 (risco da navalha) guardada para o capítulo Cortes.
-- Pendente: roteiro quadro a quadro aprovado; logo do cavalheiro (redesenhar em vetor ou pedir original); som (sim/não); repetição (senhor sem preferência → proposta: inteira na 1ª visita, curta nas seguintes).
+- Roteiro aprovado (~8s): noite → neon contorna a vitrine → letreiro pisca e acende → câmera avança → impacto, racha dourada → cacos de luz → fumaça Deep Purple no branco → veios de ouro e "Fernanda Melo" desenhado em ouro e preenchido em roxo → Topo com Agendar.
+- Som: **desligado, com botão** (som gerado em código: zumbido do neon, cliques, whoosh, vidro). Logo: **cavalheiro redesenhado em vetor** (interpretação do print). Repetição: inteira na 1ª visita, curta (~4s) nas seguintes; botão "Ver de novo" roda inteira.
+
+## Abertura v1 construída (25/11/2026) — AGUARDANDO APROVAÇÃO DO SENHOR
+- Arquivo: `abertura.html` → https://claude.ai/artifact/RELreNcmcZVak8LNWoF1LM
+- Técnica: fachada em SVG (sem foto), céu e nuvens em canvas, racha e cacos em canvas (os cacos são a própria imagem da vitrine congelada), fumaça em canvas de meia resolução, veios e título em SVG. Só GSAP.
+- Testado: 1440px e 390px, Pular, Ver de novo, movimento reduzido (vai direto ao quadro final). Sem erros no console e sem rolagem lateral.
+- TODO: logo é interpretação (pedir original quando vender) · textos do Topo provisórios · ainda HTML solto (vira Astro quando o site completo for aprovado).
