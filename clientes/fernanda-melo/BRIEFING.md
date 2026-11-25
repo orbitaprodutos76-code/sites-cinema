@@ -150,3 +150,9 @@ Prints em `referencias/ref-*.png`.
 9. Lugar: **1ª página (topo da home)**.
 10. Sensação: **luxo + ousadia**.
 - Foto da parede: `img/salao-amplo.jpg` e `img/espelhos-moto.jpg` (mármore branco, nuvens roxas, veios dourados finos).
+
+## Topo v1 (26/11/2026) — AGUARDANDO OPINIÃO
+- Senhor aprovou o resumo ("blz 👍"): mármore branco do salão de fundo, nome gigante em ouro, nuvem roxa fofa na frente, respira e reage ao toque, luxo + ousadia.
+- `topo.html` → https://claude.ai/artifact/A8WXtYzKBQQYHHmUQ5MW6K · mármore gerado em código (fumaça roxa + veios de ouro), "FERNANDA MELO" em DM Serif Display com degradê de ouro, nuvem 3D em código (corpo largo + cúpulas, roxo fosco-acetinado, sombra no mármore). Respira; com o mouse ela inclina e afunda onde o cursor passa; no toque ela amassa e volta com balanço.
+- Print: `referencias/topo-v1-print.png`. Testado em 1440px e 390px, sem erros.
+- Pontos fracos conhecidos: o mármore ainda parece "mapa de relevo" em alguns trechos e tem poucos veios de ouro; a forma da nuvem pode ganhar mais personalidade.
