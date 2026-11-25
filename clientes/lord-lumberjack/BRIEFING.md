@@ -74,6 +74,20 @@ Pedidos do senhor sobre a v2: câmera é o que vende ("posso fechar a venda só 
 ## Sem textura (25/11/2026)
 - Pedido do senhor: "esqueça as texturas, põe só o preto". A pedra não aparece mais em nada: só existe como molde invisível das fendas, para o líquido ter forma e reflexo. O brilho em volta das letras virou halo de luz no ar (bloom), com os cantos em RGB 0,0,0.
 
+## Site v6 — primeiro rascunho completo (25/11/2026, aguardando o senhor)
+- Arquivo: `index-v6.html` = abertura aprovada + entrada + 7 capítulos. `abertura-pedra.html` fica intacta como referência aprovada. `index.html` ainda é a v5 (trocar só depois da aprovação).
+- Link privado: https://claude.ai/artifact/5n89DQHieagr6b2KLe1PPV
+- Depois da entrada a página libera a rolagem (Lenis) e os capítulos sobem como cortina preta sobre o topo.
+- 01 Ambiente: seção fixa com as 8 fotos deslizando na horizontal (máscara + parallax); no celular, faixa que arrasta com o dedo. 3 fatos (agenda online, sinuca, cerveja).
+- 02 Carta: combos em destaque no topo, demais categorias (I–V) em 2 colunas; fio que acende em verde; cada item abre a agenda.
+- 03 Equipe: 4 nomes gigantes (sem foto e sem biografia inventada), "Agendar com ele".
+- 04 Club: VIP e Premium com placar e barras avulso × Club.
+- 05 Loja: "28" gigante + vitrine tipográfica por categoria.
+- 06 Reputação: 5,0, barras 124/1, 3 avaliações reais.
+- 07 Endereço: horário com o dia de hoje aceso, cartão "Abrir no mapa" (o visualizador do claude.ai bloqueia mapa embutido; no site publicado dá para voltar o iframe), telefone, Instagram.
+- Agendar em qualquer botão: linha de LED cruza a tela + "Abrindo a agenda da Lord…" e abre o AppBarber.
+- Todos os textos vêm da v5 (nada inventado). WhatsApp (64) 99931-9087 ainda não confirmado como WhatsApp.
+
 ## Material pendente
 - [ ] OK do senhor para baixar as 9 imagens públicas da Lord (o v9 parou esperando isso).
 - [ ] 10 tomadas de vídeo na visita (lista em `POSTAR/TOMADAS-LORD.txt` no PC). A mais importante: **nº 01, letreiro LORD da parede, de frente**. Só filmar com autorização do dono.
