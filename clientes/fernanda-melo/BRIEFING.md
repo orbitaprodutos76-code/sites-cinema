@@ -199,3 +199,4 @@ Resumo oficial do que está decidido e reprovado: `PASSAGEM-JARVIS-11.md` (raiz 
   - **Fim (rolagem):** **nome vira janela**: zoom nas letras até virarem janela para foto/vídeo real do salão, termina no Agendar. Ref.: https://www.github.com/codrops/ImageExpansionTypography
 - Descartados nesta rodada: tesoura, pincel, poste de vidro, escultura com ouro; tinta em vídeo no topo; objeto que se desmonta.
 - PENDENTE (antes de qualquer código): 2–3 imagens estáticas da navalha-joia nas cores da casa para o senhor aprovar; obter/comprar o modelo 3D da navalha (checar licença comercial).
+- Prévias da navalha-joia geradas por IA (Figma, 26/11/2026): `referencias/navalha-a-frente.png` (de frente), `navalha-b-giro.png` (meio do giro, fundo saiu lavanda: corrigir), `navalha-c-close.png` (close do rebite). Arquivo Figma: https://www.figma.com/design/x3jwOEDU0bba0rvNtiIk0z · PENDENTE: veredito do senhor.
