@@ -191,3 +191,11 @@ Prints em `referencias/ref-*.png`.
 
 ## Passagem para o JARVIS 11 (26/11/2026)
 Resumo oficial do que está decidido e reprovado: `PASSAGEM-JARVIS-11.md` (raiz do repositório).
+
+## JARVIS 11: escolha do conjunto (26/11/2026)
+- Apresentadas 10 opções (5 objetos + 3 efeitos de topo + 2 de fim), cada uma com referência real. O senhor escolheu:
+  - **Objeto:** **navalha-joia**: lâmina espelhada, cabo de mármore branco com veios de ouro, rebite roxo. Ref. de forma: https://www.cgtrader.com/3d-models/industrial/tool/vintage-straight-razor
+  - **Topo (só assistir):** **nome em ouro de verdade** (ouro metálico refletindo, brilho atravessando as letras, sombra do objeto) + **giro de estúdio** (360° lento, faixa de luz, poeira dourada mínima). Ref.: Carolina Herrera / Immersive Garden https://immersive-g.com/projects/Carolina-Herrera · prints `referencias/ref-strop-barber.png`, `ref-daddyyankee-vapor.png`.
+  - **Fim (rolagem):** **nome vira janela**: zoom nas letras até virarem janela para foto/vídeo real do salão, termina no Agendar. Ref.: https://www.github.com/codrops/ImageExpansionTypography
+- Descartados nesta rodada: tesoura, pincel, poste de vidro, escultura com ouro; tinta em vídeo no topo; objeto que se desmonta.
+- PENDENTE (antes de qualquer código): 2–3 imagens estáticas da navalha-joia nas cores da casa para o senhor aprovar; obter/comprar o modelo 3D da navalha (checar licença comercial).
