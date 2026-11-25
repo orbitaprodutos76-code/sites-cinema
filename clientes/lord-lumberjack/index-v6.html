@@ -57,6 +57,10 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:3}
   .sombra{background:linear-gradient(270deg,rgb(3 4 3/.92) 0%,rgb(3 4 3/.6) 42%,rgb(3 4 3/.12) 70%),linear-gradient(0deg,rgb(3 4 3/.7),transparent 40%)}
 }
 
+.semgl #gl,.semgl .dica,.semgl .letreiro{display:none}
+.semgl .parede{opacity:1;width:100vw;height:100vh;transform:none}
+.semgl .parede img{object-fit:cover;object-position:22% 26%}
+.semgl .sombra{opacity:1}
 /* ================= SITE (capítulos) ================= */
 html.livre,html.livre body{overflow:visible;height:auto}
 .caps{position:relative;z-index:8;margin-top:100vh;margin-top:100svh;background:#000;color:var(--led);font-family:Manrope,system-ui,sans-serif;display:none}
@@ -308,7 +312,7 @@ html.livre .caps{display:block}
 const Q=new URLSearchParams(location.search);
 const cv=document.getElementById('gl');
 const gl=cv.getContext('webgl2',{antialias:false,alpha:false,preserveDrawingBuffer:true});
-if(!gl){ document.body.style.background='#000'; return; }
+if(!gl){ document.documentElement.classList.add('semgl'); addEventListener('DOMContentLoaded',()=>{ document.getElementById('hero').classList.add('on'); document.getElementById('topo').classList.add('on'); document.getElementById('pular').hidden=true; window.iniciaSite&&window.iniciaSite(); }); return; }
 const HDR=!!gl.getExtension('EXT_color_buffer_float');
 gl.getExtension('OES_texture_float_linear');
 
@@ -668,9 +672,16 @@ window.iniciaSite=function(){
   const hoje=new Date().getDay(); document.querySelectorAll('#horas [data-dia]').forEach(d=>{ if(+d.dataset.dia===hoje) d.classList.add('hoje'); });
   // agendar: linha de LED atravessa a tela e abre a agenda
   const vai=document.getElementById('vai');
+  const dentro=(()=>{ try{ return self!==top; }catch(x){ return true; } })();   // dentro de visualizador (claude.ai, Instagram, WhatsApp…)
+  const solta=()=>vai.classList.remove('on');
   document.querySelectorAll('[data-agenda]').forEach(a=>a.addEventListener('click',ev=>{
-    if(ev.metaKey||ev.ctrlKey||reduz) return; ev.preventDefault(); vai.classList.add('on'); setTimeout(()=>{ location.href=a.href; },1150); }));
-  addEventListener('pageshow',()=>vai.classList.remove('on'));
+    if(ev.metaKey||ev.ctrlKey||reduz) return;
+    if(dentro){ a.target='_blank'; a.rel='noopener'; vai.classList.add('on'); setTimeout(solta,1100); return; } // abre em aba nova e a página não trava
+    ev.preventDefault(); vai.classList.add('on');
+    setTimeout(()=>{ location.href=a.href; setTimeout(solta,2000); },1150);   // se a navegação for bloqueada, a tela preta se desfaz
+  }));
+  addEventListener('pageshow',solta);
+  vai.addEventListener('click',solta);
   const inicia=()=>{
     const g=window.gsap, ST=window.ScrollTrigger;
     const tudo=()=>{ document.querySelectorAll('.conta .barra i,.barras i').forEach(i=>i.style.setProperty('--w',getComputedStyle(i).getPropertyValue('--alvo')||'0%')); };

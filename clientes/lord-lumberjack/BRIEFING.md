@@ -88,6 +88,10 @@ Pedidos do senhor sobre a v2: câmera é o que vende ("posso fechar a venda só 
 - Agendar em qualquer botão: linha de LED cruza a tela + "Abrindo a agenda da Lord…" e abre o AppBarber.
 - Todos os textos vêm da v5 (nada inventado). WhatsApp (64) 99931-9087 ainda não confirmado como WhatsApp.
 
+## Correção (25/11/2026): tela preta com linha verde
+- Era a transição do Agendar presa: o visualizador do claude.ai bloqueia sair da página. Agora, dentro de visualizador (claude.ai, Instagram, WhatsApp), a agenda abre em aba nova; fora dele, se a navegação não acontecer em 2 s, a tela preta se desfaz (e um toque nela também desfaz).
+- Aparelho sem 3D (WebGL): mostra o site direto com a foto e o texto, em vez de ficar preto.
+
 ## Material pendente
 - [ ] OK do senhor para baixar as 9 imagens públicas da Lord (o v9 parou esperando isso).
 - [ ] 10 tomadas de vídeo na visita (lista em `POSTAR/TOMADAS-LORD.txt` no PC). A mais importante: **nº 01, letreiro LORD da parede, de frente**. Só filmar com autorização do dono.
