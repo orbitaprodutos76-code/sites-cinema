@@ -20,8 +20,8 @@ body{margin:0;background:var(--branco);color:var(--berinjela);font-family:var(--
 .aviso{position:fixed;inset:0;display:none;place-items:center;text-align:center;padding:2rem}
 </style>
 
-<canvas id="tinta" aria-label="Tinta roxa avançando em direção à tela. Mexa o dedo ou o mouse para mexer na tinta."></canvas>
-<div class="ui"><span>Mexa o dedo ou o mouse na tinta</span><button id="denovo" type="button">Ver de novo</button></div>
+<canvas id="tinta" aria-label="Tinta roxa densa avançando devagar em direção à tela."></canvas>
+<div class="ui"><button id="denovo" type="button">Ver de novo</button></div>
 <p class="aviso" id="aviso">Este navegador não conseguiu rodar a simulação. Abra no Chrome, Safari ou Edge atualizados.</p>
 
 <script>
@@ -34,7 +34,7 @@ function falha() { document.getElementById('aviso').style.display = 'grid'; }
 if (!gl) return falha();
 if (!gl.getExtension('EXT_color_buffer_float') && !gl.getExtension('EXT_color_buffer_half_float')) return falha();
 
-const CFG = { simRes: leve ? 96 : 128, dyeRes: leve ? 512 : 896, pressIter: 22, curl: 18, velDiss: .985, dyeDiss: .9985, pressao: .8 };
+const CFG = { simRes: leve ? 96 : 128, dyeRes: leve ? 512 : 896, pressIter: 24, curl: 9, velDiss: .965, dyeDiss: 1, pressao: .8 };
 
 /* ---------- shaders ---------- */
 const VS = `#version 300 es
@@ -66,16 +66,16 @@ const FS = {
   display: cab + `uniform sampler2D uDye; uniform vec2 dyeTexel; uniform float zoom;
     void main(){
       vec2 uv = .5 + (vUv - .5) / zoom;
-      vec2 e = dyeTexel * 1.5;
+      vec2 e = dyeTexel * 4.;
       float d = texture(uDye, uv).r;
       float dl = texture(uDye, uv - vec2(e.x, 0.)).r, dr = texture(uDye, uv + vec2(e.x, 0.)).r;
       float db = texture(uDye, uv - vec2(0., e.y)).r, dt = texture(uDye, uv + vec2(0., e.y)).r;
-      vec3 n = normalize(vec3((dl - dr) * 3.5, (db - dt) * 3.5, 1.));
+      vec3 n = normalize(vec3((dl - dr) * 1.6, (db - dt) * 1.6, 1.));
       float dif = clamp(dot(n, normalize(vec3(-.45, .6, .65))), 0., 1.);
-      float a = 1. - exp(-d * 1.05);
+      float a = smoothstep(.08, .55, d);
       vec3 fino = vec3(139., 70., 220.) / 255., claro = vec3(107., 33., 168.) / 255., fundo = vec3(36., 4., 62.) / 255.;
       vec3 tinta = mix(fino, claro, smoothstep(.15, .9, d));
-      tinta = mix(tinta, fundo, smoothstep(1.2, 3.6, d));
+      tinta = mix(tinta, fundo, smoothstep(1.4, 5., d) * .8);
       tinta *= .55 + .7 * dif;
       tinta += vec3(.7, .5, 1.) * pow(dif, 10.) * .16 * a;
       vec3 col = mix(vec3(1.), tinta, a);
@@ -177,23 +177,29 @@ function explosao(forca, raio, n, tinta, espalha) {
     splat(x, y, Math.cos(a) * f, Math.sin(a) * f, tinta * R(.5, 1), raio * R(.5, 1.2));
   }
 }
-function roteiro() {
-  fila = [
-    { t: .0, f: () => explosao(900, .00035, 10, 3.2, .01) },
-    { t: .35, f: () => explosao(1500, .0006, 14, 2.6, .025) },
-    { t: .8, f: () => explosao(2200, .0009, 18, 2.2, .05) },
-    { t: 1.35, f: () => explosao(2800, .0012, 20, 1.6, .08) },
-    { t: 2.0, f: () => explosao(2400, .0014, 16, 1.1, .12) }
-  ];
-  relogio = 0; zoom = .45;
+let fonte = 0;
+function roteiro() { fila = []; relogio = 0; zoom = 1; fonte = 1; }
+function alimenta(dt) {
+  // tinta brotando do centro e empurrando para fora por igual, devagar; o empurrão vai diminuindo
+  const asp = cv.width / cv.height, retrato = asp < 1;
+  const dur = retrato ? 4 : 10;
+  const f = Math.max(0, 1 - relogio / dur);
+  if (f <= 0) return;
+  const k = dt * 60, n = 12;
+  splat(.5, .5, 0, 0, (retrato ? .1 : .14) * f * k, retrato ? .0022 : .0035);
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * Math.PI * 2 + R(-.12, .12), r = .045;
+    const forca = (retrato ? 48 : 95) * (.75 + .5 * Math.sin(relogio * 1.7 + i * 2.3)) * f;
+    splat(.5 + Math.cos(a) * r / asp, .5 + Math.sin(a) * r, Math.cos(a) * forca, Math.sin(a) * forca, .05 * f * k, .0012);
+  }
 }
 function limpa() { cria(); }
-let proxAmbiente = 4.5;
+let proxAmbiente = 12;
 function ambiente() {
   const a = R(0, Math.PI * 2), r = R(.06, .2), asp = cv.width / cv.height;
   const x = .5 + Math.cos(a) * r / asp, y = .5 + Math.sin(a) * r;
   const t = a + Math.PI / 2 * (Math.random() < .5 ? 1 : -1);
-  splat(x, y, Math.cos(t) * 260, Math.sin(t) * 260, .25, .0012);
+  splat(x, y, Math.cos(t) * 90, Math.sin(t) * 90, 0, .002);
 }
 
 /* ---------- dedo / mouse ---------- */
@@ -204,8 +210,8 @@ function noPonteiro(e) {
   // converte da tela para o espaço da tinta (por causa do zoom)
   const tx = .5 + (x - .5) / zoom, ty = .5 + (y - .5) / zoom;
   if (ponteiro.ativo) {
-    const dx = (tx - ponteiro.x) * 5200, dy = (ty - ponteiro.y) * 5200;
-    if (Math.abs(dx) + Math.abs(dy) > .5) splat(tx, ty, dx, dy, .12, .0009 / zoom);
+    const dx = (tx - ponteiro.x) * 900, dy = (ty - ponteiro.y) * 900;
+    if (Math.abs(dx) + Math.abs(dy) > .5) splat(tx, ty, dx, dy, 0, .0025 / zoom);
   }
   ponteiro.x = tx; ponteiro.y = ty; ponteiro.ativo = true;
 }
@@ -219,17 +225,17 @@ let ult = performance.now();
 function quadro(agora) {
   const dt = Math.min(.033, (agora - ult) / 1000); ult = agora;
   relogio += dt;
-  while (fila.length && fila[0].t <= relogio) fila.shift().f();
+  alimenta(dt);
   // a câmera "recebe" a tinta: começa longe e a tinta vem para a tela
-  const alvo = cv.width > cv.height ? 1.2 : .9, k = 1 - Math.exp(-dt * .55);
+  const alvo = cv.width > cv.height ? 1.35 : 1.2, k = 1 - Math.exp(-dt * .18);
   zoom += (alvo - zoom) * k;
-  if (relogio > proxAmbiente) { ambiente(); proxAmbiente = relogio + R(1.6, 3); }
+  if (relogio > proxAmbiente) { ambiente(); proxAmbiente = relogio + R(3, 5); }
   passo(dt); mostra();
   requestAnimationFrame(quadro);
 }
 tam(); cria(); roteiro();
 if (reduz) {
-  for (let i = 0; i < 200; i++) { relogio += 1 / 60; while (fila.length && fila[0].t <= relogio) fila.shift().f(); zoom = 1.1; passo(1 / 60); }
+  for (let i = 0; i < 600; i++) { relogio += 1 / 60; alimenta(1 / 60); zoom = 1; passo(1 / 60); }
   mostra();
 } else requestAnimationFrame(quadro);
 addEventListener('resize', () => { tam(); cria(); roteiro(); });
