@@ -53,6 +53,14 @@ Pedidos do senhor sobre a v2: câmera é o que vende ("posso fechar a venda só 
 - O relógio avança no máximo 0,05 s por quadro (aparelho lento não pula a cena).
 - Mesmo link: https://claude.ai/artifact/BeB98o8D6WxRdNjvrsLV7k
 
+## Abertura v4 + entrada do site (25/11/2026, em ajuste: o senhor avisou que vamos trabalhar bastante na entrada)
+- O senhor achou **ruim** a câmera entrar na luz do losango. Pediu: descer mais rápido, a câmera **parar em cima** da logo, e o site entrar com uma animação forte **com qualquer toque na tela** depois da abertura.
+- Abertura: perseguição rasante (0–1,2 s) → decola girando (1,2–2,3 s) → desce rápido e **pousa** em cima da logo com leve assentamento (2,3–3,15 s). Parada, o líquido continua correndo e aparece "Toque para entrar". O botão Pular some no pouso.
+- Entrada (~2,6 s, disparada por toque, clique, tecla ou rolagem): câmera sobe até ficar de cima → a pedra se dissolve no vetor aceso no mesmo lugar (escala vetor→pedra: 0,002875) → cada parte (símbolo, LORD, LUMBERJACK) voa até o letreiro real da foto (caixas medidas pelo v9) enquanto a foto abre do letreiro até a barbearia inteira → letreiro fica aceso em verde (neon somado às letras pretas reais) → título, texto e Agendar entram.
+- Tela deitada: texto à direita (o letreiro fica à esquerda na foto). Celular: texto embaixo.
+- `?quadro=T&e=E` desenha qualquer momento da abertura (T) e da entrada (E de 0 a 1) para prints.
+- Mesmo link: https://claude.ai/artifact/BeB98o8D6WxRdNjvrsLV7k
+
 ## Material pendente
 - [ ] OK do senhor para baixar as 9 imagens públicas da Lord (o v9 parou esperando isso).
 - [ ] 10 tomadas de vídeo na visita (lista em `POSTAR/TOMADAS-LORD.txt` no PC). A mais importante: **nº 01, letreiro LORD da parede, de frente**. Só filmar com autorização do dono.
