@@ -65,3 +65,10 @@ O senhor mandou a referência "Deep Purple × Gold". Interpretado como as duas c
 3. **Estrutura dos capítulos** + tipografia (mostruário de fontes já no padrão roxo/branco/dourado).
 4. **Agendamento** integrado conforme o acesso.
 5. **Site completo** → testes celular/computador → link público → proposta.
+
+## Abertura — decisão de 25/11/2026 (JARVIS 10)
+- Fachada: **não há foto boa à noite → recriar em código** (SVG/canvas fiel ao print `img/fachada-noite.jpg`).
+- Senhor pediu uma abertura que arranque "UAU". Opções apresentadas: 1 vidro racha em ouro · 2 navalha risca a noite · 3 através do espelho · 4 Malévola acorda · 5 quem vê acende.
+- **ESCOLHIDA: 1 · O vidro racha em ouro.** Noite → neon contorna a vitrine → letreiro acende → câmera avança → **o vidro racha em veios dourados (kintsugi = mármore do salão)** → estilhaça em cacos de luz → fumaça Deep Purple invade o branco → veios escrevem "Fernanda Melo".
+- Ideia 2 (risco da navalha) guardada para o capítulo Cortes.
+- Pendente: roteiro quadro a quadro aprovado; logo do cavalheiro (redesenhar em vetor ou pedir original); som (sim/não); repetição (senhor sem preferência → proposta: inteira na 1ª visita, curta nas seguintes).
