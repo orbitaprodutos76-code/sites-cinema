@@ -105,7 +105,18 @@ float fbm(vec2 p){ float a=.5,s=0.; for(int i=0;i<5;i++){ s+=a*vn(p); p=p*2.03+1
 // pedra: relevo grosso + poros finos
 // poro/cristal redondo (antes era célula quadrada e virava quadradinho no close)
 float ponto(vec2 w,float esc,float lim,float raio){ vec2 c=floor(w*esc), f=fract(w*esc); float h=h21(c); vec2 o=vec2(h21(c+7.1),h21(c+3.3))*.5+.25; return step(lim,h)*smoothstep(raio,raio*.5,length(f-o)); }
-float stoneH(vec2 w){ return fbm(w*34.)*.65 + fbm(w*150.)*.35 - ponto(w,900.,.985,.3)*.6; }
+// ardósia preta (referência: foto do senhor): placas em camadas com degraus suaves, poucas rachaduras, grão fino
+vec2 torce(vec2 w){ return w + .07*vec2(vn(w*4.)-.5, vn(w*4.+5.2)-.5); }
+float stoneH(vec2 w){
+  vec2 q=torce(w);
+  float t=fbm(q*1.5)*2.6;                                       // poucas placas grandes
+  float f=fract(t);
+  float camadas=(floor(t)+smoothstep(.62,.98,f))/2.6;            // degrau largo e quebrado entre placas
+  float borda=smoothstep(.62,.8,f)*smoothstep(.98,.85,f);        // lascado só na borda da placa
+  float racha=smoothstep(.012,.0,abs(fbm(q*4.+11.)-.5))*smoothstep(.55,.7,vn(w*1.3+3.)); // raras
+  float grao=vn(w*190.)*.10 + vn(w*70.)*.12 + vn(w*420.)*.05;
+  return camadas*2.6 + grao + borda*vn(w*90.)*.5 - racha*1.1;
+}
 vec4 mapAt(vec2 w){
   vec2 uv=vec2(w.x+.5,(MH*.5-w.y)/MH);
   if(any(lessThan(uv,vec2(0)))||any(greaterThan(uv,vec2(1)))) return vec4(-99.,99.,0.,0.);
@@ -125,7 +136,7 @@ vec2 liq(vec2 w,vec4 m){
   return vec2(fill, exp(-max(tl,0.)*9.)*fill);
 }
 // o líquido tem volume: sobe dentro do sulco e faz menisco na ponta
-float height(vec2 w){ vec4 m=mapAt(w); vec2 l=liq(w,m); return stoneH(w)*.0016 - groove(m.x)*.0062 + l.x*.0047*(1.+.5*l.y); }
+float height(vec2 w){ vec4 m=mapAt(w); vec2 l=liq(w,m); float g=groove(m.x); return stoneH(w)*.0016*(1.-.85*g) - g*.0062 + l.x*.0047*(1.+.5*l.y); } // dentro da fenda o líquido fica liso
 
 void main(){
   vec2 q=(vUv*2.-1.)*vec2(uRes.x/uRes.y,1.);
@@ -141,9 +152,9 @@ void main(){
   vec3 V=-rd;
 
   // pedra preta texturizada
-  float tone=fbm(w*22.)*.6+fbm(w*90.)*.4;
-  vec3 alb=vec3(.030,.033,.031)*(.55+.9*tone);
-  float speck=ponto(w,1400.,.993,.22);                        // cristais do granito
+  float tone=vn(torce(w)*9.)*.6+vn(w*55.)*.4;
+  vec3 alb=vec3(.016,.017,.016)*(.6+.7*tone);                // bem mais escura que o granito
+  float speck=ponto(w,1400.,.997,.16)*.35;                    // quase sem cristais: ardósia é fosca
   float g=groove(sdf);
   alb*=1.-.6*g;                                                // fundo do sulco mais escuro
 
@@ -152,7 +163,7 @@ void main(){
   float pool=smoothstep(.85,.05,length(w-uSpot));
   float dif=max(dot(n,L),0.);
   vec3 H=normalize(L+V);
-  float spec=pow(max(dot(n,H),0.),70.)*.55 + speck*pow(max(dot(n,H),0.),8.)*2.2;
+  float spec=pow(max(dot(n,H),0.),38.)*.32 + speck*pow(max(dot(n,H),0.),8.)*1.2;  // brilho acetinado das placas
   vec3 key=vec3(1.,.97,.92)*1.25*pool*uKey;
   vec3 col=alb*dif*key + spec*key*.35 + alb*.05;
 

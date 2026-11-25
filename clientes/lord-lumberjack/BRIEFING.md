@@ -64,6 +64,10 @@ Pedidos do senhor sobre a v2: câmera é o que vende ("posso fechar a venda só 
 ## ✅ APROVADO pelo senhor (25/11/2026): abertura v4 + entrada do site
 "BOAA CLAUDE É ISSO". Esta é a referência de qualidade daqui pra frente. Não mexer sem pedido. Ajustes finos vêm por cima dela.
 
+## Pedra nova: ardósia preta (25/11/2026)
+- O senhor mandou foto de referência (pedra negra em placas com rachaduras, guardada em `referencias/pedra-negra.jpg`) e pediu **mais escura e com menos detalhe**.
+- A foto não foi usada como textura (736 px, luz embutida, rachaduras próprias brigando com as fendas da logo). Virou **pedra em código inspirada nela**: poucas placas grandes com degrau e borda lascada, rachaduras raras, grão fino, superfície fosca e bem escura, quase sem cristais. Dentro das fendas o relevo é aliviado para o líquido ficar liso.
+
 ## Material pendente
 - [ ] OK do senhor para baixar as 9 imagens públicas da Lord (o v9 parou esperando isso).
 - [ ] 10 tomadas de vídeo na visita (lista em `POSTAR/TOMADAS-LORD.txt` no PC). A mais importante: **nº 01, letreiro LORD da parede, de frente**. Só filmar com autorização do dono.
