@@ -5,8 +5,8 @@
 <style>
 /* Esboço: história de fora pra dentro. Noite (preto + neon) → vidro → salão branco-leite com fumaça roxa e veios de ouro */
 :root{
-  --leite:#f6f2ec; --leite2:#ece6dd; --preto:#0b0a0d; --tinta:#1d1724;
-  --roxo:#6b3fb8; --roxo-claro:#a98be0; --neon:#c45cff; --ouro:#c9a24a; --ouro-claro:#ecd08a;
+  --leite:#ffffff; --leite2:#f3effb; --preto:#0a0a12; --tinta:#0a0a12; --mudo:#55516a; --lavanda:#b79cf2;
+  --roxo:#5b1fd1; --roxo-claro:#b79cf2; --neon:#8b2cff; --magenta:#d63cff; --azul:#2a0bff; --ouro:#d4a72c; --ouro-claro:#ffe48a; --ouro-escuro:#9a7417;
   --fd:'Unbounded','Arial Black',sans-serif; --fo:'Cormorant Garamond',Georgia,serif; --fb:'Inter',system-ui,sans-serif;
   color-scheme:light;
 }
@@ -16,22 +16,31 @@ body{background:var(--leite);color:var(--tinta);font-family:var(--fb);margin:0}
 .miolo{max-width:76rem;margin-inline:auto}
 .nota{display:inline-flex;gap:.6rem;align-items:center;font:600 .66rem var(--fb);letter-spacing:.22em;text-transform:uppercase;color:var(--roxo);border:1px dashed rgb(107 63 184/.45);border-radius:99px;padding:.45em 1em;background:rgb(255 255 255/.6)}
 .nota.escura{color:var(--roxo-claro);border-color:rgb(169 139 224/.45);background:rgb(0 0 0/.35)}
-.efeito{font-size:.86rem;color:#6d6475;max-width:62ch;line-height:1.55;margin-top:.7rem}
+.efeito{font-size:.86rem;color:var(--mudo);max-width:62ch;line-height:1.55;margin-top:.7rem}
 .escura .efeito,.efeito.claro{color:#b9b0c4}
 h1,h2,h3{margin:0}
 /* topo do esboço */
 .capa{padding-block:clamp(2rem,6vw,3.5rem) 1rem}
 .capa h1{font:700 clamp(1.4rem,3.4vw,2.2rem)/1.1 var(--fd);letter-spacing:-.01em;text-wrap:balance}
 .capa h1 em{font:italic 600 1.15em var(--fo);color:var(--roxo)}
-.capa p{color:#6d6475;max-width:64ch;line-height:1.6;margin:.8rem 0 0}
+.capa p{color:var(--mudo);max-width:64ch;line-height:1.6;margin:.8rem 0 0}
+/* paleta */
+.paleta{padding-block:1rem 1rem}
+.cores{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,9.5rem),1fr));gap:.8rem;margin-top:1rem}
+.cores div{display:flex;flex-direction:column;gap:.2rem;min-width:0}
+.cores i{display:block;height:4.5rem;border-radius:8px;margin-bottom:.4rem}
+.cores b{font:700 .74rem var(--fd);text-transform:uppercase}
+.cores code{font:600 .74rem ui-monospace,monospace;color:var(--tinta)}
+.cores small{font-size:.74rem;color:var(--mudo)}
 /* ===== abertura em quadros ===== */
 .storyboard{padding-block:2rem 4rem}
 .quadros{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,17rem),1fr));gap:1rem;margin-top:1.2rem}
 .qd{display:flex;flex-direction:column;gap:.6rem;min-width:0}
 .tela{position:relative;aspect-ratio:9/13;border-radius:10px;overflow:hidden;background:#000;isolation:isolate}
 .tela img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.salao img,.espelho img,.foto-corte img,.q3 img{filter:saturate(1.35) contrast(1.08)}
 .qd b{font:700 .74rem var(--fd);letter-spacing:.04em;text-transform:uppercase}
-.qd span{font-size:.84rem;color:#6d6475;line-height:1.5}
+.qd span{font-size:.84rem;color:var(--mudo);line-height:1.5}
 .qd i{font-style:normal;font:600 .66rem var(--fb);letter-spacing:.18em;color:var(--roxo)}
 /* quadro 1: noite, o neon corre contornando a vitrine */
 .q1 img{filter:brightness(.16) saturate(.4)}
@@ -42,10 +51,10 @@ h1,h2,h3{margin:0}
 /* quadro 2: o letreiro acende */
 .q2 img{filter:brightness(.55) saturate(1.2)}
 .q2 .neon{stroke-dashoffset:0}
-.letreiro{position:absolute;left:52%;top:47.5%;transform:translate(-50%,-50%);font:900 clamp(.9rem,2.6vw,1.25rem)/1 var(--fd);color:#e8d9ff;letter-spacing:.02em;white-space:nowrap;text-shadow:0 0 6px var(--neon),0 0 18px var(--neon),0 0 40px #7b2cff;animation:pisca 3.2s steps(1) infinite}
+.letreiro{position:absolute;left:52%;top:47.5%;transform:translate(-50%,-50%);font:900 clamp(.9rem,2.6vw,1.25rem)/1 var(--fd);color:#e8d9ff;letter-spacing:.02em;white-space:nowrap;text-shadow:0 0 6px var(--magenta),0 0 18px var(--neon),0 0 44px var(--azul);animation:pisca 3.2s steps(1) infinite}
 @keyframes pisca{0%,8%{opacity:.15}9%,13%{opacity:1}14%,17%{opacity:.2}18%,100%{opacity:1}}
 /* quadro 3: a câmera atravessa o vidro */
-.q3 img{transform:scale(1.35);filter:blur(1.5px) brightness(1.05)}
+.q3 img{transform:scale(1.35);filter:blur(1.5px) brightness(1.05) saturate(1.35) contrast(1.08)}
 .q3::before{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(115deg,transparent 35%,rgb(255 255 255/.7) 47%,rgb(196 92 255/.25) 52%,transparent 62%);animation:reflexo 2.6s ease-in-out infinite}
 .q3::after{content:'';position:absolute;inset:0;z-index:2;border:2px solid rgb(196 92 255/.7);box-shadow:inset 0 0 40px rgb(196 92 255/.5);border-radius:10px}
 @keyframes reflexo{0%{transform:translateX(-60%)}100%{transform:translateX(60%)}}
@@ -58,7 +67,7 @@ h1,h2,h3{margin:0}
 @keyframes desenha{0%{stroke-dashoffset:var(--l,600)}55%,100%{stroke-dashoffset:0}}
 .nome{position:absolute;inset:auto 0 12% 0;text-align:center;z-index:3}
 .nome small{display:block;font:600 .62rem var(--fb);letter-spacing:.42em;color:var(--tinta);margin-bottom:.4rem}
-.nome strong{display:block;font:600 clamp(1.5rem,4.4vw,2.2rem)/1 var(--fo);letter-spacing:.04em;text-transform:uppercase;background:linear-gradient(100deg,#9c7a2c,var(--ouro-claro) 40%,#b48a32 60%,var(--ouro-claro));-webkit-background-clip:text;background-clip:text;color:transparent}
+.nome strong{display:block;font:600 clamp(1.5rem,4.4vw,2.2rem)/1 var(--fo);letter-spacing:.04em;text-transform:uppercase;background:linear-gradient(100deg,var(--ouro-escuro),var(--ouro-claro) 40%,var(--ouro) 60%,var(--ouro-claro));-webkit-background-clip:text;background-clip:text;color:transparent}
 
 /* ===== seções do site ===== */
 .secao{position:relative;padding-block:clamp(3.5rem,9vw,6.5rem);overflow:hidden}
@@ -72,8 +81,8 @@ h1,h2,h3{margin:0}
 .topo{min-height:min(88vh,52rem);display:grid;align-items:center}
 .topo .fumaca{opacity:.9}
 .topo .grade{position:relative;z-index:2;display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(1.5rem,4vw,4rem);align-items:center}
-.topo p{color:#5d5466;line-height:1.6;max-width:34ch;margin:1.2rem 0 1.8rem}
-.espelho{position:relative;aspect-ratio:1;border-radius:50%;overflow:hidden;box-shadow:0 0 0 6px #f3d58a,0 0 30px 8px rgb(243 213 138/.85),0 0 90px 20px rgb(201 162 74/.4)}
+.topo p{color:var(--mudo);line-height:1.6;max-width:34ch;margin:1.2rem 0 1.8rem}
+.espelho{position:relative;aspect-ratio:1;border-radius:50%;overflow:hidden;box-shadow:0 0 0 6px var(--ouro-claro),0 0 30px 10px rgb(255 228 138/.95),0 0 100px 26px rgb(255 210 74/.5)}
 .espelho img{width:100%;height:100%;object-fit:cover;object-position:60% 40%}
 /* salão: faixa com veio de ouro */
 .salao .fotos{display:grid;grid-template-columns:1.3fr 1fr;gap:1rem;margin-top:2rem}
@@ -89,13 +98,13 @@ h1,h2,h3{margin:0}
 /* serviços: cápsulas com fumaça roxa */
 .capsulas{display:flex;flex-wrap:wrap;gap:.7rem;margin:2rem 0 1.4rem}
 .capsula{position:relative;overflow:hidden;isolation:isolate;border:1px solid rgb(107 63 184/.45);background:#fff;color:var(--tinta);border-radius:99px;padding:.9rem 1.6rem;font:700 .82rem var(--fd);letter-spacing:.04em;text-transform:uppercase;cursor:pointer;transition:color .3s .1s}
-.capsula::before{content:'';position:absolute;inset:-40%;z-index:-1;background:radial-gradient(circle at 30% 60%,#8a5ad6,transparent 55%),radial-gradient(circle at 70% 40%,#5a2fa0,transparent 60%),radial-gradient(circle at 50% 50%,#6b3fb8,#4a2585);transform:scale(0);transition:transform .7s cubic-bezier(.16,1,.3,1);border-radius:50%}
+.capsula::before{content:'';position:absolute;inset:-40%;z-index:-1;background:radial-gradient(circle at 30% 60%,var(--neon),transparent 55%),radial-gradient(circle at 70% 40%,#4b0fa8,transparent 60%),radial-gradient(circle at 50% 50%,var(--roxo),#3a0b8a);transform:scale(0);transition:transform .7s cubic-bezier(.16,1,.3,1);border-radius:50%}
 .capsula[aria-selected=true]{color:#fff;border-color:transparent}
 .capsula[aria-selected=true]::before{transform:scale(1.2)}
 .itens{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,14rem),1fr));border:1px solid rgb(201 162 74/.55);border-radius:10px;overflow:hidden;background:#fff}
 .item{padding:1.2rem 1.2rem 1.1rem;display:flex;flex-direction:column;gap:.4rem;min-height:8.5rem;box-shadow:inset 0 0 0 .5px rgb(201 162 74/.4)}
 .item b{font:700 .95rem/1.2 var(--fd);text-transform:uppercase}
-.item small{font:600 .66rem var(--fb);letter-spacing:.16em;text-transform:uppercase;color:#8a8192}
+.item small{font:600 .66rem var(--fb);letter-spacing:.16em;text-transform:uppercase;color:var(--mudo)}
 .item span{margin-top:auto;font:italic 600 1.7rem var(--fo);color:var(--roxo)}
 /* malévola: tela escurece, farol acende */
 .malevola{background:var(--preto);color:#f1ecf7}
@@ -110,14 +119,14 @@ h1,h2,h3{margin:0}
 .equipe li{border-top:1px solid rgb(29 23 36/.15);padding-top:1rem}
 .equipe .aro{width:100%;aspect-ratio:1;border-radius:50%;border:2px solid var(--ouro);display:grid;place-items:center;box-shadow:0 0 24px rgb(201 162 74/.35) inset;font:italic 600 clamp(2rem,6vw,3.6rem) var(--fo);color:var(--ouro);background:radial-gradient(circle,#fff,var(--leite2))}
 .equipe b{display:block;margin-top:1rem;font:700 clamp(.9rem,2vw,1.2rem) var(--fd);text-transform:uppercase}
-.equipe small{color:#8a8192;font-size:.82rem}
+.equipe small{color:var(--mudo);font-size:.82rem}
 /* agendar: o sistema delas, no visual novo */
 .agendar .passos{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin:2rem 0}
 .passo{background:#fff;border:1px solid rgb(201 162 74/.5);border-radius:10px;padding:1rem}
 .passo i{display:grid;place-items:center;width:2rem;height:2rem;border-radius:50%;font:700 .8rem var(--fd);font-style:normal;background:var(--roxo);color:#fff;box-shadow:0 0 0 3px rgb(201 162 74/.6)}
 .passo b{display:block;margin-top:.7rem;font:700 .82rem var(--fd);text-transform:uppercase}
-.passo span{font-size:.82rem;color:#8a8192}
-.rodape{padding-block:2rem;border-top:1px solid rgb(29 23 36/.12);color:#8a8192;font-size:.82rem}
+.passo span{font-size:.82rem;color:var(--mudo)}
+.rodape{padding-block:2rem;border-top:1px solid rgb(29 23 36/.12);color:var(--mudo);font-size:.82rem}
 @media (max-width:760px){
   .topo .grade,.cortes .grade,.salao .fotos{grid-template-columns:1fr}
   .equipe ol{grid-template-columns:1fr 1fr 1fr;gap:.6rem}
@@ -130,8 +139,8 @@ h1,h2,h3{margin:0}
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
     <filter id="brilho" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-    <linearGradient id="ouro" x1="0" x2="1"><stop offset="0" stop-color="#9c7a2c"/><stop offset=".45" stop-color="#ecd08a"/><stop offset="1" stop-color="#b48a32"/></linearGradient>
-    <linearGradient id="ouro2" x1="0" x2="1"><stop offset="0" stop-color="#f6e3a8"/><stop offset="1" stop-color="#d9b25a"/></linearGradient>
+    <linearGradient id="ouro" x1="0" x2="1"><stop offset="0" stop-color="#9a7417"/><stop offset=".45" stop-color="#ffe48a"/><stop offset="1" stop-color="#d4a72c"/></linearGradient>
+    <linearGradient id="ouro2" x1="0" x2="1"><stop offset="0" stop-color="#fff1b8"/><stop offset="1" stop-color="#ffd24a"/></linearGradient>
   </defs>
 </svg>
 
@@ -141,6 +150,19 @@ h1,h2,h3{margin:0}
   <p>Primeiro a abertura em quatro quadros-chave, depois cada seção do site com as fotos reais. Em cada parte, a nota diz qual efeito entra na versão de verdade. Fontes e textos ainda são provisórios.</p>
 </div></header>
 
+
+<section class="faixa paleta" aria-labelledby="h-pal"><div class="miolo">
+  <h2 id="h-pal" class="nota">Paleta · medida nas fotos e levada ao máximo</h2>
+  <div class="cores">
+    <div><i style="background:#ffffff;box-shadow:inset 0 0 0 1px #e4e0ee"></i><b>Branco</b><code>#FFFFFF</code><small>paredes e piso</small></div>
+    <div><i style="background:#5b1fd1"></i><b>Roxo</b><code>#5B1FD1</code><small>mármore e moto</small></div>
+    <div><i style="background:#8b2cff"></i><b>Roxo neon</b><code>#8B2CFF</code><small>vitrine (#4001A1 medido)</small></div>
+    <div><i style="background:#b79cf2"></i><b>Lavanda</b><code>#B79CF2</code><small>luz no mármore</small></div>
+    <div><i style="background:#2a0bff"></i><b>Azul letreiro</b><code>#2A0BFF</code><small>letreiro (#1F00DF medido)</small></div>
+    <div><i style="background:linear-gradient(135deg,#9a7417,#ffe48a 50%,#d4a72c)"></i><b>Dourado</b><code>#FFE48A · #D4A72C</code><small>aro aceso (#FFED91) e veios</small></div>
+    <div><i style="background:#0a0a12"></i><b>Preto</b><code>#0A0A12</code><small>bancadas (#0A0B12 medido)</small></div>
+  </div>
+</div></section>
 <section class="faixa storyboard" aria-labelledby="h-ab"><div class="miolo">
   <h2 id="h-ab" class="nota">Abertura · cerca de 6 segundos</h2>
   <div class="quadros">
@@ -281,13 +303,13 @@ const reduz=matchMedia('(prefers-reduced-motion: reduce)').matches;
 document.querySelectorAll('[data-fumaca]').forEach(cv=>{
   const ctx=cv.getContext('2d'), forte=cv.hasAttribute('data-forte');
   let W=0,H=0; const N=forte?14:10;
-  const bolhas=Array.from({length:N},(_,i)=>({x:Math.random(),y:.25+Math.random()*.6,r:.18+Math.random()*.3,vx:(Math.random()-.5)*.02,vy:(Math.random()-.5)*.012,f:Math.random()*6,c:i%3}));
-  const cores=[[107,63,184],[138,90,214],[74,37,133]];
+  const bolhas=Array.from({length:N},(_,i)=>({x:Math.random(),y:.25+Math.random()*.6,r:.18+Math.random()*.3,vx:(Math.random()-.5)*.02,vy:(Math.random()-.5)*.012,f:Math.random()*6,c:i%4}));
+  const cores=[[91,31,209],[139,44,255],[75,15,168],[183,156,242]];
   function tam(){ const r=cv.getBoundingClientRect(); W=cv.width=Math.max(1,Math.round(r.width/3)); H=cv.height=Math.max(1,Math.round(r.height/3)); cv.style.filter='blur('+(forte?28:16)+'px)'; }
   function quadro(t){
     ctx.clearRect(0,0,W,H);
     bolhas.forEach(b=>{ if(!reduz){ b.x+=b.vx*.016+Math.sin(t/3000+b.f)*.0006; b.y+=b.vy*.016+Math.cos(t/2600+b.f)*.0005; if(b.x<-.3)b.x=1.3; if(b.x>1.3)b.x=-.3; if(b.y<-.2)b.y=1.2; if(b.y>1.2)b.y=-.2; }
-      const R=b.r*Math.max(W,H), g=ctx.createRadialGradient(b.x*W,b.y*H,0,b.x*W,b.y*H,R), c=cores[b.c], a=forte?.5:.42;
+      const R=b.r*Math.max(W,H), g=ctx.createRadialGradient(b.x*W,b.y*H,0,b.x*W,b.y*H,R), c=cores[b.c%4], a=forte?.5:.42;
       g.addColorStop(0,`rgba(${c[0]},${c[1]},${c[2]},${a})`); g.addColorStop(.55,`rgba(${c[0]},${c[1]},${c[2]},${a*.35})`); g.addColorStop(1,`rgba(${c[0]},${c[1]},${c[2]},0)`);
       ctx.fillStyle=g; ctx.beginPath(); ctx.arc(b.x*W,b.y*H,R,0,7); ctx.fill(); });
     if(!reduz) requestAnimationFrame(quadro);

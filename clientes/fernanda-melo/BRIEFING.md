@@ -45,6 +45,15 @@ Depende de: quem fez/controla esse app.
 - O senhor escolheu a abertura **2 + 1** (neon → atravessa o vidro → fumaça roxa e veios de ouro no branco-leite) e pediu um **esboço do site** antes de construir.
 - `esboco.html` (link: https://claude.ai/artifact/BifDc1g3yVS2F9WDW7aw1B): abertura em 4 quadros-chave + 7 seções (Topo com espelho dourado, Salão, Cortes com o risco redesenhado em ouro, Serviços em cápsulas com fumaça roxa e preços reais do sistema, Momento Malévola, Equipe, Agendar em 4 passos). Fontes provisórias: Unbounded + Cormorant itálico + Inter.
 
+## Paleta oficial (25/11/2026) — medida nas fotos e levada ao máximo
+Pedido do senhor: cores bem nítidas, "o branco muito branco, o roxo muito roxo".
+- Branco `#FFFFFF` (fundo; nada de bege) · superfície clara `#F3EFFB`
+- Roxo `#5B1FD1` (mármore/moto) · Roxo neon `#8B2CFF` (vitrine, medido #4001A1) · Lavanda `#B79CF2` (luz no mármore)
+- Azul letreiro `#2A0BFF` (medido #1F00DF) — só em neon, com moderação
+- Dourado luz `#FFE48A` (aro aceso, medido #FFED91) · Dourado metal `#D4A72C` (veios) · Dourado sombra `#9A7417`
+- Preto `#0A0A12` (bancadas, medido #0A0B12) · texto secundário `#55516A`
+- Fotos no site com saturação +35% e contraste +8% (as fotos reais são mais vivas que os prints).
+
 ## Plano em etapas (cada uma aprovada pelo senhor antes da próxima)
 0. **Material e acessos** (antes de qualquer design): fotos em alta (salão, moto, espelhos, equipe), logo, cidade/endereço, Instagram, horário oficial, lista de serviços revisada, quem controla o Base44.
 1. **Direção visual** (moodboard + 2–3 conceitos de abertura em imagem/rascunho) → senhor escolhe.
