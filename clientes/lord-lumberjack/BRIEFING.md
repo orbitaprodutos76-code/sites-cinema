@@ -102,6 +102,12 @@ Pedidos do senhor sobre a v2: câmera é o que vende ("posso fechar a venda só 
 - O senhor **autorizou** usar no site as fotos dos 4 barbeiros e dos produtos publicadas na página da Lord no AppBarber (são selfies; melhor que monograma, abaixo do nível da abertura). Ainda não baixadas: o AppBarber bloqueia acesso automático; pegar pelo celular do senhor ou pelo dono.
 - Prints do AppBarber: abas Serviços, Profissionais, Fidelidade, Produtos, Pacotes, Assinaturas; botão "Agendar agora"; faixa empurrando baixar o app. O navegador interno esconde o caminho do link: falta saber se o endereço muda por serviço/barbeiro.
 
+## Tipografia e animações (25/11/2026)
+- Fonte escolhida pelo senhor: **08 · Impacto e elegância** = Anton (títulos, preços, nomes, sempre em maiúsculas) + Playfair Display itálico (destaques em verde, números dos capítulos, avaliações) + Inter (textos e rótulos). Mostruário das 10 opções: `fontes.html` (https://claude.ai/artifact/XJgfLmWrx14xpnFtrUKcDa).
+- Pacote de animações aprovado ("fecha o recomendado"): número gigante do capítulo atravessando a tela (mais rápido quanto mais rápido rola); fotos do Ambiente começam apagadas e uma faixa de luz acende a cena; itens da carta ligam como LED, o fio corre até o preço e o preço gira como placar; nomes da equipe deslizam como letreiro (cada linha num sentido); títulos dos capítulos acendem em neon letra por letra; lanterna verde seguindo o mouse (só computador).
+- Foto do barbeiro ao passar o mouse no nome: mecanismo pronto (`data-foto` em cada `.nome`), **faltam as fotos** (o senhor autorizou, mas o AppBarber bloqueia download automático).
+- Ficaram de fora de propósito (exagero): anel 3D da loja, cartão girando do Club, menu em tela cheia.
+
 ## Material pendente
 - [ ] OK do senhor para baixar as 9 imagens públicas da Lord (o v9 parou esperando isso).
 - [ ] 10 tomadas de vídeo na visita (lista em `POSTAR/TOMADAS-LORD.txt` no PC). A mais importante: **nº 01, letreiro LORD da parede, de frente**. Só filmar com autorização do dono.
