@@ -21,6 +21,11 @@ O sistema é um app Base44, não um gigante como o AppBarber. Se quem controla o
 2. o próprio site fazer os 4 passos com o visual novo, gravando na mesma agenda.
 Depende de: quem fez/controla esse app.
 
+## Decisões do senhor (25/11/2026)
+- **Agendamento/integração: só depois da venda.** Não sabemos quem controla o app Base44; resolver no pós-venda. Até lá o site leva ao sistema atual.
+- **NÃO destacar "comandada por mulheres".** Foco: um site bonito e bom. A equipe aparece normalmente.
+- Fotos: o senhor vai mandar. **Esperar as fotos antes da direção visual.**
+
 ## Plano em etapas (cada uma aprovada pelo senhor antes da próxima)
 0. **Material e acessos** (antes de qualquer design): fotos em alta (salão, moto, espelhos, equipe), logo, cidade/endereço, Instagram, horário oficial, lista de serviços revisada, quem controla o Base44.
 1. **Direção visual** (moodboard + 2–3 conceitos de abertura em imagem/rascunho) → senhor escolhe.
