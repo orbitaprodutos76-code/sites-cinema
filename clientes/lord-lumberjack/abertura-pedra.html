@@ -26,10 +26,6 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:3}
 .site p{color:rgb(244 251 239/.72);line-height:1.6;max-width:30rem;margin-bottom:1.8rem}
 .cta{display:inline-block;background:var(--verde);color:#030403;font:700 .8rem Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;padding:1.1em 2em;border-radius:99px}
 .cta:focus-visible,.ui button:focus-visible{outline:2px solid var(--verde);outline-offset:3px}
-/* rachadura */
-.metade{position:fixed;inset:0;z-index:4;background-size:100% 100%;will-change:transform}
-.fenda{position:fixed;inset:0;z-index:5;width:100%;height:100%;pointer-events:none;overflow:visible}
-.fenda path{fill:none;stroke:#eaffdf;stroke-width:2.2;stroke-linejoin:round;filter:drop-shadow(0 0 6px #6dbb3a) drop-shadow(0 0 22px #6dbb3a)}
 .clarao{position:fixed;inset:0;z-index:2;background:radial-gradient(40% 70% at 50% 50%,rgb(109 187 58/.55),transparent 70%);opacity:0;pointer-events:none}
 .ui{position:fixed;right:1.25rem;bottom:1.25rem;z-index:6;display:flex;gap:.5rem}
 .ui button{background:rgb(3 4 3/.5);color:rgb(244 251 239/.7);border:1px solid rgb(244 251 239/.2);border-radius:99px;padding:.55em 1.1em;font:700 .68rem Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px)}
@@ -69,14 +65,16 @@ const SCENE=`#version 300 es
 precision highp float;
 in vec2 vUv; out vec4 o;
 uniform sampler2D uMap; uniform vec2 uRes; uniform vec3 uCam,uTgt; uniform float uFov,uT,uTime;
-uniform vec2 uSpot; uniform float uKey;
+uniform vec2 uSpot; uniform float uKey; uniform vec3 uUp;
 const float MH=0.82759;            // altura do mapa (largura = 1)
 float h21(vec2 p){ p=fract(p*vec2(123.34,456.21)); p+=dot(p,p+45.32); return fract(p.x*p.y); }
 float vn(vec2 p){ vec2 i=floor(p),f=fract(p); f=f*f*(3.-2.*f);
   return mix(mix(h21(i),h21(i+vec2(1,0)),f.x),mix(h21(i+vec2(0,1)),h21(i+vec2(1,1)),f.x),f.y); }
 float fbm(vec2 p){ float a=.5,s=0.; for(int i=0;i<5;i++){ s+=a*vn(p); p=p*2.03+17.1; a*=.5; } return s; }
 // pedra: relevo grosso + poros finos
-float stoneH(vec2 w){ return fbm(w*34.)*.65 + fbm(w*150.)*.35 - step(.985,h21(floor(w*900.)))*.6; }
+// poro/cristal redondo (antes era célula quadrada e virava quadradinho no close)
+float ponto(vec2 w,float esc,float lim,float raio){ vec2 c=floor(w*esc), f=fract(w*esc); float h=h21(c); vec2 o=vec2(h21(c+7.1),h21(c+3.3))*.5+.25; return step(lim,h)*smoothstep(raio,raio*.5,length(f-o)); }
+float stoneH(vec2 w){ return fbm(w*34.)*.65 + fbm(w*150.)*.35 - ponto(w,900.,.985,.3)*.6; }
 vec4 mapAt(vec2 w){
   vec2 uv=vec2(w.x+.5,(MH*.5-w.y)/MH);
   if(any(lessThan(uv,vec2(0)))||any(greaterThan(uv,vec2(1)))) return vec4(-99.,99.,0.,0.);
@@ -85,11 +83,22 @@ vec4 mapAt(vec2 w){
   return vec4((m.r*255.-128.)/12., mix(99.,m.g*5.,edge), m.b, edge);   // sdf (px da logo), chegada (s), semente
 }
 float groove(float sdf){ return smoothstep(-.4,2.4,sdf); }          // 0 = pedra, 1 = fundo do sulco
-float height(vec2 w){ vec4 m=mapAt(w); return stoneH(w)*.0016 - groove(m.x)*.0062; }
+// chegada "viva": o líquido acelera e segura conforme a região (não anda em ritmo de máquina)
+float chegada(vec2 w,float arr){ return arr*(1.+.16*(vn(w*7.)-.5)) + .10*(vn(w*19.+3.1)-.5); }
+// x = quanto da fenda está cheio, y = calor da ponta que avança
+vec2 liq(vec2 w,vec4 m){
+  float tl=uT-chegada(w,m.y);
+  tl-=.16*exp(-m.x*.55);                     // corre pelo meio primeiro: ponta em língua, bordas depois
+  tl+=(vn(w*380.+vec2(0,uTime*2.))-.5)*.04;  // borda da ponta irregular
+  float fill=smoothstep(0.,.07,tl)*smoothstep(.1,1.,m.x);
+  return vec2(fill, exp(-max(tl,0.)*9.)*fill);
+}
+// o líquido tem volume: sobe dentro do sulco e faz menisco na ponta
+float height(vec2 w){ vec4 m=mapAt(w); vec2 l=liq(w,m); return stoneH(w)*.0016 - groove(m.x)*.0062 + l.x*.0047*(1.+.5*l.y); }
 
 void main(){
   vec2 q=(vUv*2.-1.)*vec2(uRes.x/uRes.y,1.);
-  vec3 f=normalize(uTgt-uCam), r=normalize(cross(f,vec3(0,0,1))), u=cross(r,f);
+  vec3 f=normalize(uTgt-uCam), r=normalize(cross(f,uUp)), u=cross(r,f);
   vec3 rd=normalize(f + (q.x*r + q.y*u)*tan(uFov*.5));
   if(rd.z>=-.0001){ o=vec4(0,0,0,10.); return; }
   float dist=-uCam.z/rd.z; vec3 P=uCam+rd*dist; vec2 w=P.xy;
@@ -103,7 +112,7 @@ void main(){
   // pedra preta texturizada
   float tone=fbm(w*22.)*.6+fbm(w*90.)*.4;
   vec3 alb=vec3(.030,.033,.031)*(.55+.9*tone);
-  float speck=step(.993,h21(floor(w*1400.)));                 // cristais do granito
+  float speck=ponto(w,1400.,.993,.22);                        // cristais do granito
   float g=groove(sdf);
   alb*=1.-.6*g;                                                // fundo do sulco mais escuro
 
@@ -117,15 +126,17 @@ void main(){
   vec3 col=alb*dif*key + spec*key*.35 + alb*.05;
 
   // luz líquida dentro do sulco
-  float tl=uT-arr;
-  float wob=(vn(w*420.+vec2(0,uTime*1.5))-.5)*.08;
-  float lit=smoothstep(0.,.09,tl+wob);
-  float fill=smoothstep(.15,1.3,sdf)*lit;
+  vec2 lq=liq(w,m); float fill=lq.x, front=lq.y;
+  float tl=uT-chegada(w,arr);
   float core=smoothstep(.8,4.5,sdf);
-  float shimmer=.88+.12*vn(w*260.+vec2(uTime*.7,-uTime*1.3));
-  vec3 em=mix(vec3(.16,.62,.09),vec3(.85,1.,.78),core*.7)*2.3*fill*shimmer;
-  float front=exp(-max(tl,0.)*7.)*fill;                        // ponta quente que avança
-  em+=vec3(.9,1.,.85)*front*2.2;
+  // correnteza: faixas de brilho que andam no sentido do fluxo (a chegada é a coordenada ao longo da fenda)
+  float corr=.72+.28*smoothstep(.2,1.,sin(arr*34.-uTime*19.+vn(w*240.)*4.));
+  float shimmer=.9+.1*vn(w*260.+vec2(uTime*.7,-uTime*1.3));
+  vec3 em=mix(vec3(.13,.58,.08),vec3(.78,1.,.70),core*.38)*2.0*fill*shimmer*corr;
+  em+=vec3(.85,1.,.8)*front*2.6;
+  // superfície molhada: reflexo da luz da cena no líquido
+  float specL=pow(max(dot(n,H),0.),120.)*fill;
+  em+=vec3(.9,1.,.9)*specL*1.6;
 
   // a luz vaza e acende a textura da pedra em volta
   float dOut=max(-sdf,0.);
@@ -210,30 +221,42 @@ img.src='img/pedra-mapa.png';
 // ---------- coreografia (segundos) ----------
 // ponta da luz a cada 0,1 s do mapa (calculado do pedra-mapa.png): a câmera persegue isso
 const FRONT=[[0.001,0.289],[0.001,0.289],[-0.014,0.258],[0.001,0.289],[-0.014,0.258],[-0.012,0.245],[-0.008,0.23],[-0.006,0.214],[-0.001,0.188],[-0.005,0.154],[-0.022,0.111],[-0.033,0.077],[-0.042,0.034],[-0.051,-0.006],[-0.055,-0.046],[-0.066,-0.081],[-0.084,-0.123],[-0.059,-0.137],[-0.028,-0.144],[0.009,-0.147],[0.047,-0.151],[0.08,-0.158],[0.114,-0.166],[0.15,-0.174],[0.208,-0.182],[0.233,-0.192],[0.248,-0.2],[0.233,-0.211],[0.196,-0.225],[0.091,-0.255],[0.03,-0.284],[0.103,-0.286],[0.154,-0.286],[0.162,-0.287],[0.22,-0.285]];
-const LUZ=0.9, VEL=1.0, FIM_LUZ=LUZ+3.4/VEL, RACHA=FIM_LUZ+0.7, TOTAL=RACHA+1.3;
+const LOSANGO=[-0.108,-0.140];               // losango aceso no centro do "O": onde a câmera mergulha
+const LUZ=.2, VEL=1.35;                      // a luz enche tudo em ~2,5 s
+const PERSEGUE=1.2, DECOLA=2.3, MERGULHO=3.75, ENTRA=MERGULHO+.12;
 const cl=(x,a=0,b=1)=>Math.min(b,Math.max(a,x)), mix=(a,b,k)=>a+(b-a)*k;
 const sm=x=>{x=cl(x);return x*x*(3-2*x);}, io=x=>{x=cl(x);return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;};
-function frente(T){ // média móvel da ponta (suaviza o tranco da câmera)
-  let sx=0,sy=0,n=0; for(let d=-.35;d<=.35;d+=.05){ const k=cl((T+d)*10,0,FRONT.length-1), i=Math.floor(k), f=k-i, a=FRONT[i], b=FRONT[Math.min(i+1,FRONT.length-1)]; sx+=mix(a[0],b[0],f); sy+=mix(a[1],b[1],f); n++; }
-  return [sx/n,sy/n]; }
+const inQ=x=>{x=cl(x);return x*x*x;};
+function frente(T){ let sx=0,sy=0,n=0; for(let d=-.3;d<=.3;d+=.05){ const k=cl((T+d)*10,0,FRONT.length-1), i=Math.floor(k), f=k-i, a=FRONT[i], b=FRONT[Math.min(i+1,FRONT.length-1)]; sx+=mix(a[0],b[0],f); sy+=mix(a[1],b[1],f); n++; } return [sx/n,sy/n]; }
+function orbita(alvo,az,el,dist){ const a=az*Math.PI/180, e=el*Math.PI/180;
+  return [alvo[0]+dist*Math.cos(e)*Math.cos(a), alvo[1]+dist*Math.cos(e)*Math.sin(a), alvo[2]+dist*Math.sin(e)]; }
 function shot(t){
-  const T=(t-LUZ)*VEL;                         // relógio da luz dentro da pedra
-  const fim=io((t-(FIM_LUZ-1.3))/1.6);         // 0 → 1: abre o plano para a logo inteira
-  const fr=frente(Math.max(T,0));
-  const alvo=[mix(fr[0],0,fim), mix(fr[1],0.0,fim), 0];
-  // sobe: rasante (3°) → quase de frente (72°); aproxima no começo, afasta no fim
-  const sobe=mix(3,14,sm(t/LUZ)) + 24*io((t-LUZ)/(FIM_LUZ-LUZ)); // nasce rente à pedra e vai subindo
-  const elev=mix(sobe,72,fim);
+  const T=(t-LUZ)*VEL;
   const asp=W/H, tg=Math.tan(19*Math.PI/180);
-  const dFim=Math.max(.45/tg,.42/(tg*asp));      // garante LORD e LUMBERJACK inteiros (celular também)
-  const dist=mix(mix(.34,.26,sm(t/LUZ)),dFim,fim);
-  const e=elev*Math.PI/180, lado=.06*Math.sin(t*.7)*(1-fim);
-  const cam=[alvo[0]+lado, alvo[1]-dist*Math.cos(e), dist*Math.sin(e)+.004];
-  const revela=sm(t/LUZ);
-  const pulso=Math.exp(-Math.pow((t-FIM_LUZ-.15)*4,2))*.25;
-  return { T, cam, tgt:alvo, fov:38*Math.PI/180,
-    spot:[alvo[0]-.7*(1-revela), alvo[1]+.05], dof:mix(5,1.2,fim), expo:mix(.35,1,revela)+pulso,
-    key:mix(3.2,1.4,sm((t-LUZ)/1.2))+fim*1.6 };
+  const dAlto=Math.max(.5/tg,.44/(tg*asp));       // altura em que a logo inteira cabe (celular também)
+  const fr=frente(Math.max(T,0)+.12);
+  let alvo, az, el, dist;
+  if(t<PERSEGUE){                                   // 1. rasante, atrás da gota (a gota desce: câmera fica acima dela no mapa)
+    const k=t/PERSEGUE;
+    alvo=[fr[0],fr[1],0]; az=mix(96,84,k); el=mix(5,9,k); dist=mix(.15,.19,k);
+  } else if(t<DECOLA){                              // 2. decola rápido girando por cima até o lado da frente
+    const k=io((t-PERSEGUE)/(DECOLA-PERSEGUE));
+    const centro=[0,-.02,0];
+    alvo=[mix(fr[0],centro[0],k), mix(fr[1],centro[1],k), 0];
+    az=mix(84,-90,k); el=mix(9,62,Math.sin(Math.PI*Math.min(k*1.25,1)*.5)); dist=mix(.19,dAlto,k);
+  } else {                                          // 3. desce e mergulha no losango
+    const k=(t-DECOLA)/(MERGULHO-DECOLA), kk=sm(k);
+    alvo=[mix(0,LOSANGO[0],kk), mix(-.02,LOSANGO[1],kk), 0];
+    az=-90; el=mix(62,82,kk); dist=Math.exp(mix(Math.log(dAlto),Math.log(.02),Math.pow(cl(k),1.6))); // desce sem pausa, acelerando
+  }
+  const cam=orbita(alvo,az,el,dist);
+  const upv=[0,0,1];                               // elevação fica abaixo de 88°: a imagem gira com a órbita, sem capotar
+  const revela=sm(t/.35);
+  const pulso=Math.exp(-Math.pow((t-(LUZ+2.5/VEL+.1))*5,2))*.2;
+  const entra=inQ((t-MERGULHO+.12)/.35);             // ao encostar no losango, a luz toma a tela
+  return { T, cam, tgt:alvo, up:upv, fov:mix(40,50,inQ((t-DECOLA)/(MERGULHO-DECOLA))*.8)*Math.PI/180,
+    spot:[alvo[0]-.4*(1-revela), alvo[1]+.05], dof:t<PERSEGUE?4.5:mix(1.5,3.5,inQ((t-DECOLA)/(MERGULHO-DECOLA))),
+    expo:mix(.3,t<PERSEGUE?.72:1,revela)+pulso+entra*7, key:mix(3.,1.5,sm((t-LUZ)/1.))+ (t>PERSEGUE&&t<DECOLA?.8:0) };
 }
 function pass(pr,rt){ gl.useProgram(pr.p); gl.bindFramebuffer(gl.FRAMEBUFFER,rt?rt.f:null); gl.viewport(0,0,rt?rt.w:W,rt?rt.h:H); }
 function tex(pr,name,t,unit){ gl.activeTexture(gl.TEXTURE0+unit); gl.bindTexture(gl.TEXTURE_2D,t); gl.uniform1i(pr.U[name],unit); }
@@ -246,7 +269,7 @@ function draw(T,time,S){
   const cam=S.cam, tgt=S.tgt;
   let s=P.scene; pass(s,RT.scene); tex(s,'uMap',mapTex,0);
   gl.uniform2f(s.U.uRes,W,H); gl.uniform3fv(s.U.uCam,cam); gl.uniform3fv(s.U.uTgt,tgt);
-  gl.uniform1f(s.U.uFov,S.fov); gl.uniform1f(s.U.uKey,S.key); gl.uniform1f(s.U.uT,T); gl.uniform1f(s.U.uTime,time); gl.uniform2fv(s.U.uSpot,S.spot);
+  gl.uniform1f(s.U.uFov,S.fov); gl.uniform1f(s.U.uKey,S.key); gl.uniform3fv(s.U.uUp,S.up||[0,0,1]); gl.uniform1f(s.U.uT,T); gl.uniform1f(s.U.uTime,time); gl.uniform2fv(s.U.uSpot,S.spot);
   gl.drawArrays(gl.TRIANGLES,0,3);
   // 1/4 e 1/16 de resolução: desfoque (profundidade de campo) e bloom
   pass(P.copy,RT.a); tex(P.copy,'uTex',RT.scene.t,0); gl.uniform2f(P.copy.U.uTexel,1/W,1/H); gl.drawArrays(gl.TRIANGLES,0,3);
@@ -264,27 +287,15 @@ const site=document.getElementById('site'), ui=document.getElementById('ui');
 const reduz=matchMedia('(prefers-reduced-motion: reduce)').matches;
 let raf=0, t0=0, acabou=false;
 function mostraSite(){ site.classList.add('on'); document.getElementById('denovo').hidden=false; document.getElementById('pular').hidden=true; }
-function fendaPath(){ // rachadura irregular de cima a baixo
-  const pts=[]; let x=50; for(let i=0;i<=22;i++){ x=cl(x+(Math.random()-.5)*7,40,60); pts.push([i===0||i===22?x:x, i/22*100]); }
-  return pts; }
-function racha(){
+function entraNaLuz(){
   if(acabou) return; acabou=true; cancelAnimationFrame(raf);
-  const url=cv.toDataURL('image/jpeg',.9), pts=fendaPath();
-  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg'); svg.setAttribute('class','fenda'); svg.setAttribute('viewBox','0 0 100 100'); svg.setAttribute('preserveAspectRatio','none');
-  const path=document.createElementNS(svg.namespaceURI,'path'); path.setAttribute('d','M'+pts.map(p=>p.join(' ')).join(' L')); path.setAttribute('vector-effect','non-scaling-stroke'); svg.appendChild(path);
-  const poly=lado=>`polygon(${lado<0?'0% 0%':'100% 0%'},${pts.map(p=>p[0]+'% '+p[1]+'%').join(',')},${lado<0?'0% 100%':'100% 100%'})`;
-  const halves=[-1,1].map(l=>{ const d=document.createElement('div'); d.className='metade'; d.style.backgroundImage=`url(${url})`; d.style.clipPath=poly(l); document.body.appendChild(d); return [d,l]; });
-  document.body.appendChild(svg); cv.style.visibility='hidden';
-  const len=path.getTotalLength(); path.style.strokeDasharray=len; path.style.strokeDashoffset=len;
-  path.animate([{strokeDashoffset:len},{strokeDashoffset:0}],{duration:420,easing:'cubic-bezier(.7,0,.3,1)',fill:'forwards'});
   const clarao=document.getElementById('clarao');
-  setTimeout(()=>{
-    clarao.animate([{opacity:0},{opacity:1,offset:.25},{opacity:0}],{duration:1300,easing:'ease-out',fill:'forwards'});
-    halves.forEach(([d,l])=>d.animate([{transform:'translateX(0)'},{transform:`translateX(${l*58}vw) rotate(${l*1.5}deg)`}],{duration:1100,easing:'cubic-bezier(.77,0,.18,1)',fill:'forwards'}));
-    svg.animate([{opacity:1},{opacity:0}],{duration:500,delay:150,fill:'forwards'});
-    setTimeout(mostraSite,250);
-    setTimeout(()=>{ halves.forEach(([d])=>d.remove()); svg.remove(); },1200);
-  },450);
+  clarao.style.background='radial-gradient(60% 60% at 50% 50%,#eaffdf 0%,#6dbb3a 45%,#0b1a07 100%)';
+  clarao.style.zIndex=4;
+  clarao.animate([{opacity:1},{opacity:1,offset:.25},{opacity:0}],{duration:1000,easing:'cubic-bezier(.4,0,.2,1)',fill:'forwards'});
+  cv.style.visibility='hidden';
+  mostraSite();
+  document.querySelector('.site__foto').animate([{transform:'scale(1.25)',filter:'brightness(2.2) saturate(.6)'},{transform:'scale(1)',filter:'none'}],{duration:1500,easing:'cubic-bezier(.16,1,.3,1)'});
 }
 function start(){
   resize();
@@ -292,11 +303,11 @@ function start(){
   const visto=(()=>{try{return sessionStorage.getItem('lord-intro')}catch(e){return null}})();
   if(reduz || (visto && !Q.has('intro'))){ cv.style.display='none'; mostraSite(); return; }
   try{sessionStorage.setItem('lord-intro','1')}catch(e){}
-  t0=performance.now();
-  const loop=now=>{ const t=(now-t0)/1000; const S=shot(Math.min(t,RACHA)); draw(S.T,t,S); if(t>=RACHA){ racha(); return; } raf=requestAnimationFrame(loop); };
+  let t=0, ant=0;
+  const loop=now=>{ t+=ant?Math.min((now-ant)/1000,.05):0; ant=now; /* engasgo (compilar o 3D, aba lenta) não pula a cena */ const S=shot(Math.min(t,ENTRA)); draw(S.T,t,S); if(t>=ENTRA){ entraNaLuz(); return; } raf=requestAnimationFrame(loop); };
   raf=requestAnimationFrame(loop);
 }
-document.getElementById('pular').onclick=()=>{ cancelAnimationFrame(raf); if(!acabou){ const S=shot(RACHA); draw(S.T,RACHA,S); racha(); } };
+document.getElementById('pular').onclick=()=>{ cancelAnimationFrame(raf); entraNaLuz(); };
 document.getElementById('denovo').onclick=()=>{ location.search='?intro'; };
 addEventListener('resize',()=>{ if(!acabou) resize(); });
 })();

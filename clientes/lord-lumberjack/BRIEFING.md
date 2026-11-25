@@ -46,6 +46,13 @@ Barbearia de nome forte na cidade. Entregar algo amador queima o senhor com o me
 - Material: o senhor NÃO consegue fotos dos barbeiros, dos produtos nem vídeos. **Proibido tapar buraco com frase genérica**; buscar informação real. Ele vai mandar prints de avaliações do Google.
 - Estrutura do site em 7 capítulos aprovada (Topo · 01 Ambiente · 02 Carta · 03 Barbeiros · 04 Club · 05 Loja · 06–07 Reputação e Endereço).
 
+## Abertura da pedra v3 (25/11/2026, aguardando aprovação)
+Pedidos do senhor sobre a v2: câmera é o que vende ("posso fechar a venda só por isso"); a rachadura parecia PowerPoint; a luz parecia "renderizando" e não escorrendo. Duração desejada: **5 a 6 s, o mais rápido possível**.
+- **Câmera:** 0–1,2 s rasante atrás da gota (perseguição) → 1,2–2,3 s decola rápido girando por cima da pedra até a frente → 2,3–3,75 s desce sem pausa e **mergulha no losango do "O"** → a luz toma a tela e o site surge dela (substitui a rachadura). Total ~3,9 s de cena + ~1 s de entrada do site.
+- **Líquido:** ponta em língua (corre pelo meio da fenda primeiro), velocidade irregular por região, faixas de correnteza no sentido do fluxo, volume e reflexo na superfície.
+- O relógio avança no máximo 0,05 s por quadro (aparelho lento não pula a cena).
+- Mesmo link: https://claude.ai/artifact/BeB98o8D6WxRdNjvrsLV7k
+
 ## Material pendente
 - [ ] OK do senhor para baixar as 9 imagens públicas da Lord (o v9 parou esperando isso).
 - [ ] 10 tomadas de vídeo na visita (lista em `POSTAR/TOMADAS-LORD.txt` no PC). A mais importante: **nº 01, letreiro LORD da parede, de frente**. Só filmar com autorização do dono.
