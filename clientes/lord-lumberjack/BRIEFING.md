@@ -61,6 +61,9 @@ Pedidos do senhor sobre a v2: câmera é o que vende ("posso fechar a venda só 
 - `?quadro=T&e=E` desenha qualquer momento da abertura (T) e da entrada (E de 0 a 1) para prints.
 - Mesmo link: https://claude.ai/artifact/BeB98o8D6WxRdNjvrsLV7k
 
+## ✅ APROVADO pelo senhor (25/11/2026): abertura v4 + entrada do site
+"BOAA CLAUDE É ISSO". Esta é a referência de qualidade daqui pra frente. Não mexer sem pedido. Ajustes finos vêm por cima dela.
+
 ## Material pendente
 - [ ] OK do senhor para baixar as 9 imagens públicas da Lord (o v9 parou esperando isso).
 - [ ] 10 tomadas de vídeo na visita (lista em `POSTAR/TOMADAS-LORD.txt` no PC). A mais importante: **nº 01, letreiro LORD da parede, de frente**. Só filmar com autorização do dono.
