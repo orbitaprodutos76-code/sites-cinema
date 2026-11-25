@@ -36,6 +36,16 @@ Barbearia de nome forte na cidade. Entregar algo amador queima o senhor com o me
 - Regra reforçada: **pensar e perguntar antes de executar**. Perguntas em múltipla escolha com várias respostas permitidas e opção "Outro".
 - `rascunho-nuvem/abertura-verde.html`: tentativa simplificada feita na nuvem, **reprovada** (fraca). Não usar como base.
 
+## Abertura da pedra v2 (25/11/2026, aguardando aprovação do senhor)
+- Arquivo: `abertura-pedra.html` (shader do v9 + coreografia nova). Link privado: https://claude.ai/artifact/BeB98o8D6WxRdNjvrsLV7k
+- Câmera (pedido do senhor): nasce rente à pedra, sobe perseguindo a ponta da luz verde e termina de frente com a logo inteira (enquadramento calculado também para celular em pé).
+- Luz: a ponta é calculada do `pedra-mapa.png` (símbolo 0,2–1,2 s · LORD 0,8–2,5 s · LUMBERJACK 2,2–3,3 s). Corrigido o vazamento verde em retângulo e o tempo que estava parado.
+- Final escolhido: **a rachadura se abre** e mostra o topo do site (foto da parede + textos reais da v5).
+- Duração ~5,6 s · botão Pular · 1 vez por sessão (`?intro` força) · reduzir movimento = site direto · `?quadro=2.5` desenha um quadro fixo (prints e gravação do vídeo).
+- **Celular: vai rodar como vídeo pré-gravado** (decisão do senhor). Gravar depois da aprovação, a partir de `?quadro=`.
+- Material: o senhor NÃO consegue fotos dos barbeiros, dos produtos nem vídeos. **Proibido tapar buraco com frase genérica**; buscar informação real. Ele vai mandar prints de avaliações do Google.
+- Estrutura do site em 7 capítulos aprovada (Topo · 01 Ambiente · 02 Carta · 03 Barbeiros · 04 Club · 05 Loja · 06–07 Reputação e Endereço).
+
 ## Material pendente
 - [ ] OK do senhor para baixar as 9 imagens públicas da Lord (o v9 parou esperando isso).
 - [ ] 10 tomadas de vídeo na visita (lista em `POSTAR/TOMADAS-LORD.txt` no PC). A mais importante: **nº 01, letreiro LORD da parede, de frente**. Só filmar com autorização do dono.

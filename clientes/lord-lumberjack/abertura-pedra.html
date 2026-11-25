@@ -8,11 +8,49 @@
 :root{--bg:#030403}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;background:var(--bg);overflow:hidden}
-canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:3}
+:root{--verde:#6dbb3a;--led:#f4fbef}
+/* site por trás (topo real da v5) */
+.site{position:fixed;inset:0;z-index:1;color:var(--led);font-family:Manrope,system-ui,sans-serif;overflow:hidden}
+.site__foto{position:absolute;inset:0;background:url(img/foto-1757354912336.jpg) center 30%/cover;transform:scale(1.08);transition:transform 2.4s cubic-bezier(.16,1,.3,1)}
+.site.on .site__foto{transform:scale(1)}
+.site__foto::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgb(3 4 3/.92) 0%,rgb(3 4 3/.55) 55%,rgb(3 4 3/.25)),linear-gradient(0deg,rgb(3 4 3/.9),transparent 45%)}
+.site__txt{position:absolute;left:clamp(1.25rem,6vw,5rem);bottom:clamp(2rem,12vh,7rem);max-width:36rem}
+.site__txt>*{opacity:0;transform:translateY(18px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
+.site.on .site__txt>*{opacity:1;transform:none}
+.site.on .site__txt>:nth-child(2){transition-delay:.12s}.site.on .site__txt>:nth-child(3){transition-delay:.24s}.site.on .site__txt>:nth-child(4){transition-delay:.36s}
+.nota{display:inline-block;font:600 .7rem Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;border:1px solid rgb(244 251 239/.2);border-radius:99px;padding:.5em 1em;margin-bottom:1.4rem}
+.nota b{color:var(--verde);letter-spacing:.1em}
+.site h1{font:500 clamp(2.6rem,7vw,5.6rem)/1 'Bodoni Moda',Georgia,serif;margin-bottom:1.2rem}
+.site h1 em{color:var(--verde)}
+.site p{color:rgb(244 251 239/.72);line-height:1.6;max-width:30rem;margin-bottom:1.8rem}
+.cta{display:inline-block;background:var(--verde);color:#030403;font:700 .8rem Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;padding:1.1em 2em;border-radius:99px}
+.cta:focus-visible,.ui button:focus-visible{outline:2px solid var(--verde);outline-offset:3px}
+/* rachadura */
+.metade{position:fixed;inset:0;z-index:4;background-size:100% 100%;will-change:transform}
+.fenda{position:fixed;inset:0;z-index:5;width:100%;height:100%;pointer-events:none;overflow:visible}
+.fenda path{fill:none;stroke:#eaffdf;stroke-width:2.2;stroke-linejoin:round;filter:drop-shadow(0 0 6px #6dbb3a) drop-shadow(0 0 22px #6dbb3a)}
+.clarao{position:fixed;inset:0;z-index:2;background:radial-gradient(40% 70% at 50% 50%,rgb(109 187 58/.55),transparent 70%);opacity:0;pointer-events:none}
+.ui{position:fixed;right:1.25rem;bottom:1.25rem;z-index:6;display:flex;gap:.5rem}
+.ui button{background:rgb(3 4 3/.5);color:rgb(244 251 239/.7);border:1px solid rgb(244 251 239/.2);border-radius:99px;padding:.55em 1.1em;font:700 .68rem Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px)}
+.ui button:hover{color:var(--verde);border-color:var(--verde)}
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<canvas id="gl"></canvas>
+<main class="site" id="site">
+  <div class="site__foto" role="img" aria-label="Interior da Lord Lumberjack com o letreiro LORD na parede"></div>
+  <div class="site__txt">
+    <span class="nota"><b>★★★★★</b> 5,0 no Google · 125 avaliações</span>
+    <h1>Seu corte em <em>outro nível.</em></h1>
+    <p>Barbearia em Mineiros, com espelhos iluminados, sinuca e cerveja gelada esperando você. Agende em 30 segundos e chegue só na sua hora.</p>
+    <a class="cta" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr">Agendar horário</a>
+  </div>
+</main>
+<div class="clarao" id="clarao"></div>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="ui" id="ui"><button id="pular">Pular</button><button id="denovo" hidden>Ver de novo</button></div>
 <script>
 (() => {
 'use strict';
@@ -31,7 +69,7 @@ const SCENE=`#version 300 es
 precision highp float;
 in vec2 vUv; out vec4 o;
 uniform sampler2D uMap; uniform vec2 uRes; uniform vec3 uCam,uTgt; uniform float uFov,uT,uTime;
-uniform vec2 uSpot;
+uniform vec2 uSpot; uniform float uKey;
 const float MH=0.82759;            // altura do mapa (largura = 1)
 float h21(vec2 p){ p=fract(p*vec2(123.34,456.21)); p+=dot(p,p+45.32); return fract(p.x*p.y); }
 float vn(vec2 p){ vec2 i=floor(p),f=fract(p); f=f*f*(3.-2.*f);
@@ -75,7 +113,7 @@ void main(){
   float dif=max(dot(n,L),0.);
   vec3 H=normalize(L+V);
   float spec=pow(max(dot(n,H),0.),70.)*.55 + speck*pow(max(dot(n,H),0.),8.)*2.2;
-  vec3 key=vec3(1.,.97,.92)*1.25*pool;
+  vec3 key=vec3(1.,.97,.92)*1.25*pool*uKey;
   vec3 col=alb*dif*key + spec*key*.35 + alb*.05;
 
   // luz líquida dentro do sulco
@@ -85,14 +123,14 @@ void main(){
   float fill=smoothstep(.15,1.3,sdf)*lit;
   float core=smoothstep(.8,4.5,sdf);
   float shimmer=.88+.12*vn(w*260.+vec2(uTime*.7,-uTime*1.3));
-  vec3 em=mix(vec3(.18,.62,.10),vec3(1.,1.,.92),core)*3.2*fill*shimmer;
+  vec3 em=mix(vec3(.16,.62,.09),vec3(.85,1.,.78),core*.7)*2.3*fill*shimmer;
   float front=exp(-max(tl,0.)*7.)*fill;                        // ponta quente que avança
-  em+=vec3(1.,1.,.95)*front*3.;
+  em+=vec3(.9,1.,.85)*front*2.2;
 
   // a luz vaza e acende a textura da pedra em volta
   float dOut=max(-sdf,0.);
   float litN=smoothstep(0.,.35,tl)*m.w;
-  float spill=litN*(exp(-dOut/5.)*.9+exp(-dOut/28.)*.22);
+  float spill=litN*(exp(-dOut/2.2)*.9+exp(-dOut/5.5)*.28)*smoothstep(10.2,5.5,dOut);
   vec3 sc=vec3(.32,.85,.18);
   float faceS=.35+.65*clamp(n.z,0.,1.);
   col+=alb*sc*spill*14.*faceS + sc*spill*speck*1.5 + sc*spill*pow(max(dot(n,normalize(V+vec3(0,0,1))),0.),40.)*.25;
@@ -100,6 +138,7 @@ void main(){
   col+=sc*g*(1.-fill)*litN*.12;
 
   col+=em;
+  col*=smoothstep(.015,.16,-rd.z);
   o=vec4(col,dist);
 }`;
 
@@ -168,9 +207,34 @@ img.onload=()=>{ gl.bindTexture(gl.TEXTURE_2D,mapTex); gl.pixelStorei(gl.UNPACK_
   start(); };
 img.src='img/pedra-mapa.png';
 
-// ---------- câmera do quadro parado ----------
-const SHOT={ cam:[.30,-.58,.27], tgt:[.0,-.12,0], fov:38*Math.PI/180, spot:[-.05,-.02], dof:5.5, expo:1.0 };
-
+// ---------- coreografia (segundos) ----------
+// ponta da luz a cada 0,1 s do mapa (calculado do pedra-mapa.png): a câmera persegue isso
+const FRONT=[[0.001,0.289],[0.001,0.289],[-0.014,0.258],[0.001,0.289],[-0.014,0.258],[-0.012,0.245],[-0.008,0.23],[-0.006,0.214],[-0.001,0.188],[-0.005,0.154],[-0.022,0.111],[-0.033,0.077],[-0.042,0.034],[-0.051,-0.006],[-0.055,-0.046],[-0.066,-0.081],[-0.084,-0.123],[-0.059,-0.137],[-0.028,-0.144],[0.009,-0.147],[0.047,-0.151],[0.08,-0.158],[0.114,-0.166],[0.15,-0.174],[0.208,-0.182],[0.233,-0.192],[0.248,-0.2],[0.233,-0.211],[0.196,-0.225],[0.091,-0.255],[0.03,-0.284],[0.103,-0.286],[0.154,-0.286],[0.162,-0.287],[0.22,-0.285]];
+const LUZ=0.9, VEL=1.0, FIM_LUZ=LUZ+3.4/VEL, RACHA=FIM_LUZ+0.7, TOTAL=RACHA+1.3;
+const cl=(x,a=0,b=1)=>Math.min(b,Math.max(a,x)), mix=(a,b,k)=>a+(b-a)*k;
+const sm=x=>{x=cl(x);return x*x*(3-2*x);}, io=x=>{x=cl(x);return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;};
+function frente(T){ // média móvel da ponta (suaviza o tranco da câmera)
+  let sx=0,sy=0,n=0; for(let d=-.35;d<=.35;d+=.05){ const k=cl((T+d)*10,0,FRONT.length-1), i=Math.floor(k), f=k-i, a=FRONT[i], b=FRONT[Math.min(i+1,FRONT.length-1)]; sx+=mix(a[0],b[0],f); sy+=mix(a[1],b[1],f); n++; }
+  return [sx/n,sy/n]; }
+function shot(t){
+  const T=(t-LUZ)*VEL;                         // relógio da luz dentro da pedra
+  const fim=io((t-(FIM_LUZ-1.3))/1.6);         // 0 → 1: abre o plano para a logo inteira
+  const fr=frente(Math.max(T,0));
+  const alvo=[mix(fr[0],0,fim), mix(fr[1],0.0,fim), 0];
+  // sobe: rasante (3°) → quase de frente (72°); aproxima no começo, afasta no fim
+  const sobe=mix(3,14,sm(t/LUZ)) + 24*io((t-LUZ)/(FIM_LUZ-LUZ)); // nasce rente à pedra e vai subindo
+  const elev=mix(sobe,72,fim);
+  const asp=W/H, tg=Math.tan(19*Math.PI/180);
+  const dFim=Math.max(.45/tg,.42/(tg*asp));      // garante LORD e LUMBERJACK inteiros (celular também)
+  const dist=mix(mix(.34,.26,sm(t/LUZ)),dFim,fim);
+  const e=elev*Math.PI/180, lado=.06*Math.sin(t*.7)*(1-fim);
+  const cam=[alvo[0]+lado, alvo[1]-dist*Math.cos(e), dist*Math.sin(e)+.004];
+  const revela=sm(t/LUZ);
+  const pulso=Math.exp(-Math.pow((t-FIM_LUZ-.15)*4,2))*.25;
+  return { T, cam, tgt:alvo, fov:38*Math.PI/180,
+    spot:[alvo[0]-.7*(1-revela), alvo[1]+.05], dof:mix(5,1.2,fim), expo:mix(.35,1,revela)+pulso,
+    key:mix(3.2,1.4,sm((t-LUZ)/1.2))+fim*1.6 };
+}
 function pass(pr,rt){ gl.useProgram(pr.p); gl.bindFramebuffer(gl.FRAMEBUFFER,rt?rt.f:null); gl.viewport(0,0,rt?rt.w:W,rt?rt.h:H); }
 function tex(pr,name,t,unit){ gl.activeTexture(gl.TEXTURE0+unit); gl.bindTexture(gl.TEXTURE_2D,t); gl.uniform1i(pr.U[name],unit); }
 function blurPair(src,tmp,dst,w,h,k){
@@ -182,7 +246,7 @@ function draw(T,time,S){
   const cam=S.cam, tgt=S.tgt;
   let s=P.scene; pass(s,RT.scene); tex(s,'uMap',mapTex,0);
   gl.uniform2f(s.U.uRes,W,H); gl.uniform3fv(s.U.uCam,cam); gl.uniform3fv(s.U.uTgt,tgt);
-  gl.uniform1f(s.U.uFov,S.fov); gl.uniform1f(s.U.uT,T); gl.uniform1f(s.U.uTime,time); gl.uniform2fv(s.U.uSpot,S.spot);
+  gl.uniform1f(s.U.uFov,S.fov); gl.uniform1f(s.U.uKey,S.key); gl.uniform1f(s.U.uT,T); gl.uniform1f(s.U.uTime,time); gl.uniform2fv(s.U.uSpot,S.spot);
   gl.drawArrays(gl.TRIANGLES,0,3);
   // 1/4 e 1/16 de resolução: desfoque (profundidade de campo) e bloom
   pass(P.copy,RT.a); tex(P.copy,'uTex',RT.scene.t,0); gl.uniform2f(P.copy.U.uTexel,1/W,1/H); gl.drawArrays(gl.TRIANGLES,0,3);
@@ -196,15 +260,45 @@ function draw(T,time,S){
   gl.drawArrays(gl.TRIANGLES,0,3);
 }
 
+const site=document.getElementById('site'), ui=document.getElementById('ui');
+const reduz=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let raf=0, t0=0, acabou=false;
+function mostraSite(){ site.classList.add('on'); document.getElementById('denovo').hidden=false; document.getElementById('pular').hidden=true; }
+function fendaPath(){ // rachadura irregular de cima a baixo
+  const pts=[]; let x=50; for(let i=0;i<=22;i++){ x=cl(x+(Math.random()-.5)*7,40,60); pts.push([i===0||i===22?x:x, i/22*100]); }
+  return pts; }
+function racha(){
+  if(acabou) return; acabou=true; cancelAnimationFrame(raf);
+  const url=cv.toDataURL('image/jpeg',.9), pts=fendaPath();
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg'); svg.setAttribute('class','fenda'); svg.setAttribute('viewBox','0 0 100 100'); svg.setAttribute('preserveAspectRatio','none');
+  const path=document.createElementNS(svg.namespaceURI,'path'); path.setAttribute('d','M'+pts.map(p=>p.join(' ')).join(' L')); path.setAttribute('vector-effect','non-scaling-stroke'); svg.appendChild(path);
+  const poly=lado=>`polygon(${lado<0?'0% 0%':'100% 0%'},${pts.map(p=>p[0]+'% '+p[1]+'%').join(',')},${lado<0?'0% 100%':'100% 100%'})`;
+  const halves=[-1,1].map(l=>{ const d=document.createElement('div'); d.className='metade'; d.style.backgroundImage=`url(${url})`; d.style.clipPath=poly(l); document.body.appendChild(d); return [d,l]; });
+  document.body.appendChild(svg); cv.style.visibility='hidden';
+  const len=path.getTotalLength(); path.style.strokeDasharray=len; path.style.strokeDashoffset=len;
+  path.animate([{strokeDashoffset:len},{strokeDashoffset:0}],{duration:420,easing:'cubic-bezier(.7,0,.3,1)',fill:'forwards'});
+  const clarao=document.getElementById('clarao');
+  setTimeout(()=>{
+    clarao.animate([{opacity:0},{opacity:1,offset:.25},{opacity:0}],{duration:1300,easing:'ease-out',fill:'forwards'});
+    halves.forEach(([d,l])=>d.animate([{transform:'translateX(0)'},{transform:`translateX(${l*58}vw) rotate(${l*1.5}deg)`}],{duration:1100,easing:'cubic-bezier(.77,0,.18,1)',fill:'forwards'}));
+    svg.animate([{opacity:1},{opacity:0}],{duration:500,delay:150,fill:'forwards'});
+    setTimeout(mostraSite,250);
+    setTimeout(()=>{ halves.forEach(([d])=>d.remove()); svg.remove(); },1200);
+  },450);
+}
 function start(){
   resize();
-  const T=Q.has('t')?parseFloat(Q.get('t')):1.9;
-  if(Q.has('t')){ draw(T,1.3,SHOT); return; }       // quadro parado
-  const t0=performance.now();
-  const loop=now=>{ draw(T,(now-t0)/1000,SHOT); requestAnimationFrame(loop); };
-  requestAnimationFrame(loop);
+  if(Q.has('quadro')){ const t=parseFloat(Q.get('quadro')); const S=shot(t); draw(S.T,t,S); return; } // quadro fixo (prints e vídeo)
+  const visto=(()=>{try{return sessionStorage.getItem('lord-intro')}catch(e){return null}})();
+  if(reduz || (visto && !Q.has('intro'))){ cv.style.display='none'; mostraSite(); return; }
+  try{sessionStorage.setItem('lord-intro','1')}catch(e){}
+  t0=performance.now();
+  const loop=now=>{ const t=(now-t0)/1000; const S=shot(Math.min(t,RACHA)); draw(S.T,t,S); if(t>=RACHA){ racha(); return; } raf=requestAnimationFrame(loop); };
+  raf=requestAnimationFrame(loop);
 }
-addEventListener('resize',()=>{ if(mapTex) { resize(); } });
+document.getElementById('pular').onclick=()=>{ cancelAnimationFrame(raf); if(!acabou){ const S=shot(RACHA); draw(S.T,RACHA,S); racha(); } };
+document.getElementById('denovo').onclick=()=>{ location.search='?intro'; };
+addEventListener('resize',()=>{ if(!acabou) resize(); });
 })();
 </script>
 </body>
