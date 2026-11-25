@@ -223,7 +223,7 @@ img.src='img/pedra-mapa.png';
 const FRONT=[[0.001,0.289],[0.001,0.289],[-0.014,0.258],[0.001,0.289],[-0.014,0.258],[-0.012,0.245],[-0.008,0.23],[-0.006,0.214],[-0.001,0.188],[-0.005,0.154],[-0.022,0.111],[-0.033,0.077],[-0.042,0.034],[-0.051,-0.006],[-0.055,-0.046],[-0.066,-0.081],[-0.084,-0.123],[-0.059,-0.137],[-0.028,-0.144],[0.009,-0.147],[0.047,-0.151],[0.08,-0.158],[0.114,-0.166],[0.15,-0.174],[0.208,-0.182],[0.233,-0.192],[0.248,-0.2],[0.233,-0.211],[0.196,-0.225],[0.091,-0.255],[0.03,-0.284],[0.103,-0.286],[0.154,-0.286],[0.162,-0.287],[0.22,-0.285]];
 const LOSANGO=[-0.108,-0.140];               // losango aceso no centro do "O": onde a câmera mergulha
 const LUZ=.2, VEL=1.35;                      // a luz enche tudo em ~2,5 s
-const PERSEGUE=1.2, DECOLA=2.3, MERGULHO=3.75, ENTRA=MERGULHO+.12;
+const PERSEGUE=1.2, DECOLA=2.3, MERGULHO=3.1, ENTRA=MERGULHO+.1;
 const cl=(x,a=0,b=1)=>Math.min(b,Math.max(a,x)), mix=(a,b,k)=>a+(b-a)*k;
 const sm=x=>{x=cl(x);return x*x*(3-2*x);}, io=x=>{x=cl(x);return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;};
 const inQ=x=>{x=cl(x);return x*x*x;};
@@ -247,7 +247,7 @@ function shot(t){
   } else {                                          // 3. desce e mergulha no losango
     const k=(t-DECOLA)/(MERGULHO-DECOLA), kk=sm(k);
     alvo=[mix(0,LOSANGO[0],kk), mix(-.02,LOSANGO[1],kk), 0];
-    az=-90; el=mix(62,82,kk); dist=Math.exp(mix(Math.log(dAlto),Math.log(.02),Math.pow(cl(k),1.6))); // desce sem pausa, acelerando
+    az=-90; el=mix(62,82,kk); dist=Math.exp(mix(Math.log(dAlto),Math.log(.02),Math.pow(cl(k),2.2))); // queda: começa já descendo e acelera forte no fim
   }
   const cam=orbita(alvo,az,el,dist);
   const upv=[0,0,1];                               // elevação fica abaixo de 88°: a imagem gira com a órbita, sem capotar
