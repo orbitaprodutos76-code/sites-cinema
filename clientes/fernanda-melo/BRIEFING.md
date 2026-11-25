@@ -137,3 +137,16 @@ Prints em `referencias/ref-*.png`.
 - Névoa, céu e vídeo de nuvem real (`nuvem-roxa.html`, `corte.html`, `laboratorio-nevoa.html`) ficam só como histórico.
 - `mostruario-nuvem.html` → https://claude.ai/artifact/WZQjfk3Qp97ZRsV3TeEUjm · a mesma nuvem 3D compacta (feita em código, gira e responde ao mouse/dedo) em 4 acabamentos do salão: **A mármore roxo com veios de ouro** (fundo branco) · **B vinil inflável brilhante** (fundo Deep Purple, nome em ouro, estilo DY) · **C veludo fosco + aro de luz dourada** (o espelho do salão) · **D vidro roxo com contorno neon** (a vitrine). Print: `referencias/mostruario-nuvem-v1-print.png`.
 - PENDENTE: o senhor escolher a letra (ou misturar) antes de qualquer abertura.
+
+## As 10 perguntas da nuvem (26/11/2026) — respostas do senhor
+1. "Simples" = **forma** (amontoado de bolinhas), **falta de detalhe**, **falta de vida**.
+2. Silhueta: **cúmulo compacto** (rolos reais, mas como objeto sólido).
+3. Tamanho: **médio, na frente do nome gigante** (estilo Daddy Yankee).
+4. Material de partida: mármore — mas atenção: **o MÁRMORE BRANCO (com fumaça roxa e veios de ouro, igual à parede do salão) é o FUNDO DO SITE**.
+5. **A nuvem é ROXA e sem ouro.** O ouro fica no mármore do fundo e no nome.
+6. Material da nuvem: **fofa e macia** (fosco-acetinado, rolos bem desenhados).
+7. Vida: **respira e pulsa** + **reage ao toque/mouse** (inclina e se deforma).
+8. Abertura: **depois**. Primeiro a nuvem no site, como **animação principal**.
+9. Lugar: **1ª página (topo da home)**.
+10. Sensação: **luxo + ousadia**.
+- Foto da parede: `img/salao-amplo.jpg` e `img/espelhos-moto.jpg` (mármore branco, nuvens roxas, veios dourados finos).
