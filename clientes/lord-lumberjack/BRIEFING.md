@@ -98,6 +98,10 @@ Pedidos do senhor sobre a v2: câmera é o que vende ("posso fechar a venda só 
 - Caminhos: (1) link direto do AppBarber já com serviço/barbeiro, se ele aceitar; (2) se não aceitar, a transição mostra a escolha e o caminho no app ("Combos → Carlos → horário"); (3) botões dizendo "Agendar no app da Lord" + aviso "1. Escolha aqui · 2. Confirme no app em 30 s"; (4) plano B: WhatsApp com a escolha escrita.
 - Teste daqui: o AppBarber (sites.appbarber.com.br) tem bloqueio contra navegador automático (Vercel Security Checkpoint). **Não contornar.** A documentação pública não diz se existe link por serviço/barbeiro. Próximo passo: o senhor manda prints/endereços do fluxo no celular.
 
+## Fotos do AppBarber (25/11/2026)
+- O senhor **autorizou** usar no site as fotos dos 4 barbeiros e dos produtos publicadas na página da Lord no AppBarber (são selfies; melhor que monograma, abaixo do nível da abertura). Ainda não baixadas: o AppBarber bloqueia acesso automático; pegar pelo celular do senhor ou pelo dono.
+- Prints do AppBarber: abas Serviços, Profissionais, Fidelidade, Produtos, Pacotes, Assinaturas; botão "Agendar agora"; faixa empurrando baixar o app. O navegador interno esconde o caminho do link: falta saber se o endereço muda por serviço/barbeiro.
+
 ## Material pendente
 - [ ] OK do senhor para baixar as 9 imagens públicas da Lord (o v9 parou esperando isso).
 - [ ] 10 tomadas de vídeo na visita (lista em `POSTAR/TOMADAS-LORD.txt` no PC). A mais importante: **nº 01, letreiro LORD da parede, de frente**. Só filmar com autorização do dono.
