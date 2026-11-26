@@ -14,7 +14,10 @@
 - **Body Gym Academia**, desde **2019**. Bio: "VOCÊ ALÉM DE UM SIMPLES TREINO!!!". 362 posts, 5.107 seguidores.
 - **Logo:** espartano musculoso de braços cruzados, capacete com crista vermelha, olhos vermelhos, moldura com grega, letras "BODY GYM" prateadas e "V" metálico atrás. Cores da marca: **preto, vermelho, prata/cromo**.
 - **Endereço:** Av. Afonso José Carrijo, Qd. 13, Lt. 8, Res. Parque Flamboyant, **Mineiros – GO** (CEP 75832-204, lido do post, confirmar).
-- **WhatsApp:** (64) 99231-0285 (lido de um post pequeno, CONFIRMAR).
+- **WhatsApp:** (64) 9 9231-9285 · wa.me/5564992319285 (confirmado pela bio).
+- **Proprietário:** @douglaspretto89.
+- **Destaques do perfil:** Eventos, Antes e Depois, Evoluções, Pôr do sol, Novidades, Horários. Reels: dicas para perder o medo de academia, festa anos 80, Halloween, encontros ao ar livre com a turma.
+- **Público MUITO variado:** de pessoas realmente grandes a idosos (palavra do senhor). O site precisa acolher todo mundo, não só atleta de elite.
 - **Horário:** seg a sex 05h–23h · sáb 08h–16h · dom 08h–12h.
 - **Destaques do espaço:** janelões de vidro com **vista para morros verdes**; **pôr do sol** atravessando o salão sobre as esteiras (o diferencial, segundo o senhor); **bandeiras de Goiás, Brasil e da Body Gym** na parede preta com o letreiro "TRILHA A"; telhado industrial; catracas; esfera espelhada decorativa.
 - **Referência visual do senhor:** `referencias/ref-rockway-senhor.jpg` (Rockway Fitness Club): fundo escuro, vermelho, atleta no centro, título gigante "FORGE YOUR STRONGER SELF" com palavras atrás e na frente da pessoa, números (membros, nota, 24/7), cards laterais.
@@ -25,7 +28,12 @@
 - Rascunho barato (imagens) antes do bom.
 
 ## PENDENTE (material)
-- Modalidades, planos/preços, aula experimental? Confirmar WhatsApp e CEP.
+- Modalidades, planos/preços, aula experimental? Confirmar CEP.
 - Prints do Instagram (bio, destaques, posts mais fortes).
 - Fotos e vídeos do espaço e dos treinos (o senhor pode gravar lá).
 - Logo em boa resolução.
+
+## Direção travada (26/11/2026)
+- Cena do topo: **força da Rockway + o pôr do sol da Body Gym**. Cores: **escuro + vermelho + luz dourada** (prata nos detalhes). Fotos de pessoas: **as do Instagram**.
+- 3 opções de topo geradas (IA): `referencias/topo-a-cordas.png`, `topo-b-esteiras.png`, `topo-c-levantamento.png`. Arquivo Figma: https://www.figma.com/design/BkWBCQSpT6AGzs4XkY639e
+- Atenção: A e C mostram só atleta de elite, o que conflita com o público variado. PENDENTE: escolha.
