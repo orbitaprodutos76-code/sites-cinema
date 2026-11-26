@@ -7,193 +7,241 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;600;700&display=swap">
+<link rel="preload" as="image" href="midia/abertura-piso.webp">
+<link rel="preload" as="image" href="midia/abertura-anilha.webp">
 <style>
+/* Abertura v7 da Body Gym (isolada para revisão).
+   Camadas reais: piso (fundo) + anilha recortada que CAI de verdade + sombra + nuvem de giz em partículas + marca letra a letra.
+   Cores: preto domina; vermelho como luz (brilho de fundo, "GYM", faíscas); dourado só em detalhes. */
 :root{
-  --preto:#0a0a0b;
-  --carvao:#151517;
-  --linha:#2a2a2e;
-  --texto:#f3f3f4;
-  --suave:#a9a9b0;
+  --preto:#050506;
   --vermelho:#D7192A;
-  --vermelho-escuro:#8e0f1a;
   --ouro:#f6b445;
   --fonte-titulo:"Anton","Impact","Arial Narrow Bold",sans-serif;
   --fonte-texto:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --calha:max(28px,env(safe-area-inset-left,0px));
-  --calha-d:max(28px,env(safe-area-inset-right,0px));
-  color-scheme:dark;
+  --calha-d:max(20px,env(safe-area-inset-right,0px));
 }
-
-html,body{margin:0;background:#000;color:#f3f3f4;font-family:var(--fonte-texto)}
+html,body{margin:0;height:100%;background:var(--preto);color:#f3f3f4;font-family:var(--fonte-texto);overflow:hidden}
 *{box-sizing:border-box}
-.cromo{background:linear-gradient(180deg,#ffffff 0%,#d9dadd 30%,#8d9096 52%,#f4f4f5 64%,#a4a6ab 82%,#5e6066 100%);
+
+.abertura{position:fixed;inset:0;overflow:hidden;background:var(--preto);contain:strict}
+.cam{position:absolute;inset:0;will-change:transform}
+.cena{position:absolute;inset:0}
+.piso{position:absolute;inset:-6%;opacity:0}
+.piso img{width:100%;height:100%;object-fit:cover;object-position:50% 70%;filter:brightness(.92) contrast(1.08)}
+/* luz vermelha da academia: vem de trás, à esquerda e à direita, sem lavar a cena */
+.luz-vermelha{position:absolute;inset:0;opacity:0;mix-blend-mode:screen;pointer-events:none;background:
+  radial-gradient(40% 55% at 12% 38%,rgba(215,25,42,.55),rgba(215,25,42,0) 70%),
+  radial-gradient(34% 45% at 90% 30%,rgba(215,25,42,.38),rgba(215,25,42,0) 70%)}
+.veu{position:absolute;inset:0;pointer-events:none;background:
+  linear-gradient(180deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,0) 30%,rgba(0,0,0,0) 70%,rgba(0,0,0,.7) 100%),
+  radial-gradient(120% 90% at 50% 55%,rgba(0,0,0,0) 50%,rgba(0,0,0,.75) 100%)}
+.sombra{position:absolute;left:50%;bottom:12.5%;width:min(46vh,34vw);height:5vh;margin-left:calc(min(46vh,34vw)/-2);border-radius:50%;
+  background:radial-gradient(closest-side,rgba(0,0,0,.95),rgba(0,0,0,0));opacity:0;transform:scaleX(.25)}
+.anilha{position:absolute;left:50%;bottom:13.5%;height:60vh;aspect-ratio:673/860;transform-origin:50% 100%;will-change:transform}
+.anilha img{position:absolute;inset:0;width:100%;height:100%}
+.anilha .rastro{filter:blur(10px) brightness(1.4);opacity:0;transform:translateY(-14%) scaleY(1.25)}
+.anilha .nitida{filter:drop-shadow(0 0 30px rgba(0,0,0,.6))}
+.onda{position:absolute;left:50%;bottom:12%;width:44vh;height:7vh;margin-left:-22vh;border-radius:50%;opacity:0;
+  box-shadow:0 0 0 2px rgba(255,226,180,.85),0 0 30px 6px rgba(255,200,140,.35);transform:scale(.2)}
+.po{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.flash{position:absolute;inset:0;opacity:0;mix-blend-mode:screen;pointer-events:none;
+  background:radial-gradient(circle at 50% 82%,#fffaf0 0%,#ffd9a0 25%,rgba(215,25,42,.35) 55%,rgba(0,0,0,0) 80%)}
+
+/* Marca */
+.marca{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.logo{width:clamp(70px,9vh,120px);height:clamp(70px,9vh,120px);border-radius:50%;opacity:0;margin-bottom:2.2vh;
+  box-shadow:0 0 0 2px rgba(215,25,42,.9),0 0 40px rgba(215,25,42,.45)}
+.nome{position:relative;display:flex;font-family:var(--fonte-titulo);font-size:clamp(84px,19vw,330px);line-height:.86;text-transform:uppercase;letter-spacing:.01em;white-space:nowrap}
+.nome .l{display:inline-block;opacity:0;will-change:transform;padding:.12em .015em .06em;margin:-.12em -.015em -.06em}
+.nome .esp{width:.22em}
+.cromo{background:linear-gradient(180deg,#ffffff 0%,#dcdde0 30%,#8b8e94 52%,#f5f5f6 63%,#a2a4a9 82%,#55575c 100%);
   -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
-  filter:drop-shadow(0 2px 0 rgba(0,0,0,.6)) drop-shadow(0 14px 22px rgba(0,0,0,.55))}
-/* ===== Abertura (tela cheia, ~5,5 s, uma vez por visita) ===== */
-.abertura{position:fixed;inset:0;z-index:100;background:#000;overflow:hidden;display:none;contain:strict}
-.com-abertura .abertura{display:block}
-.com-abertura body{overflow:hidden}
-.ab-cam,.ab-cena,.ab-haze,.ab-flash,.ab-giz,.ab-marca{position:absolute;inset:0}
-.ab-cena{opacity:0}
-.ab-cena img{width:100%;height:100%;object-fit:cover;object-position:56% 62%}
-.ab-haze{background:radial-gradient(70% 60% at 50% 52%,rgba(150,10,24,.55),rgba(0,0,0,0) 72%),radial-gradient(130% 100% at 50% 50%,rgba(0,0,0,0) 45%,rgba(0,0,0,.85) 100%);opacity:0}
-.ab-luz{position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;transform:scaleX(0);opacity:0;
-  background:linear-gradient(90deg,rgba(246,180,69,0) 0%,#ffd58a 50%,rgba(246,180,69,0) 100%);box-shadow:0 0 26px 5px rgba(246,180,69,.5)}
-.ab-flash{opacity:0;mix-blend-mode:screen;background:radial-gradient(circle at 56% 74%,#fff6e0 0%,#ffc56b 22%,rgba(215,25,42,.55) 50%,rgba(0,0,0,0) 78%)}
-.ab-giz{width:100%;height:100%;pointer-events:none}
-.ab-marca{display:grid;place-items:center;pointer-events:none}
-.ab-logo{position:absolute;left:50%;top:50%;width:min(78vw,78vh);height:min(78vw,78vh);margin:calc(min(78vw,78vh)/-2) 0 0 calc(min(78vw,78vh)/-2);
-  border-radius:50%;opacity:0;mix-blend-mode:screen;filter:saturate(1.25) brightness(1.1);
-  -webkit-mask-image:radial-gradient(circle at 50% 47%,#000 26%,rgba(0,0,0,0) 52%);mask-image:radial-gradient(circle at 50% 47%,#000 26%,rgba(0,0,0,0) 52%)}
-.ab-nome{position:relative;display:inline-block;opacity:0;font-family:var(--fonte-titulo);font-size:clamp(74px,16vw,270px);line-height:.9;letter-spacing:.015em;text-transform:uppercase;white-space:nowrap}
-.ab-nome .cromo{display:block}
-.ab-brilho{position:absolute;top:0;bottom:0;left:0;width:16%;overflow:hidden;pointer-events:none;
+  filter:drop-shadow(0 3px 0 rgba(0,0,0,.7)) drop-shadow(0 20px 30px rgba(0,0,0,.6))}
+.rubro{background:linear-gradient(180deg,#ff5a63 0%,#e3192b 42%,#9e0d1c 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 3px 0 rgba(50,0,6,.8)) drop-shadow(0 18px 36px rgba(215,25,42,.45))}
+.brilho{position:absolute;top:0;bottom:0;left:0;width:14%;overflow:hidden;pointer-events:none;
   -webkit-mask-image:linear-gradient(90deg,rgba(0,0,0,0),#000 50%,rgba(0,0,0,0));mask-image:linear-gradient(90deg,rgba(0,0,0,0),#000 50%,rgba(0,0,0,0))}
-.ab-brilho span{position:absolute;top:0;left:0;white-space:nowrap;padding:.22em .02em .12em;margin-top:-.22em;
-  background:linear-gradient(180deg,#fff7e2 0%,#ffd27a 45%,#c98a22 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
-.ab-sub{position:absolute;left:0;right:0;top:calc(50% + clamp(54px,9.5vw,160px));text-align:center;opacity:0;
-  font:700 clamp(11px,1vw,14px)/1 var(--fonte-texto);letter-spacing:.5em;text-transform:uppercase;color:var(--ouro)}
-.ab-barra{position:absolute;left:0;right:0;height:12.5%;background:#000;z-index:4}
-.ab-barra.cima{top:0;transform-origin:50% 0}
-.ab-barra.baixo{bottom:0;transform-origin:50% 100%}
-.ab-progresso{position:absolute;left:0;right:0;bottom:0;height:2px;z-index:5;transform:scaleX(0);transform-origin:0 50%;background:linear-gradient(90deg,var(--vermelho),var(--ouro))}
-.ab-pular{position:absolute;z-index:6;right:var(--calha-d);bottom:calc(env(safe-area-inset-bottom,0px) + 22px);cursor:pointer;
-  font:600 11px/1 var(--fonte-texto);letter-spacing:.32em;text-transform:uppercase;color:#d6d6da;background:rgba(0,0,0,.35);
-  border:1px solid rgba(255,255,255,.22);border-radius:40px;padding:12px 18px;transition:background-color .3s,border-color .3s}
-.ab-pular:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.5)}
+.brilho span{position:absolute;top:0;left:0;display:flex;white-space:nowrap;
+  background:linear-gradient(180deg,#fff9ea 0%,#ffd88a 50%,#d0902a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.linha{width:min(62vw,820px);height:1px;margin-top:3vh;transform:scaleX(0);
+  background:linear-gradient(90deg,rgba(246,180,69,0),var(--ouro) 50%,rgba(246,180,69,0))}
+.sub{margin-top:2vh;opacity:0;font:700 clamp(11px,1vw,14px)/1 var(--fonte-texto);letter-spacing:.5em;text-transform:uppercase;color:#e8e8ea}
+.sub b{color:var(--ouro);font-weight:700}
 
+.barra-cine{position:absolute;left:0;right:0;height:11%;background:#000;z-index:4}
+.barra-cine.cima{top:0;transform-origin:50% 0}
+.barra-cine.baixo{bottom:0;transform-origin:50% 100%}
+.progresso{position:absolute;left:0;right:0;bottom:0;height:2px;z-index:5;transform:scaleX(0);transform-origin:0 50%;background:linear-gradient(90deg,var(--vermelho),var(--ouro))}
+.pular{position:absolute;z-index:6;right:var(--calha-d);bottom:calc(env(safe-area-inset-bottom,0px) + 20px);cursor:pointer;
+  font:600 11px/1 var(--fonte-texto);letter-spacing:.32em;text-transform:uppercase;color:#d6d6da;background:rgba(0,0,0,.4);
+  border:1px solid rgba(255,255,255,.22);border-radius:40px;padding:12px 18px}
 
-.abertura{display:block}
-#painel{position:fixed;z-index:200;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 70px);transform:translateX(-50%);display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+#painel{position:fixed;z-index:20;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 64px);transform:translateX(-50%);display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:max-content;max-width:94vw;
   opacity:0;pointer-events:none;transition:opacity .4s}
 #painel.fim{opacity:1;pointer-events:auto}
-#painel button{font:700 13px/1 var(--fonte-texto);letter-spacing:.08em;color:#fff;background:#1a1a1d;border:1px solid #3a3a40;border-radius:40px;padding:13px 18px;cursor:pointer}
+#painel button{font:700 13px/1 var(--fonte-texto);letter-spacing:.06em;color:#fff;background:#18181b;border:1px solid #3a3a40;border-radius:40px;padding:13px 18px;cursor:pointer}
 #painel button.on{background:var(--vermelho);border-color:var(--vermelho)}
-#painel button:focus-visible{outline:3px solid var(--ouro);outline-offset:3px}
+button:focus-visible{outline:3px solid var(--ouro);outline-offset:3px}
+
+@media (max-width:760px){
+  .anilha{height:44vh;bottom:22%}
+  .sombra{bottom:21%;width:36vh;margin-left:-18vh}
+  .onda{bottom:20.5%;width:40vh;margin-left:-20vh}
+  .piso img{object-position:50% 72%}
+  .nome{font-size:20vw}
+  .sub{letter-spacing:.3em}
+}
 </style>
 </head>
 <body>
-<div class="abertura" id="abertura" aria-hidden="true">
-  <div class="ab-cam">
-    <div class="ab-cena" id="ab-queda"><img src="midia/abertura-queda.webp" width="1536" height="864" alt="" decoding="async"></div>
-    <div class="ab-cena" id="ab-impacto"><img src="midia/abertura-impacto.webp" width="1536" height="864" alt="" decoding="async"></div>
-    <div class="ab-haze"></div>
-    <div class="ab-luz"></div>
-    <div class="ab-flash"></div>
-    <canvas class="ab-giz"></canvas>
-    <div class="ab-marca">
-      <img class="ab-logo" src="midia/logo.webp" width="476" height="476" alt="">
-      <div class="ab-nome"><span class="cromo">Body Gym</span><span class="ab-brilho"><span>Body Gym</span></span></div>
-      <span class="ab-sub">Mineiros · GO — desde 2019</span>
+<div class="abertura" id="abertura" aria-label="Abertura animada da Body Gym" role="img">
+  <div class="cam">
+    <div class="cena">
+      <div class="piso"><img src="midia/abertura-piso.webp" width="1536" height="864" alt=""></div>
+      <div class="luz-vermelha"></div>
+      <div class="sombra"></div>
+      <div class="anilha"><img class="rastro" src="midia/abertura-anilha.webp" width="673" height="860" alt=""><img class="nitida" src="midia/abertura-anilha.webp" width="673" height="860" alt=""></div>
+      <div class="onda"></div>
+      <div class="veu"></div>
+    </div>
+    <canvas class="po"></canvas>
+    <div class="flash"></div>
+    <div class="marca">
+      <img class="logo" src="midia/logo.webp" width="476" height="476" alt="">
+      <div class="nome" aria-hidden="true">
+        <span class="l cromo">B</span><span class="l cromo">O</span><span class="l cromo">D</span><span class="l cromo">Y</span><span class="esp"></span><span class="l rubro">G</span><span class="l rubro">Y</span><span class="l rubro">M</span>
+        <span class="brilho"><span>BODY<i style="display:inline-block;width:.22em"></i>GYM</span></span>
+      </div>
+      <div class="linha"></div>
+      <span class="sub">Mineiros · GO <b>—</b> desde 2019</span>
     </div>
   </div>
-  <div class="ab-barra cima"></div><div class="ab-barra baixo"></div>
-  <div class="ab-progresso"></div>
-  <button class="ab-pular" type="button" tabindex="-1">Pular</button>
+  <div class="barra-cine cima"></div><div class="barra-cine baixo"></div>
+  <div class="progresso"></div>
+  <button class="pular" type="button">Pular</button>
 </div>
 
-
 <div id="painel" role="group" aria-label="Controles da abertura">
-  <button type="button" data-vel="1" class="on">Rever 1x</button>
+  <button type="button" data-vel="1">Rever 1x</button>
   <button type="button" data-vel="0.5">Câmera lenta 0,5x</button>
   <button type="button" data-vel="0.25">Quadro a quadro 0,25x</button>
 </div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script>
 (function(){
   var q=function(s,c){return (c||document).querySelector(s)}, qa=function(s,c){return Array.prototype.slice.call((c||document).querySelectorAll(s))};
-  var desk=matchMedia('(min-width: 761px)').matches, lenis=null;
-  /* velocidade escolhida vem na URL (?vel=0.5) */
-  var v0=+new URLSearchParams(location.search).get('vel'); if(v0) window.VEL=v0;
-  qa('#painel button').forEach(function(x){ x.classList.toggle('on', +x.dataset.vel===(window.VEL||1)); });
-  /* Giz: partículas de magnésio iluminadas (canvas 2D, leve no celular) */
-  function Giz(cv, o){
-    var ctx=cv.getContext('2d'), P=[], dpr=Math.min(window.devicePixelRatio||1,2), W=0, H=0, mx=-9999, my=-9999, ativo=true, ult=0;
-    o=Object.assign({max:220, ambiente:0, gravidade:-6, origem:null},o||{});
-    function mede(){ var r=cv.getBoundingClientRect(); W=r.width; H=r.height; cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); ctx.setTransform(dpr,0,0,dpr,0,0); }
-    mede(); addEventListener('resize',mede);
-    function poe(x,y,vx,vy,vida,r){ if(P.length>=o.max) P.shift(); P.push({x:x,y:y,vx:vx,vy:vy,v:vida,m:vida,r:r,o:Math.random()<.68}); }
-    function explode(x,y,n,forca){
-      for(var i=0;i<n;i++){ var a=-Math.PI*(.05+.9*Math.random()), s=forca*(.25+Math.random()*.9);
-        poe(x+(Math.random()-.5)*30, y, Math.cos(a)*s*(Math.random()<.5?-1:1), Math.sin(a)*s, 1.2+Math.random()*1.8, .6+Math.random()*2.2); }
-    }
-    function passo(t){
-      if(!ativo){ ult=0; return; }
-      var dt=ult?Math.min(.05,(t-ult)/1000):.016; ult=t;
-      if(o.ambiente && o.origem){ var q=o.ambiente*dt; while(q>0){ if(Math.random()<q){ var g=o.origem();
-        poe(g.x+(Math.random()-.5)*g.w, g.y+(Math.random()-.5)*g.h, 6+Math.random()*14, -(8+Math.random()*22), 3+Math.random()*4, .5+Math.random()*1.6);} q-=1; } }
-      ctx.clearRect(0,0,W,H); ctx.globalCompositeOperation='lighter';
-      for(var i=P.length-1;i>=0;i--){ var p=P[i]; p.v-=dt; if(p.v<=0){ P.splice(i,1); continue; }
-        var dx=p.x-mx, dy=p.y-my, d2=dx*dx+dy*dy;
-        if(d2<16900){ var d=Math.sqrt(d2)||1, f=(130-d)/130*420*dt; p.vx+=dx/d*f; p.vy+=dy/d*f; }
-        p.vx*=Math.pow(.35,dt); p.vy=p.vy*Math.pow(.35,dt)+o.gravidade*dt*4; p.x+=p.vx*dt; p.y+=p.vy*dt;
-        var vida=p.v/p.m, al=Math.min(1,vida*1.6)*Math.min(1,(p.m-p.v)*6)*.85;
-        ctx.fillStyle=p.o?'rgba(255,206,130,'+al+')':'rgba(255,246,232,'+(al*.8)+')';
-        ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,6.283); ctx.fill(); }
-      ctx.globalCompositeOperation='source-over';
-    }
-    gsap.ticker.add(function(){ passo(performance.now()); });
-    return { explode:explode, mira:function(x,y){mx=x;my=y}, liga:function(v){ ativo=v; if(!v) ctx.clearRect(0,0,W,H); }, tam:function(){return{w:W,h:H}} };
+  var desk=matchMedia('(min-width: 761px)').matches;
+  var VEL=+new URLSearchParams(location.search).get('vel')||1;
+  qa('#painel button').forEach(function(b){ b.classList.toggle('on',+b.dataset.vel===VEL);
+    b.addEventListener('click',function(){ var u=new URL(location.href); u.searchParams.set('vel',b.dataset.vel); location.replace(u.toString()); }); });
+
+  /* ---------- Pó: nuvem de giz (sprites macios) + fagulhas (pontos com gravidade) ---------- */
+  var cv=q('.po'), ctx=cv.getContext('2d'), dpr=Math.min(devicePixelRatio||1,2), W=0, H=0, P=[];
+  function mede(){ W=innerWidth; H=innerHeight; cv.width=W*dpr; cv.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
+  mede(); addEventListener('resize',mede);
+  function sprite(r,g,b){ var c=document.createElement('canvas'); c.width=c.height=128; var x=c.getContext('2d');
+    var gr=x.createRadialGradient(64,64,0,64,64,64); gr.addColorStop(0,'rgba('+r+','+g+','+b+',1)'); gr.addColorStop(.45,'rgba('+r+','+g+','+b+',.45)'); gr.addColorStop(1,'rgba('+r+','+g+','+b+',0)');
+    x.fillStyle=gr; x.fillRect(0,0,128,128); return c; }
+  var NUVEM=sprite(206,196,184), NUVEM_Q=sprite(232,200,150);
+  function nuvem(x,y,n,forca,larg){ for(var i=0;i<n;i++){ var lado=Math.random()<.5?-1:1;
+      P.push({t:'n',x:x+(Math.random()-.5)*larg,y:y-Math.random()*10,vx:lado*forca*(.2+Math.random()*.9),vy:-(20+Math.random()*forca*.35),
+        r:14+Math.random()*24,cr:(desk?80:55)+Math.random()*(desk?190:120),v:2+Math.random()*2.4,m:0,a:.05+Math.random()*.08,s:Math.random()<.35?NUVEM_Q:NUVEM}); P[P.length-1].m=P[P.length-1].v; } }
+  function fagulhas(x,y,n,forca){ for(var i=0;i<n;i++){ var a=-Math.PI*(.08+.84*Math.random()), s=forca*(.3+Math.random()*.9), k=Math.random();
+      P.push({t:'f',x:x+(Math.random()-.5)*60,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,r:.6+Math.random()*1.8,v:.9+Math.random()*1.6,m:0,
+        c:k<.12?'255,70,70':(k<.55?'255,214,150':'255,246,232')}); P[P.length-1].m=P[P.length-1].v; } }
+  gsap.ticker.add(function(t,dtMs){
+    var dt=Math.min(.05,dtMs/1000)*VEL; ctx.clearRect(0,0,W,H);
+    for(var i=P.length-1;i>=0;i--){ var p=P[i]; p.v-=dt; if(p.v<=0){P.splice(i,1);continue;}
+      var vida=p.v/p.m, idade=p.m-p.v;
+      if(p.t==='n'){ p.vx*=Math.pow(.25,dt); p.vy=p.vy*Math.pow(.4,dt)-6*dt; p.x+=p.vx*dt; p.y+=p.vy*dt;
+        var r=p.r+(p.cr-p.r)*(1-Math.pow(1-Math.min(1,idade/p.m*1.4),3));
+        ctx.globalCompositeOperation='source-over'; ctx.globalAlpha=p.a*Math.min(1,idade*8)*Math.min(1,vida*1.8);
+        ctx.drawImage(p.s,p.x-r*1.25,p.y-r*.7,r*2.5,r*1.4); }
+      else { p.vx*=Math.pow(.6,dt); p.vy+=520*dt; p.x+=p.vx*dt; p.y+=p.vy*dt;
+        ctx.globalCompositeOperation='lighter'; ctx.globalAlpha=Math.min(1,vida*2);
+        ctx.fillStyle='rgb('+p.c+')'; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,6.283); ctx.fill(); } }
+    ctx.globalAlpha=1; ctx.globalCompositeOperation='source-over';
+  });
+
+  /* ---------- Coreografia ---------- */
+  var A=q('#abertura'), cam=q('.cam'), anilha=q('.anilha'), nome=q('.nome'), letras=qa('.nome .l');
+  function chao(){ var r=anilha.getBoundingClientRect(); return {x:r.left+r.width/2, y:r.bottom}; }
+  var tl=gsap.timeline({paused:true,defaults:{ease:'expo.out'},onComplete:fim});
+  function treme(t,forca,n){ for(var i=0;i<n;i++){ var k=Math.pow(1-i/n,1.6);
+      tl.to(cam,{x:(Math.random()-.5)*forca*k,y:(Math.random()-.5)*forca*k*.8,rotation:(Math.random()-.5)*forca*.02*k,duration:.04,ease:'none'},t+i*.04); }
+    tl.to(cam,{x:0,y:0,rotation:0,duration:.1,ease:'power2.out'},t+n*.04); }
+
+  gsap.set(anilha,{xPercent:-50,yPercent:-175,rotation:-16,scale:1.12});
+  gsap.set(letras,{opacity:0}); gsap.set('.brilho',{opacity:0});
+  var IMPACTO=1.85;
+
+  // 0 – 1,85 s · a câmera desce para o piso e a anilha cai em câmera lenta (acelerando como peso de verdade)
+  tl.to('.progresso',{scaleX:1,duration:5.9,ease:'none'},0)
+    .to('.piso',{opacity:1,duration:1.2,ease:'power2.out'},0)
+    .fromTo('.piso img',{yPercent:-6,scale:1.16},{yPercent:0,scale:1.04,duration:2.2,ease:'power2.inOut'},0)
+    .to('.luz-vermelha',{opacity:.8,duration:1.6,ease:'power2.out'},.3)
+    .to(anilha,{yPercent:0,rotation:0,scale:1,duration:IMPACTO-.25,ease:'power2.in'},.25)
+    .fromTo('.anilha .rastro',{opacity:0},{opacity:.65,duration:.6,ease:'power2.in'},IMPACTO-.75)
+    .to('.sombra',{opacity:.9,scaleX:1,duration:IMPACTO-.35,ease:'power2.in'},.35)
+
+  // 1,85 s · IMPACTO: quica, tremor, clarão, onda no chão, nuvem de giz e fagulhas
+    .set('.anilha .rastro',{opacity:0},IMPACTO)
+    .to(anilha,{yPercent:-4.5,duration:.13,ease:'power2.out'},IMPACTO)
+    .to(anilha,{yPercent:0,duration:.17,ease:'power2.in'},IMPACTO+.13)
+    .to(anilha,{keyframes:[{rotation:3.2},{rotation:-2.2},{rotation:1.2},{rotation:-.5},{rotation:0}],duration:1.1,ease:'sine.inOut'},IMPACTO+.3)
+    .fromTo(cam,{scale:1},{scale:1.045,duration:.08,ease:'power2.out',immediateRender:false},IMPACTO)
+    .to(cam,{scale:1,duration:.5,ease:'power3.out'},IMPACTO+.08)
+    .fromTo('.flash',{opacity:0},{opacity:.95,duration:.04,ease:'none',immediateRender:false},IMPACTO)
+    .to('.flash',{opacity:0,duration:.6,ease:'power2.out'},IMPACTO+.04)
+    .fromTo('.onda',{opacity:1,scale:.2},{opacity:0,scale:3.2,duration:.9,ease:'expo.out',immediateRender:false},IMPACTO)
+    .add(function(){ var c=chao(), k=desk?1:.7; nuvem(c.x,c.y,desk?48:28,desk?560:360,anilha.offsetWidth*.6); fagulhas(c.x,c.y,desk?220:130,(desk?900:640)); },IMPACTO)
+    .to('.barra-cine.cima,.barra-cine.baixo',{scaleY:0,duration:1.1,ease:'expo.inOut'},IMPACTO+.25);
+  treme(IMPACTO,desk?46:30,11);
+
+  // 2,4 – 3,1 s · a poeira sobe, a câmera avança e a cena escurece para a marca
+  tl.to(cam,{scale:1.1,duration:1.2,ease:'power2.inOut'},IMPACTO+.6)
+    .to('.cena',{opacity:.22,duration:.8,ease:'power2.inOut'},IMPACTO+1.05)
+
+  // 3,05 s · BODY GYM bate letra por letra (cada batida treme e levanta pó)
+  var T0=IMPACTO+1.2, PASSO=.09, QUEDA=.3;
+  letras.forEach(function(l,i){
+    var t=T0+i*PASSO;
+    tl.fromTo(l,{opacity:0,scale:2.8,yPercent:-38},{opacity:1,scale:1,yPercent:0,duration:QUEDA,ease:'power4.in'},t)
+      .add(function(){ var r=l.getBoundingClientRect(); nuvem(r.left+r.width/2,r.bottom-r.height*.12,desk?3:2,desk?140:90,r.width*.6); },t+QUEDA);
+    if(i<letras.length-1) treme(t+QUEDA,desk?9:6,3);
+  });
+  var FINAL=T0+(letras.length-1)*PASSO+QUEDA;
+  treme(FINAL,desk?30:20,8);
+  tl.fromTo('.flash',{opacity:0},{opacity:.55,duration:.04,ease:'none',immediateRender:false},FINAL)
+    .to('.flash',{opacity:0,duration:.5,ease:'power2.out'},FINAL+.04)
+    .add(function(){ var r=nome.getBoundingClientRect(); fagulhas(r.left+r.width*.5,r.bottom-r.height*.1,desk?120:70,600); },FINAL)
+    .fromTo(cam,{scale:1.1},{scale:1.13,duration:.07,ease:'power2.out',immediateRender:false},FINAL)
+    .to(cam,{scale:1.06,duration:.9,ease:'power3.out'},FINAL+.07)
+    .to('.linha',{scaleX:1,duration:1,ease:'expo.inOut'},FINAL+.15)
+    .fromTo('.logo',{opacity:0,y:20,scale:.85},{opacity:1,y:0,scale:1,duration:.9},FINAL+.2)
+    .fromTo('.sub',{opacity:0,y:10},{opacity:1,y:0,duration:.9},FINAL+.35)
+    .add(function(){ var w=nome.offsetWidth, b=q('.brilho'), s=q('.brilho span');
+      gsap.set(b,{opacity:1}); gsap.fromTo(b,{x:-.2*w},{x:w*1.05,duration:.95/VEL,ease:'power2.inOut'}); gsap.fromTo(s,{x:.2*w},{x:-w*1.05,duration:.95/VEL,ease:'power2.inOut'}); },FINAL+.3)
+
+  // saída: a câmera atravessa a marca (no site, aqui entra o topo)
+    .to(cam,{scale:1.9,duration:.85,ease:'power3.in'},FINAL+1.45)
+    .to(A,{opacity:0,duration:.5,ease:'power2.in'},FINAL+1.8);
+
+  var acabou=false;
+  function fim(){ if(acabou) return; acabou=true; q('#painel').classList.add('fim'); }
+  q('.pular').addEventListener('click',function(){ tl.progress(1); });
+  addEventListener('keydown',function(e){ if(e.key==='Escape') tl.progress(1); });
+
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){
+    gsap.set('.piso',{opacity:1}); gsap.set(anilha,{yPercent:0,rotation:0,scale:1}); gsap.set('.sombra',{opacity:.9,scaleX:1});
+    gsap.set('.cena',{opacity:.25}); gsap.set(letras,{opacity:1}); gsap.set('.linha',{scaleX:1}); gsap.set('.logo,.sub',{opacity:1});
+    gsap.set('.barra-cine',{scaleY:0}); fim(); return;
   }
-
-
-  /* Abertura de cinema */
-  function abertura(){
-    var A=q('#abertura'); var raiz=document.documentElement;
-    var cvA=q('.ab-giz',A), gA=Giz(cvA,{max:desk?420:220, gravidade:9});
-    var nome=q('.ab-nome',A), brilho=q('.ab-brilho',A), brilhoTxt=q('.ab-brilho span',A), pular=q('.ab-pular',A);
-    var acabou=false;
-    function fim(){ if(acabou) return; acabou=true; q('#painel').classList.add('fim'); }
-    window.tlAbertura=null;
-    var tl=window.tlAbertura=gsap.timeline({paused:true, defaults:{ease:'expo.out'}, onComplete:fim});
-    var W=innerWidth, H=innerHeight;
-    function treme(t,forca,n){ for(var i=0;i<n;i++){ var k=1-i/n; tl.to('.ab-cam',{x:(Math.random()-.5)*forca*k,y:(Math.random()-.5)*forca*k,duration:.045,ease:'none'},t+i*.045); } tl.to('.ab-cam',{x:0,y:0,duration:.08,ease:'power2.out'},t+n*.045); }
-
-    // 0 – 0,8 s · preto + fio de luz dourada
-    tl.to('.ab-progresso',{scaleX:1,duration:5.4,ease:'none'},0)
-      .to('.ab-luz',{opacity:1,duration:.25,ease:'power2.out'},.12)
-      .to('.ab-luz',{scaleX:1,duration:.9,ease:'expo.inOut'},.12)
-    // 0,8 – 2,2 s · câmera lenta: desce rente ao piso atrás da anilha
-      .to('.ab-luz',{scaleY:60,opacity:0,duration:.6,ease:'power3.in'},.85)
-      .to('#ab-queda',{opacity:1,duration:.5,ease:'power2.out'},.95)
-      .fromTo('#ab-queda img',{scale:1.42,yPercent:-7,rotation:-3},{scale:1.14,yPercent:0,rotation:0,duration:1.45,ease:'power2.inOut'},.95)
-      .to('.ab-haze',{opacity:.9,duration:1.2,ease:'power2.out'},.95)
-    // 2,2 – 3,2 s · IMPACTO
-      .set('#ab-queda',{opacity:0},2.3)
-      .set('#ab-impacto',{opacity:1},2.3)
-      .fromTo('#ab-impacto img',{scale:1.2},{scale:1.02,duration:1.1,ease:'power4.out'},2.3)
-      .fromTo('.ab-flash',{opacity:0},{opacity:1,duration:.05,ease:'none'},2.28)
-      .to('.ab-flash',{opacity:0,duration:.7,ease:'power2.out'},2.33)
-      .add(function(){ var x=W*(desk?.56:.6), y=H*.72; gA.explode(x,y,desk?260:150,desk?900:620); gA.explode(x,y,desk?120:70,420); },2.3);
-    treme(2.3,desk?42:28,9);
-    // 2,9 s · as faixas de cinema abrem: tela inteira
-    tl.to('.ab-barra.cima,.ab-barra.baixo',{scaleY:0,duration:1.1,ease:'expo.inOut'},2.75)
-    // 3,2 – 4,4 s · a marca carimba em cromo
-      .to('#ab-impacto',{opacity:.22,duration:.5,ease:'power2.out'},3.1)
-      .fromTo('.ab-logo',{opacity:0,scale:1.25},{opacity:.42,scale:1,duration:1.4,ease:'power3.out'},3.05)
-      .fromTo(nome,{opacity:0,scale:2.3},{opacity:1,scale:1,duration:.42,ease:'power4.in'},3.15)
-      .add(function(){ gA.explode(W*.5,H*.56,desk?140:80,520); },3.57);
-    treme(3.57,desk?26:18,7);
-    tl.fromTo('.ab-sub',{opacity:0,y:12},{opacity:1,y:0,duration:.9},3.8)
-      .add(function(){ var w=nome.offsetWidth; gsap.fromTo(brilho,{x:-.25*w},{x:w*1.05,duration:.9,ease:'power2.inOut'}); gsap.fromTo(brilhoTxt,{x:.25*w},{x:-w*1.05,duration:.9,ease:'power2.inOut'}); },3.75)
-    // 4,4 – 5,5 s · a câmera avança e vira o novo topo
-      .to('.ab-cam',{scale:1.6,duration:1.05,ease:'power3.in'},4.45)
-      .to(A,{opacity:0,duration:.6,ease:'power2.in'},4.85);
-
-    function corta(){ if(acabou) return; tl.pause(); gsap.to(A,{opacity:0,duration:.4,ease:'power2.out',onComplete:fim}); }
-    pular.addEventListener('click',corta);
-    addEventListener('keydown',function k(e){ if(e.key==='Escape'){ corta(); removeEventListener('keydown',k); } });
-
-    // espera as imagens (no máximo 1 s) e roda
-    var imgs=qa('.ab-cena img',A).map(function(i){ return i.decode?i.decode().catch(function(){}):Promise.resolve(); });
-    Promise.race([Promise.all(imgs), new Promise(function(r){setTimeout(r,1000)})]).then(function(){ tl.timeScale(window.VEL||1).play(0); });
-  }
-
-  abertura();
-  qa('#painel button').forEach(function(b){ b.addEventListener('click',function(){
-    window.VEL=+b.dataset.vel; qa('#painel button').forEach(function(x){x.classList.toggle('on',x===b)});
-    var u=new URL(location.href); u.searchParams.set('vel',b.dataset.vel); location.replace(u.toString());
-  }); });
+  var imgs=qa('.abertura img').map(function(i){ return i.decode?i.decode().catch(function(){}):Promise.resolve(); });
+  Promise.race([Promise.all(imgs),new Promise(function(r){setTimeout(r,1200)})]).then(function(){ tl.timeScale(VEL).play(0); });
 })();
 </script>
 </body>
