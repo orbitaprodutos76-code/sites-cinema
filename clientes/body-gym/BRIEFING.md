@@ -158,3 +158,9 @@
 - Quadros: `referencias/abertura-v13-3d.jpg`. Link: https://claude.ai/artifact/SiZfdtPofuUnTWTvBvRoEq (versão 8).
 - Riscos: desempenho em celular fraco (bloom + 3D); não testei em aparelho real. PENDENTE: nota do senhor.
 - **v13 REPROVADA com força:** "que coisa feia, que animação bosta, eu posso vender isso por 400 reais?". Decisão do JARVIS: parar de iterar no escuro; pedir referência concreta e decidir o caminho com o senhor.
+
+## Nova direção: referência concreta do senhor (26/11/2026)
+- Referência nota 10: https://pin.it/3PPc49vWW → template de After Effects **"Dark Cinematic Hero Opener"** (Achna, VideoHive/Envato). Folha de quadros: `referencias/ref-dark-hero-opener-folha.jpg`. Técnica: logo/letras de **pedra escura com bordas e rachaduras de lava acesas**, **câmera macro** deslizando rente à superfície com foco raso, corte para a **revelação** da marca inteira em leve ângulo, fumaça escura e brasas; a luz vem do próprio objeto.
+- Quadro parado de referência feito com o BODY GYM (Three.js: pedra com relevo, rachaduras de lava, costura de lava em volta de cada letra, brasas, fumaça, foco raso): `referencias/quadro-lava.jpg` (gerado por `referencias/quadro-lava.html`). Lava em vermelho da marca, não laranja.
+- Novo limite do senhor: **abertura com apenas 5 segundos**, animações equilibradas.
+- PENDENTE: aprovação do quadro + decidir se a frase "Além de um simples treino" entra nos 5 s.
