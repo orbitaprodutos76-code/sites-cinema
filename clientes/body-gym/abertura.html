@@ -19,6 +19,7 @@ html,body{margin:0;height:100%;background:#000;color:#fff;font-family:var(--font
 #cena{position:absolute;inset:0;width:100%;height:100%;display:block}
 .reserva{position:absolute;inset:0;display:none;place-items:center;font:400 22vw/.85 Anton,Impact,sans-serif;text-transform:uppercase;color:#cfd6dc}
 .sem3d .reserva{display:grid}
+.final{position:absolute;inset:0;opacity:0;background:url(midia/body-por-do-sol.webp) 50% 62%/cover;will-change:transform,opacity}
 .sub{position:absolute;left:0;right:0;bottom:16%;text-align:center;opacity:0;font:700 clamp(11px,.95vw,14px)/1 var(--fonte-texto);letter-spacing:.5em;padding-left:.5em;text-transform:uppercase;color:#d9e2e8}
 .sub b{color:var(--o)}
 .cine{position:absolute;left:0;right:0;height:10%;background:#000;z-index:5}.cine.c{top:0;transform-origin:50% 0}.cine.b{bottom:0;transform-origin:50% 100%}
@@ -44,6 +45,7 @@ button:focus-visible{outline:3px solid var(--o);outline-offset:3px}
 <div class="abertura" id="abertura" role="img" aria-label="Abertura: Além de um simples treino. Body Gym.">
   <canvas id="cena" aria-hidden="true"></canvas>
   <div class="reserva">Body Gym</div>
+  <div class="final" aria-hidden="true"></div>
   <span class="sub">Mineiros · GO <b>—</b> desde 2019</span>
   <div class="grao"></div>
   <div class="cine c"></div><div class="cine b"></div>
@@ -98,7 +100,7 @@ const Som = (() => {
 const cv = q('#cena'); let r;
 try { r = new THREE.WebGLRenderer({ canvas: cv, antialias: true, powerPreference: 'high-performance' }); }
 catch (e) { document.documentElement.classList.add('sem3d'); throw e; }
-r.setPixelRatio(Math.min(devicePixelRatio || 1, desk ? 1.75 : 1.5)); r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1; r.outputColorSpace = THREE.SRGBColorSpace;
+r.setPixelRatio(Math.min(devicePixelRatio || 1, 2)); r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1; r.outputColorSpace = THREE.SRGBColorSpace;
 const cena = new THREE.Scene(); cena.background = new THREE.Color(0x000000);
 const cam = new THREE.PerspectiveCamera(28, 1, .02, 60);
 function canvasTex(desenha, n = 1024) { const c = document.createElement('canvas'); c.width = c.height = n; desenha(c.getContext('2d'), n); const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t; }
@@ -128,20 +130,27 @@ const flTex = canvasTex((x, n) => { const g = x.createLinearGradient(0, 0, n, 0)
   x.fillStyle = g; x.fillRect(0, n / 2 - 1, n, 2); x.globalAlpha = .35; x.fillRect(0, n / 2 - 4, n, 8); x.globalAlpha = 1;
   const g2 = x.createRadialGradient(n / 2, n / 2, 0, n / 2, n / 2, 14); g2.addColorStop(0, 'rgba(255,255,255,.9)'); g2.addColorStop(1, 'rgba(160,200,255,0)'); x.fillStyle = g2; x.fillRect(0, 0, n, n); }, 1024);
 
+// pôr do sol real (frente do BODY GYM) e emblema
+const carrega = u => new THREE.TextureLoader().load(u);
+const solTex = carrega('midia/body-por-do-sol.webp'); solTex.colorSpace = THREE.SRGBColorSpace; solTex.anisotropy = 8;
+const logoTex = carrega('midia/logo-emblema.webp'); logoTex.colorSpace = THREE.SRGBColorSpace; logoTex.anisotropy = 8;
+const logoRel = carrega('midia/logo-relevo.webp');
 // materiais
 const metalFace = new THREE.MeshPhysicalMaterial({ color: 0xdfe6eb, metalness: 1, roughness: .22, roughnessMap: martelo, bumpMap: martelo, bumpScale: .65, clearcoat: .55, clearcoatRoughness: .15 });
 const metalLado = new THREE.MeshPhysicalMaterial({ color: 0x8b98a2, metalness: 1, roughness: .34, roughnessMap: martelo, bumpMap: martelo, bumpScale: .9 });
 const pedraFace = new THREE.MeshStandardMaterial({ color: 0x5a5450, roughness: .7, metalness: .35, bumpMap: pedra, bumpScale: 1.6, roughnessMap: pedra, emissive: 0xff3a10, emissiveMap: rachas, emissiveIntensity: 0, envMapIntensity: .3 });
 const pedraLado = new THREE.MeshStandardMaterial({ color: 0x1e1b1a, roughness: .85, metalness: .2, bumpMap: pedra, bumpScale: 2, emissive: 0xff2a0c, emissiveMap: rachas, emissiveIntensity: 0, envMapIntensity: .3 });
 const costura = new THREE.MeshStandardMaterial({ color: 0x200000, emissive: 0xff3412, emissiveIntensity: 0, roughness: .6 });
-const comLuz = [metalFace, metalLado, pedraFace, pedraLado];
+const solFace = new THREE.MeshBasicMaterial({ map: solTex, toneMapped: false, color: 0x000000 });   // foto com as cores reais (sem o tratamento de cor da cena)
+const emblemaFace = new THREE.MeshStandardMaterial({ map: logoTex, bumpMap: logoRel, bumpScale: 3, metalness: .75, roughness: .28, transparent: true, alphaTest: .4 });
+const comLuz = [metalFace, metalLado, pedraFace, pedraLado, emblemaFace];
 const ENV0 = new Map(comLuz.map(m => [m, m.envMapIntensity]));
 
 // luzes (todas passam pelo "disjuntor" LUZ.n)
 const key = new THREE.DirectionalLight(0xd7e6f2, 1.2); key.position.set(-2.5, 4, 3); cena.add(key);
 const rim = new THREE.DirectionalLight(0xffb070, 3.0); rim.position.set(1.5, 2.5, -3); cena.add(rim);
 const lavaLuz = new THREE.PointLight(0xff3a14, 0, 7, 1.6); lavaLuz.position.set(0, .4, 1.4); cena.add(lavaLuz);
-const LUZ = { n: 0, lava: 0, fumF: 0, fumQ: 0 };
+const LUZ = { n: 0, lava: 0, fumF: 0, fumQ: 0, sol: 0 };
 
 // névoa fria e quente
 const fumos = [];
@@ -150,14 +159,14 @@ for (let i = 0; i < 14; i++) { const quente = i % 2 === 0, m = new THREE.Mesh(ne
 
 // estilhaços de metal (flutuam; na revelação do BODY GYM são soprados para fora)
 const estil = []; const estMat = new THREE.MeshPhysicalMaterial({ color: 0xb8c4cc, metalness: 1, roughness: .3, bumpMap: martelo, bumpScale: 2 }); comLuz.push(estMat); ENV0.set(estMat, 1);
-for (let i = 0; i < (desk ? 80 : 45); i++) { const s = .03 + Math.random() * .16, g = new THREE.TetrahedronGeometry(s, 0); g.scale(1, .25 + Math.random() * .5, 1 + Math.random());
+for (let i = 0; i < (desk ? 24 : 14); i++) { const s = .03 + Math.random() * .16, g = new THREE.TetrahedronGeometry(s, 0); g.scale(1, .25 + Math.random() * .5, 1 + Math.random());
   const m = new THREE.Mesh(g, estMat); const p0 = new THREE.Vector3((Math.random() - .5) * 7, -1.2 + Math.random() * 3.2, -3 + Math.random() * 5.5);
   m.position.copy(p0); m.rotation.set(Math.random() * 6, Math.random() * 6, Math.random() * 6); m.userData = { p0, v: new THREE.Vector3((Math.random() - .5) * .12, (Math.random() - .5) * .08, (Math.random() - .5) * .1), w: new THREE.Vector3(Math.random(), Math.random(), Math.random()).multiplyScalar(1.2) };
   cena.add(m); estil.push(m); }
 const SOPRO = { k: 0 };   // 0..1: quanto os estilhaços foram soprados para fora (determinístico, vai bem no ?t=)
 
 // brasas (estouram no TREINO)
-const NB = desk ? 700 : 380, pb = new Float32Array(NB * 3), cb = new Float32Array(NB * 3), brasas = [];
+const NB = desk ? 420 : 240, pb = new Float32Array(NB * 3), cb = new Float32Array(NB * 3), brasas = [];
 for (let i = 0; i < NB; i++) { const h = Math.random(); cb[i * 3] = 1; cb[i * 3 + 1] = .3 + h * .45; cb[i * 3 + 2] = .05 + h * .1; brasas.push({ p: new THREE.Vector3(0, -50, 0), v: new THREE.Vector3(), vida: 0 }); }
 const gb = new THREE.BufferGeometry(); gb.setAttribute('position', new THREE.BufferAttribute(pb, 3).setUsage(THREE.DynamicDrawUsage)); gb.setAttribute('color', new THREE.BufferAttribute(cb, 3));
 const matB = new THREE.PointsMaterial({ size: .03, vertexColors: true, transparent: true, opacity: 1, blending: THREE.AdditiveBlending, depthWrite: false });
@@ -181,21 +190,37 @@ let W = innerWidth, H = innerHeight;
 function ajusta() { W = innerWidth; H = innerHeight; r.setSize(W, H, false); comp.setSize(W, H); cam.aspect = W / H; cam.updateProjectionMatrix(); bloom.resolution.set(W / 2, H / 2); }
 
 /* ---------- palavras ---------- */
-const PAL = {};
-function palavra(fonte, txt, lava) {
+const PAL = {}; let EMB = null;
+function palavra(fonte, txt, lava, sol) {
   const grupo = new THREE.Group(), linhas = (!desk && txt === 'BODY GYM') ? txt.split(' ') : [txt];
   linhas.forEach((t, i) => {
-    const g = new TextGeometry(t, { font: fonte, size: 1, height: .42, depth: .42, curveSegments: desk ? 10 : 6, bevelEnabled: true, bevelThickness: .05, bevelSize: .03, bevelSegments: desk ? 4 : 2 });
+    const g = new TextGeometry(t, { font: fonte, size: 1, height: .42, depth: .42, curveSegments: 14, bevelEnabled: true, bevelThickness: .05, bevelSize: .03, bevelSegments: 5 });
     g.computeBoundingBox(); const b = g.boundingBox; g.translate(-(b.min.x + b.max.x) / 2, -b.min.y - i * 1.12, -(b.min.z + b.max.z) / 2);
     const p = g.attributes.position, uv = g.attributes.uv; for (let k = 0; k < p.count; k++) uv.setXY(k, p.getX(k) * .35, p.getY(k) * .35 + p.getZ(k) * .35);
-    grupo.add(new THREE.Mesh(g, lava ? [pedraFace, pedraLado] : [metalFace, metalLado]));
+    grupo.add(new THREE.Mesh(g, lava ? [pedraFace, pedraLado] : sol ? [solFace, metalLado] : [metalFace, metalLado]));
     if (lava) { const c = new TextGeometry(t, { font: fonte, size: 1, height: .035, depth: .035, curveSegments: 8, bevelEnabled: true, bevelThickness: .004, bevelSize: .036, bevelSegments: 1 });
       c.computeBoundingBox(); const bc = c.boundingBox; c.translate(-(bc.min.x + bc.max.x) / 2, -b.min.y - i * 1.12, -(bc.min.z + bc.max.z) / 2); grupo.add(new THREE.Mesh(c, costura)); }
   });
   const cx = new THREE.Box3().setFromObject(grupo), ct = cx.getCenter(new THREE.Vector3());
   grupo.children.forEach(m => m.position.sub(ct)); grupo.userData.larg = cx.max.x - cx.min.x; grupo.userData.alt = cx.max.y - cx.min.y;
+  if (sol) { // UV da frente = posição na palavra inteira, recortando o céu com o sol (foto em pé)
+    const L = cx.max.x - cx.min.x, A = cx.max.y - cx.min.y, ia = 1260 / 780, faixa = Math.min(1, ia / (L / A));
+    grupo.children.forEach(m => { const p = m.geometry.attributes.position, uv = m.geometry.attributes.uv;
+      for (let k = 0; k < p.count; k++) { const u = (p.getX(k) + m.position.x - cx.min.x) / L, v = (p.getY(k) + m.position.y - cx.min.y) / A; uv.setXY(k, u, Math.max(0, .42 - faixa / 2) + v * faixa); } uv.needsUpdate = true; });
+  }
   grupo.visible = false; cena.add(grupo); return grupo;
 }
+// emblema espartano: disco de metal com o símbolo em relevo
+function emblema(raio) { const g = new THREE.Group();
+  const aro = new THREE.Mesh(new THREE.CylinderGeometry(raio * 1.04, raio * 1.04, raio * .16, 128, 1, true), metalLado); aro.rotation.x = Math.PI / 2; g.add(aro);
+  const fundo = new THREE.Mesh(new THREE.CircleGeometry(raio * 1.04, 128), metalLado); fundo.position.z = -raio * .08; g.add(fundo);
+  const frente = new THREE.Mesh(new THREE.PlaneGeometry(raio * 2, raio * 2), emblemaFace); frente.position.z = raio * .081; g.add(frente);
+  g.visible = false; cena.add(g); return g; }
+// ponto na perna esquerda do "O" do BODY (onde a câmera mergulha)
+let FONTE = null;
+function FOCO_O(g) { const m = g.children[0], b = new THREE.Box3().setFromObject(m), gl = FONTE.data.glyphs, k = 1 / FONTE.data.resolution;
+  const ini = b.min.x + .03, oB = gl['B'].ha * k, O = gl['O'], xo = (O.x_min + (O.x_max - O.x_min) * .11) * k;
+  return { x: ini + oB + xo, y: (b.min.y + b.max.y) / 2, z: b.max.z }; }
 function dist(g, ocupa) { const vf = THREE.MathUtils.degToRad(cam.fov) / 2, hf = Math.atan(Math.tan(vf) * cam.aspect); return Math.max((g.userData.larg / 2) / Math.tan(hf), (g.userData.alt / 2) / Math.tan(vf)) / ocupa; }
 
 /* ---------- câmera (proxy animável) ---------- */
@@ -206,8 +231,8 @@ function render(dt) {
   tempo += dt; passoBrasas(dt);
   // disjuntor de luz
   key.intensity = 1.2 * LUZ.n; rim.intensity = 3.0 * LUZ.n; comLuz.forEach(m => m.envMapIntensity = ENV0.get(m) * LUZ.n);
-  pedraFace.emissiveIntensity = .55 * LUZ.lava; pedraLado.emissiveIntensity = 1.4 * LUZ.lava; costura.emissiveIntensity = 2.4 * LUZ.lava; lavaLuz.intensity = 3 * LUZ.lava;
-  fumos.forEach(f => { f.material.opacity = (f.userData.quente ? LUZ.fumQ * .35 : LUZ.fumF * .45); f.rotation.z += f.userData.giro * dt; });
+  pedraFace.emissiveIntensity = .55 * LUZ.lava; pedraLado.emissiveIntensity = 1.4 * LUZ.lava; costura.emissiveIntensity = 2.4 * LUZ.lava; lavaLuz.intensity = 3 * LUZ.lava; solFace.color.setScalar(Math.min(1.15, LUZ.sol * Math.max(.12, LUZ.n)));
+  fumos.forEach(f => { f.material.opacity = (f.userData.quente ? LUZ.fumQ * .25 : LUZ.fumF * .22); f.rotation.z += f.userData.giro * dt; });
   // estilhaços: flutuam e, na revelação, são soprados para fora a partir do centro
   estil.forEach(m => { const u = m.userData; m.position.copy(u.p0).addScaledVector(u.v, tempo); const dir = u.p0.clone().setZ(u.p0.z * .3).normalize(); m.position.addScaledVector(dir, SOPRO.k * 3.5);
     m.rotation.x += u.w.x * dt; m.rotation.y += u.w.y * dt; });
@@ -258,19 +283,24 @@ function monta() {
   // apaga tudo (a lava some por último)
   tl.set(LUZ, { n: 0 }, 2.86).to(LUZ, { lava: 0, fumQ: 0, duration: .14, ease: 'power2.in' }, 2.86);
   // BODY GYM · luz volta falhando; câmera recua da macro até a marca inteira; risco azul e estilhaços soprados
-  g = PAL.marca; d = dist(g, desk ? .66 : .84); mostra('marca', 3.02);
+  g = PAL.marca; const altTot = g.userData.alt + g.userData.alt * (desk ? .42 : .3) * 2.6; g.userData.altT = altTot;
+  d = Math.max(dist(g, desk ? .62 : .84), (altTot / 2) / Math.tan(THREE.MathUtils.degToRad(cam.fov) / 2) / .78); mostra('marca', 3.02);
+  tl.set(LUZ, { sol: 1 }, 3.02);
   pisca(3.02, [[.6, .03], [0, .04], [1, .03], [.3, .03], [1, 0]]);
   tl.set(LUZ, { fumF: 1 }, 3.02)
-    .fromTo(C, { x: -g.userData.larg * .3, y: .2, z: d * .32, lx: -g.userData.larg * .26, ly: .1, lz: 0, rol: .08, abert: .007 }, { x: g.userData.larg * .05, y: .15, z: d, lx: 0, ly: 0, rol: 0, abert: .002, duration: .75, ease: 'expo.out', immediateRender: false }, 3.05)
-    .to(C, { z: d * .93, duration: 1.2, ease: 'none' }, 3.8)
+    .fromTo(C, { x: -g.userData.larg * .3, y: .2, z: d * .32, lx: -g.userData.larg * .26, ly: .1, lz: 0, rol: .08, abert: .007 }, { x: g.userData.larg * .04, y: g.userData.alt * .45, z: d, lx: 0, ly: g.userData.alt * .45, rol: 0, abert: .0015, duration: .75, ease: 'expo.out', immediateRender: false }, 3.05)
+    .to(C, { z: d * .94, duration: .75, ease: 'none' }, 3.8)
     .fromTo(SOPRO, { k: 0 }, { k: 1, duration: 1.4, ease: 'expo.out', immediateRender: false }, 3.35)
     .fromTo(FL, { x: -1, a: .9 }, { x: 1, a: 0, duration: .7, ease: 'power2.inOut', immediateRender: false }, 3.35)
     .to('.cine.c,.cine.b', { scaleY: 0, duration: .7, ease: 'expo.inOut' }, 3.4)
     .fromTo('.sub', { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: .5, ease: 'expo.out', immediateRender: false }, 3.7);
   somEm('marca', 3.38); treme(3.38, .03); somEm('brilho', 3.7);
-  // última piscada e saída
-  pisca(4.78, [[0, .05], [1, .04], [0, 0]]);
-  tl.to('.sub', { opacity: 0, duration: .15 }, 4.78).set({}, {}, 5);
+  // saída: mergulho no "O" até o pôr do sol tomar a tela
+  const oX = FOCO_O(g); tl.to('.sub', { opacity: 0, duration: .15 }, 4.5)
+    .to(C, { x: oX.x, y: oX.y, lx: oX.x, ly: oX.y, lz: oX.z - 1, z: oX.z + .05, abert: .0008, duration: .36, ease: 'expo.in' }, 4.5)
+    .to(LUZ, { sol: 1.1, duration: .36 }, 4.5)
+    .fromTo('.final', { opacity: 0, scale: 1.35 }, { opacity: 1, scale: 1.04, duration: .2, ease: 'power2.out', immediateRender: false }, 4.8)
+    .to('.final', { scale: 1, duration: .3, ease: 'none' }, 5.02).set({}, {}, 5);
 }
 
 let acabou = false;
@@ -287,7 +317,8 @@ gsap.ticker.add(() => { const t = performance.now(), dt = Math.min(.05, (t - ult
 new FontLoader().load('midia/anton-3d.json', fonte => {
   ajusta(); addEventListener('resize', ajusta);
   PAL.alem = palavra(fonte, 'ALÉM'); PAL.deum = palavra(fonte, 'DE UM'); PAL.simples = palavra(fonte, 'SIMPLES');
-  PAL.treino = palavra(fonte, 'TREINO', true); PAL.marca = palavra(fonte, 'BODY GYM');
+  FONTE = fonte; PAL.treino = palavra(fonte, 'TREINO', true); PAL.marca = palavra(fonte, 'BODY GYM', false, true);
+  const R = PAL.marca.userData.alt * (desk ? .42 : .3); EMB = emblema(R); EMB.position.set(0, PAL.marca.userData.alt / 2 + R * 1.25, 0); PAL.marca.add(EMB); EMB.visible = true; EMB.position.sub(PAL.marca.position);
   monta();
   if (calmo) { tl.seek(4.2).pause(); LUZ.n = 1; render(0); fim(); return; }
   if (PAUSA !== null) { tl.seek(PAUSA).pause(); tempo = PAUSA; if (PAUSA > 2.3 && PAUSA < 2.9) { estouraBrasas(PAL.treino.userData.larg, PAL.treino.userData.alt); passoBrasas(PAUSA - 2.3); } render(0); return; }

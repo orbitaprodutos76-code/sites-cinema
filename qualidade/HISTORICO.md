@@ -48,4 +48,5 @@ Formato: data · projeto · entrega · nota · reação do senhor · o que fez a
 ### Lição grave (Body Gym, 26/11)
 8. Sem uma referência visual concreta escolhida pelo senhor (link/vídeo de abertura que ele acha 10), não codar abertura. A da Lord deu 9 porque havia direção clara e material real. Na Body Gym foram 13 versões no escuro.
 9. Minha régua errou para cima em todas as entregas da Body Gym (+2,5 a +5). Até recalibrar: nota estimada = minha nota − 3.
-- 26/11 · BG · abertura v14 (5 s, metal martelado + estilhaços + risco azul; TREINO pedra com lava; piscadas de luz; câmera por corte) — feita a partir das 2 referências do senhor · **6 (est., já com −3) · aguardando nota do senhor**.
+- 26/11 · BG · abertura v14 (5 s, metal + lava + piscadas) · sem nota · "eu tinha gostado do modelo da Body Gym com a visão da paisagem; implementar o símbolo; aumentar a qualidade e tirar poluição".
+- 26/11 · BG · abertura v15 (BODY GYM com o pôr do sol nas letras 3D, emblema espartano de metal, menos estilhaços, mergulho no O até a paisagem) · **6 (est., já com −3) · aguardando nota do senhor**.
