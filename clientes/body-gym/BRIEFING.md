@@ -44,4 +44,6 @@
 ## Seções de baixo: referências (26/11/2026)
 - `referencias/secao-1-estrutura.png` (faixa horizontal de fotos + horários) · `secao-2-por-do-sol.png` (tela cheia de cinema, "O pôr do sol mais bonito de Mineiros") · `secao-3-evolucoes.png` (antes/depois com arraste) · `secao-4-comunidade.png` (colagem de polaroides: anos 80, Halloween, encontro da turma) · `secao-5-perdeu-o-medo.png` (3 dicas + cartão de contato com WhatsApp e mapa).
 - ATENÇÃO: nas Evoluções, pessoas, nomes, idades e depoimentos são INVENTADOS pela IA. No site só entram alunos reais (destaque "Antes e Depois" do Instagram) **com autorização**. "Aula experimental grátis" e "professor acompanha o primeiro treino" também são suposições: confirmar com a academia.
-- PENDENTE: veredito por seção.
+- Veredito: **2 Pôr do sol, 3 Evoluções, 4 Comunidade e 5 Perdeu o medo APROVADAS.** **1 Estrutura: "sinto uma estranheza"** → o senhor quer algo com IA e **efeitos de câmera mostrando a academia toda**, com pouco recurso.
+- Planos: **sem preços no site, "consulte no WhatsApp"**.
+- PENDENTE: escolher o caminho do tour da estrutura.
