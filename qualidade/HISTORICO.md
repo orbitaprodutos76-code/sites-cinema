@@ -15,6 +15,15 @@ Formato: data · projeto · entrega · nota · reação do senhor · o que fez a
 - 25/11 · FM · esboço 1ª paleta (medida nas fotos, com lavanda) · **6 (est.)** · "vamos deixar as cores bem nítidas" · cores corretas mas apagadas.
 - 25/11 · FM · esboço com Deep Purple × Gold + DM Serif · **aguardando nota do senhor**.
 
+## Notas do senhor em 3 eixos (26/11) — estas mandam
+| Site | Abertura | Entrada | Design geral | Frase do senhor |
+|---|---|---|---|---|
+| Lord Lumberjack (v6) | **7** | **8** | **6** | "entrada ficou fluida" |
+| Fernanda Melo (v1) | em refação | **5** | **6** | entrada "nada de mais, é o mínimo esperado"; design "não chamou muito a atenção"; abertura: "não desisti da ideia da nuvem" |
+| Body Gym | aguardando | aguardando | aguardando | |
+
+**Recalibração:** eu dei 9 ao site da Lord, e o senhor deu 6 ao design geral. Eu estava supervalorizando a abertura e julgando o site inteiro por ela. Daqui em diante, nenhum site passa de 7 se o design geral (o miolo, do 2º scroll ao fim) estiver em 6.
+
 ## Lições que valem para todo site
 1. Abertura conta história com o material REAL do cliente (parede, fachada, letreiro) → nota sobe muito.
 2. Câmera com intenção + rapidez > muitos efeitos.

@@ -2,6 +2,13 @@
 
 Feita a partir do que o senhor aprovou e reprovou na Lord e na Fernanda Melo. **Toda entrega passa por aqui antes de chegar ao senhor.**
 
+## Base de nota do senhor (3 eixos, sempre nesta ordem)
+1. **ABERTURA**: os primeiros segundos, antes de o site aparecer.
+2. **ENTRADA**: a passagem da abertura para o site (fluidez, se emenda ou corta).
+3. **DESIGN GERAL**: o site inteiro do 2º scroll em diante (seções, cor, tipografia, se chama atenção).
+
+Toda entrega abre com a estimativa nos 3 eixos: "Abertura 8 · Entrada 7 · Design geral 6". **A nota final nunca passa da menor das três + 1.** O "mínimo esperado" vale 5: funcionar e estar bonito não basta.
+
 ## Critérios e pesos
 | # | Critério | Peso | Nota 10 é… | Nota baixa é… (frases reais do senhor) |
 |---|---|---|---|---|
