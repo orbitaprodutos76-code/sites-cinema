@@ -135,3 +135,9 @@
 - Trocado por **efeitos reais do Mixkit** (licença gratuita, uso comercial), em `midia/som/` (348 KB, só baixam quando o som é ligado). Cada som é disparado para o **pico da batida cair exatamente** na palavra: ALÉM (tambor grave de trailer), DE UM (tambor mais leve), SIMPLES (tambor metálico, combina com o cromo), TREINO (braam de trailer + impacto em camadas), BODY GYM (sopro que cresce e estoura), luz nas letras (brilho baixo), mergulho no O (sopro e pouso). Lista e créditos em `midia/som/CREDITOS.md`.
 - Medido no navegador (`referencias/teste-som.js`): os 8 sons disparam no tempo (10–30 ms; 130 ms no último só no navegador de teste lento). **Não ouvi** (container sem áudio).
 - Link: https://claude.ai/artifact/SiZfdtPofuUnTWTvBvRoEq (versão 5). PENDENTE: o senhor ouvir e dar nota.
+
+## Abertura v11: atmosfera realista (26/11/2026)
+- Pedido do senhor: "deixar o fundo e as partículas mais realistas, tipo BEM realista".
+- Feito: fundo preto liso + pontinhos 2D trocados por **atmosfera em WebGL** (`#atmo`): projetor atrás e acima com **raios irregulares** que se mexem, **névoa/fumaça viva** (ruído fractal com distorção) que só aparece onde a luz bate, **poeira com profundidade de campo** (900 grãos no PC, 420 no celular: perto = bokeh grande e desfocado, no foco = pontos nítidos que acendem no feixe, fundo = finos) e **as batidas empurram o ar** (onda que espalha a poeira + nuvens de giz), no lugar das faíscas. No TREINO a luz toda vira vermelha. Renderizada em 75% (PC) / 60% (celular) da resolução para não pesar.
+- Quadro: `referencias/abertura-v11-atmosfera.jpg`. Link: https://claude.ai/artifact/SiZfdtPofuUnTWTvBvRoEq (versão 6).
+- Risco: desempenho em celular fraco (não testado em aparelho real). PENDENTE: nota do senhor.

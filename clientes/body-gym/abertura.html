@@ -42,7 +42,7 @@ html,body{margin:0;height:100%;background:#030304;color:#fff;font-family:var(--f
 .onda{position:absolute;left:50%;top:50%;width:60vmin;height:60vmin;margin:-30vmin 0 0 -30vmin;border-radius:50%;opacity:0;pointer-events:none;
   box-shadow:0 0 0 2px rgba(255,210,200,.7),0 0 40px 8px rgba(215,25,42,.35),inset 0 0 40px 6px rgba(215,25,42,.25)}
 .flash{position:absolute;inset:0;opacity:0;pointer-events:none;mix-blend-mode:screen;background:radial-gradient(circle at 50% 50%,#fff6ea 0%,rgba(255,200,170,.5) 30%,rgba(215,25,42,.25) 55%,rgba(0,0,0,0) 80%)}
-#gl,#po{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#gl,#atmo{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 #gl{opacity:0}
 .reserva{position:absolute;inset:0;display:none;place-items:center}
 .reserva span{font-family:var(--fonte-titulo);font-size:22vw;line-height:.85;text-transform:uppercase;background:url(midia/real-esteiras-sol-hd.webp) 50% 42%/cover;-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -82,8 +82,7 @@ button:focus-visible{outline:3px solid var(--o);outline-offset:3px}
 <body>
 <div class="abertura" id="abertura" role="img" aria-label="Abertura: Além de um simples treino. Body Gym.">
   <div class="palco">
-    <div class="feixe" id="feixe"></div>
-    <div class="feixe vermelho" id="feixe-v"></div>
+    <canvas id="atmo" aria-hidden="true"></canvas>
     <div class="flare" id="flare"></div>
     <div class="cena"><div class="T palavra" id="w-alem">Além</div></div>
     <div class="cena"><div class="T palavra menor" id="w-deum">de um</div></div>
@@ -98,7 +97,6 @@ button:focus-visible{outline:3px solid var(--o);outline-offset:3px}
     <div class="assina" id="assina-baixo"><span class="linha"></span><span class="sub">Mineiros · GO <b>—</b> desde 2019</span></div>
     <div class="flare ouro" id="flare-o"></div>
     <div class="flash" id="flash"></div>
-    <canvas id="po"></canvas>
   </div>
   <div class="grao"></div>
   <div class="cine c"></div><div class="cine b"></div>
@@ -125,21 +123,91 @@ qa('#painel button').forEach(function(b){ b.classList.toggle('on',+b.dataset.vel
 function letras(el,txt,cls){ txt.split('').forEach(function(c){ var s=document.createElement('span'); if(c===' '){ s.className='esp'; } else { s.className='l '+(cls||''); s.textContent=c; } el.appendChild(s); }); return qa('.l,span:not(.esp)',el).filter(function(x){return x.textContent}); }
 
 
-/* ---------- poeira no feixe de luz (canvas 2D) ---------- */
-var po=q('#po'), pc=po.getContext('2d'), dpr=Math.min(devicePixelRatio||1,2), W=innerWidth, H=innerHeight, grãos=[], POEIRA={a:0};
-function mede(){ W=innerWidth; H=innerHeight; po.width=W*dpr; po.height=H*dpr; pc.setTransform(dpr,0,0,dpr,0,0); }
-mede();
-for(var i=0;i<(desk?140:80);i++) grãos.push({x:Math.random()*W,y:H*(.28+Math.random()*.44),r:.5+Math.random()*1.8,vx:(Math.random()-.3)*12,vy:(Math.random()-.5)*6,f:Math.random()*6.28,b:.2+Math.random()*.8});
-var faisca=[];
-function estoura(x,y,n,f,cor){ for(var i=0;i<n;i++){ var a=Math.random()*6.283, s=f*(.2+Math.random()); faisca.push({x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s*.6,r:.6+Math.random()*1.8,v:.6+Math.random()*1.1,m:1.7,c:Math.random()<(cor||.3)?'255,80,80':'255,226,180'}); } }
-function desenhaPoeira(dt){
-  pc.clearRect(0,0,W,H); pc.globalCompositeOperation='lighter';
-  if(POEIRA.a>0.001){ grãos.forEach(function(g){ g.x+=g.vx*dt; g.y+=g.vy*dt; g.f+=dt*1.3; if(g.x>W+10) g.x=-10; if(g.x<-10) g.x=W+10;
-    var luz=Math.exp(-Math.pow((g.y-H/2)/(H*.18),2)); pc.globalAlpha=POEIRA.a*g.b*(.45+.55*Math.sin(g.f))*luz; pc.fillStyle='#ffe9c8'; pc.beginPath(); pc.arc(g.x,g.y,g.r,0,6.283); pc.fill(); }); }
-  for(var i=faisca.length-1;i>=0;i--){ var p=faisca[i]; p.v-=dt; if(p.v<=0){faisca.splice(i,1);continue;} p.vx*=Math.pow(.5,dt); p.vy=p.vy*Math.pow(.5,dt)+80*dt; p.x+=p.vx*dt; p.y+=p.vy*dt;
-    pc.globalAlpha=Math.min(1,p.v*1.5); pc.fillStyle='rgb('+p.c+')'; pc.beginPath(); pc.arc(p.x,p.y,p.r,0,6.283); pc.fill(); }
-  pc.globalAlpha=1; pc.globalCompositeOperation='source-over';
-}
+/* ---------- Atmosfera realista (WebGL): projetor atrás, névoa viva, poeira com profundidade de campo ---------- */
+var W=innerWidth, H=innerHeight, dpr=Math.min(devicePixelRatio||1,2);
+var POEIRA={a:0}, LUZ={b:0,v:0};          // POEIRA.a: quanto de poeira aparece · LUZ.b: força do projetor · LUZ.v: luz vermelha (TREINO)
+var Atmo=(function(){
+  var cv=q('#atmo'), g=null; try{ g=cv.getContext('webgl',{antialias:false,alpha:false}); }catch(e){}
+  var ESC=desk?.75:.6, RW=0, RH=0, t0=performance.now(), tempo=0;
+  function ajusta(){ W=innerWidth; H=innerHeight; RW=Math.round(W*dpr*ESC); RH=Math.round(H*dpr*ESC); cv.width=RW; cv.height=RH; if(g) g.viewport(0,0,RW,RH); }
+  ajusta();
+  if(!g){ cv.style.background='radial-gradient(60% 40% at 50% 45%,rgba(255,232,196,.10),rgba(0,0,0,0) 70%),#030304'; return {desenha:function(){},impulso:function(){}}; }
+  function sh(t,src){ var o=g.createShader(t); g.shaderSource(o,src); g.compileShader(o); if(!g.getShaderParameter(o,g.COMPILE_STATUS)) throw g.getShaderInfoLog(o); return o; }
+  function programa(vs,fs){ var p=g.createProgram(); g.attachShader(p,sh(g.VERTEX_SHADER,vs)); g.attachShader(p,sh(g.FRAGMENT_SHADER,fs)); g.linkProgram(p); return p; }
+  // névoa + raios do projetor
+  var pNevoa=programa('attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}',[
+    'precision highp float; uniform vec2 uRes; uniform float uT,uLuz,uVerm;',
+    'float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}',
+    'float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1.,0.)),f.x),mix(h(i+vec2(0.,1.)),h(i+vec2(1.,1.)),f.x),f.y);}',
+    'float fbm(vec2 p){float s=0.,a=.5;for(int i=0;i<4;i++){s+=a*n(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return s;}',
+    'void main(){ vec2 uv=gl_FragCoord.xy/uRes; float asp=uRes.x/uRes.y; vec2 p=vec2(uv.x*asp,uv.y);',
+    '  vec2 d=p-vec2(.5*asp,1.12); float ang=atan(d.x,-d.y); float dist=length(d);',
+    '  float raios=fbm(vec2(ang*6.,uT*.07))*.75+fbm(vec2(ang*17.+3.,uT*.05))*.45;',
+    '  float cone=exp(-pow(ang/.5,2.))*smoothstep(1.9,.25,dist);',
+    '  vec2 q=p*1.6+vec2(uT*.035,-uT*.014); float fum=fbm(q+1.5*fbm(q*1.6+vec2(uT*.04,0.)));',
+    '  float faixa=exp(-pow((uv.y-.5)/.19,2.));',
+    '  float luz=(cone*raios*.8+faixa*.3)*(.08+pow(fum,1.6)*1.9);',
+    '  vec3 cor=mix(vec3(1.,.85,.64),vec3(1.,.13,.17),uVerm);',
+    '  vec3 c=cor*luz*uLuz*.45; c*=smoothstep(1.3,.3,length((uv-.5)*vec2(asp*.75,1.)));',
+    '  c+=vec3(.012,.011,.013)+h(gl_FragCoord.xy+uT)*.006;',
+    '  gl_FragColor=vec4(c,1.); }'].join('\n'));
+  // poeira e nuvens de giz (pontos com desfoque de lente)
+  var pPo=programa(['attribute vec2 aP; attribute float aT,aA,aB; varying float vA,vB;',
+    'void main(){ gl_Position=vec4(aP,0.,1.); gl_PointSize=aT; vA=aA; vB=aB; }'].join('\n'),[
+    'precision mediump float; varying float vA,vB; uniform vec3 uCor;',
+    'void main(){ float d=length(gl_PointCoord-.5)*2.; if(d>1.) discard; float f;',
+    '  if(vB<0.){ f=exp(-d*d*3.2); }',
+    '  else { float nit=exp(-d*d*7.); float disco=smoothstep(1.,.55,d)*(.78+.22*smoothstep(.4,.95,d)); f=mix(nit,disco,vB); }',
+    '  gl_FragColor=vec4(uCor*f*vA,1.); }'].join('\n'));
+  var bTela=g.createBuffer(); g.bindBuffer(g.ARRAY_BUFFER,bTela); g.bufferData(g.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),g.STATIC_DRAW);
+  var bPo=g.createBuffer(), MAXP=g.getParameter(g.ALIASED_POINT_SIZE_RANGE)[1]||64;
+  var uN={res:g.getUniformLocation(pNevoa,'uRes'),t:g.getUniformLocation(pNevoa,'uT'),luz:g.getUniformLocation(pNevoa,'uLuz'),verm:g.getUniformLocation(pNevoa,'uVerm')};
+  var uCor=g.getUniformLocation(pPo,'uCor'), aP=g.getAttribLocation(pPo,'aP'), aT=g.getAttribLocation(pPo,'aT'), aA=g.getAttribLocation(pPo,'aA'), aB=g.getAttribLocation(pPo,'aB'), aTela=g.getAttribLocation(pNevoa,'p');
+
+  // grãos: x,y em px, z = profundidade (0 fundo, 1 colado na lente)
+  var N=desk?900:420, gr=[], FOCO=.5;
+  for(var k=0;k<N;k++){ var z=Math.pow(Math.random(),1.6); if(Math.random()<.025) z=.88+Math.random()*.12;
+    gr.push({x:Math.random()*W,y:Math.random()*H,z:z,vx:0,vy:0,f:Math.random()*6.28,b:.35+Math.random()*.65}); }
+  var nuvens=[];
+  function luzEm(x,y){ var dx=(x-W/2)/H, dy=(y+.12*H)/H, ang=Math.atan2(dx,dy); return Math.exp(-Math.pow(ang/.5,2))*.8+Math.exp(-Math.pow((y-H/2)/(H*.19),2))*.55; }
+  // batida: a onda de ar empurra a poeira e levanta nuvens de giz
+  function impulso(forca,qtd){ var cx=W/2, cy=H/2;
+    gr.forEach(function(p){ var dx=p.x-cx, dy=p.y-cy, d=Math.sqrt(dx*dx+dy*dy)+30, k=forca*(260+900*p.z)/(1+d/(H*.45))*(.6+Math.random()*.8);
+      p.vx+=dx/d*k; p.vy+=dy/d*k*.8; });
+    for(var i=0;i<qtd;i++){ var lado=Math.random()<.5?-1:1;
+      nuvens.push({x:cx+(Math.random()-.5)*W*.5,y:cy+(Math.random()-.3)*H*.18,vx:lado*(40+Math.random()*260)*forca,vy:-(10+Math.random()*80)*forca,
+        r:(desk?40:26)+Math.random()*60,cr:(desk?220:140)+Math.random()*260,v:1.6+Math.random()*1.8,m:0,a:.05+Math.random()*.07}); nuvens[nuvens.length-1].m=nuvens[nuvens.length-1].v; } }
+  var dados=new Float32Array((N+400)*5);
+  function desenha(dt){
+    tempo+=dt;
+    g.disable(g.BLEND);
+    g.useProgram(pNevoa); g.bindBuffer(g.ARRAY_BUFFER,bTela); g.enableVertexAttribArray(aTela); g.vertexAttribPointer(aTela,2,g.FLOAT,false,0,0);
+    g.uniform2f(uN.res,RW,RH); g.uniform1f(uN.t,tempo+3.); g.uniform1f(uN.luz,LUZ.b+LUZ.v*.9); g.uniform1f(uN.verm,LUZ.v/(LUZ.b+LUZ.v+1e-4));
+    g.drawArrays(g.TRIANGLES,0,3); g.disableVertexAttribArray(aTela);
+    // partículas
+    var n=0, ilum=POEIRA.a*(.35+LUZ.b*.65+LUZ.v*.6), esc=dpr*ESC;
+    for(var i=0;i<gr.length;i++){ var p=gr[i], par=.25+p.z*1.4;
+      p.f+=dt*(.6+p.z); p.vx+=(Math.sin(p.f*1.7+i)*6+5)*dt*par; p.vy+=(Math.cos(p.f*1.3+i*.7)*6-2)*dt*par;
+      p.vx*=Math.pow(.18,dt); p.vy*=Math.pow(.18,dt); p.x+=p.vx*dt*par; p.y+=p.vy*dt*par;
+      if(p.x<-60) p.x+=W+120; if(p.x>W+60) p.x-=W+120; if(p.y<-60) p.y+=H+120; if(p.y>H+60) p.y-=H+120;
+      var borr=Math.min(1,Math.abs(p.z-FOCO)*2.3), tam=(.9+p.z*2.4)*(1+borr*(p.z>FOCO?9:2.5)), a=ilum*p.b*luzEm(p.x,p.y)*(.55+.45*Math.sin(p.f*2.))/Math.pow(1+borr*(p.z>FOCO?9:2.5),1.35)*(p.z>FOCO?1.:(.35+p.z));
+      if(a<.004) continue; var o=n*5; dados[o]=p.x/W*2-1; dados[o+1]=1-p.y/H*2; dados[o+2]=Math.min(MAXP,tam*esc); dados[o+3]=Math.min(1,a*(borr<.25?2.6:1.3)); dados[o+4]=borr; n++; }
+    for(var j=nuvens.length-1;j>=0;j--){ var c=nuvens[j]; c.v-=dt; if(c.v<=0){ nuvens.splice(j,1); continue; }
+      c.vx*=Math.pow(.25,dt); c.vy=c.vy*Math.pow(.35,dt)-8*dt; c.x+=c.vx*dt; c.y+=c.vy*dt;
+      var idade=c.m-c.v, r=c.r+(c.cr-c.r)*(1-Math.pow(1-Math.min(1,idade/c.m*1.3),3)), al=c.a*Math.min(1,idade*7)*Math.min(1,c.v/c.m*1.8)*(.4+luzEm(c.x,c.y));
+      if(n>=N+399) break; var o2=n*5; dados[o2]=c.x/W*2-1; dados[o2+1]=1-c.y/H*2; dados[o2+2]=Math.min(MAXP,r*2*esc); dados[o2+3]=al; dados[o2+4]=-1; n++; }
+    if(n){ g.enable(g.BLEND); g.blendFunc(g.ONE,g.ONE); g.useProgram(pPo);
+      var vm=LUZ.v/(LUZ.b+LUZ.v+1e-4); g.uniform3f(uCor,1.,.9-.62*vm,.76-.6*vm);
+      g.bindBuffer(g.ARRAY_BUFFER,bPo); g.bufferData(g.ARRAY_BUFFER,dados.subarray(0,n*5),g.DYNAMIC_DRAW);
+      [[aP,2,0],[aT,1,8],[aA,1,12],[aB,1,16]].forEach(function(x){ g.enableVertexAttribArray(x[0]); g.vertexAttribPointer(x[0],x[1],g.FLOAT,false,20,x[2]); });
+      g.drawArrays(g.POINTS,0,n);
+      [aP,aT,aA,aB].forEach(function(x){ g.disableVertexAttribArray(x); }); }
+  }
+  addEventListener('resize',ajusta);
+  return {desenha:desenha,impulso:impulso};
+})();
+/* compatível com as chamadas da coreografia */
+function estoura(x,y,n,f){ if(n) Atmo.impulso(f/600, Math.round(n/(desk?6:5))); }
 
 /* ---------- WebGL: BODY GYM com o pôr do sol dentro ---------- */
 var U={entra:0,borrão:1,zoom:1,aberr:0,ondaT:0,ondaA:0,luz:-.6,cheio:0,brilho:0,alfa:0};
@@ -238,7 +306,7 @@ function montaTimeline(){
   gsap.set('.palavra',{opacity:0}); gsap.set('#treino .base',{opacity:0,scale:2.4}); gsap.set('.assina .linha',{scaleX:0});
   var TOTAL=5.6;
   tl.to('.progresso',{scaleX:1,duration:TOTAL,ease:'none'},0)
-    .to('#feixe',{opacity:1,duration:.5,ease:'power2.out'},.05)
+    .to(LUZ,{b:1,duration:.7,ease:'power2.out'},.05)
     .to(POEIRA,{a:1,duration:.6,ease:'power2.out'},.05);
   // batida de palavra: surge inteira, encaixa com tranco, a luz e o chão tremem; corte seco para a próxima
   function bate(sel,t,dur,forca,flare,som){
@@ -255,12 +323,12 @@ function montaTimeline(){
   bate('#w-alem',.3,.42,.8,true,'alem');
   bate('#w-deum',.78,.34,.7,false,'deum');
   bate('#w-simples',1.18,.5,1,true,'simples');
-  tl.to('#feixe',{opacity:0,duration:.2},1.68);
+  tl.to(LUZ,{b:.35,duration:.25},1.68);
   // TREINO: a batida mais forte (vermelho, separação de cores, onda, estrondo)
   var T=1.78;
   tl.set('#treino .base',{opacity:1},T)
     .fromTo('#treino .base',{scale:1.5},{scale:1,duration:.22,ease:'expo.out',immediateRender:false},T)
-    .to('#feixe-v',{opacity:1,duration:.1},T)
+    .to(LUZ,{v:1.1,duration:.08},T)
     .fromTo('#treino .ciano',{opacity:.95,x:-34},{opacity:0,x:0,duration:.45,ease:'expo.out',immediateRender:false},T)
     .fromTo('#treino .rosa',{opacity:.95,x:34},{opacity:0,x:0,duration:.45,ease:'expo.out',immediateRender:false},T)
     .fromTo('#onda',{opacity:1,scale:.3},{opacity:0,scale:2.8,duration:.8,ease:'expo.out',immediateRender:false},T)
@@ -268,7 +336,7 @@ function montaTimeline(){
     .add(function(){ estoura(W/2,H/2,desk?150:90,desk?800:520,.45); },T)
     .to('#treino .base',{scale:1.07,duration:.75,ease:'none'},T+.22)
     .set('#treino',{opacity:0},T+.97)
-    .to('#feixe-v',{opacity:0,duration:.3},T+.97)
+    .to(LUZ,{v:0,b:.55,duration:.35},T+.97)
     .to(POEIRA,{a:.35,duration:.4},T+.97);
   treme(T,desk?40:26,9);
   // BODY GYM com o pôr do sol dentro (WebGL): vem de trás rápido e bate
@@ -304,12 +372,12 @@ q('.pular').addEventListener('click',function(){ tl.progress(1); });
 addEventListener('keydown',function(e){ if(e.key==='Escape') tl.progress(1); });
 
 var ult=performance.now();
-gsap.ticker.add(function(){ var t=performance.now(), dt=Math.min(.05,(t-ult)/1000)*(PAUSA!==null?0:VEL); ult=t; desenhaPoeira(dt); renderGL(); });
+gsap.ticker.add(function(){ var t=performance.now(), dt=Math.min(.05,(t-ult)/1000)*(PAUSA!==null?0:VEL); ult=t; Atmo.desenha(dt); renderGL(); });
 
 Promise.all([document.fonts.load('400 100px Anton'),document.fonts.load('500 20px Barlow'),img.decode?img.decode().catch(function(){}):Promise.resolve()]).then(function(){
   iniciaGL(); montaTimeline();
-  if(calmo){ tl.progress(.73).pause(); U.zoom=1; U.borrão=0; U.alfa=1; gsap.set('.assina .logo,.assina .sub',{opacity:1}); gsap.set('.assina .linha',{scaleX:1}); POEIRA.a=0; fim(); return; }
-  if(PAUSA!==null){ tl.seek(PAUSA).pause(); estoura(0,0,0,0); return; }
+  if(calmo){ tl.progress(.73).pause(); LUZ.b=.6; POEIRA.a=.6; U.zoom=1; U.borrão=0; U.alfa=1; gsap.set('.assina .logo,.assina .sub',{opacity:1}); gsap.set('.assina .linha',{scaleX:1}); fim(); return; }
+  if(PAUSA!==null){ tl.seek(PAUSA).pause(); for(var k=0;k<40;k++) Atmo.desenha(1/60); return; }
   tl.timeScale(VEL).play(0);
 });
 window.abertura={tl:tl,U:U,Som:Som};
