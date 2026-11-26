@@ -120,7 +120,7 @@ section{position:relative}
 .cabeca p{margin:0;max-width:46ch;color:var(--suave)}
 
 /* Estrutura: tour 360 */
-.tour{height:760vh;background:#000}
+.tour{height:560vh;background:#000}
 .tour-palco{position:sticky;top:0;height:100svh;overflow:hidden}
 .tour-palco canvas,.tour-reserva{position:absolute;inset:0;width:100%;height:100%;display:block}
 .tour-reserva{object-fit:cover}
@@ -243,6 +243,28 @@ section{position:relative}
 .btn:active{scale:.96}
 .contador{font-variant-numeric:tabular-nums}
 
+/* Assistente: seu primeiro treino */
+.quiz{padding-block:clamp(90px,10vw,150px);background:radial-gradient(ellipse 60% 70% at 85% 40%,rgba(215,25,42,.16),rgba(0,0,0,0) 70%)}
+.quiz .grade{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(30px,5vw,80px);align-items:start}
+.quiz .cabeca{margin-bottom:0}
+.quiz form{background:#0f0f11;border-radius:14px;padding:clamp(22px,3vw,36px);box-shadow:inset 0 0 0 1px var(--linha)}
+.quiz fieldset{border:0;margin:0 0 22px;padding:0}
+.quiz legend{font:700 12px var(--fonte-texto);letter-spacing:.26em;text-transform:uppercase;color:var(--suave);margin-bottom:12px}
+.opcoes{display:flex;flex-wrap:wrap;gap:8px}
+.opcoes input{position:absolute;opacity:0;pointer-events:none}
+.opcoes label{cursor:pointer;padding:11px 16px;border-radius:999px;box-shadow:inset 0 0 0 1.5px #3a3a40;font-weight:600;font-size:15px;transition:background-color .25s,box-shadow .25s,color .25s}
+.opcoes label:hover{box-shadow:inset 0 0 0 1.5px #8a8a92}
+.opcoes input:checked + label{background:var(--vermelho);box-shadow:none;color:#fff}
+.opcoes input:focus-visible + label{outline:3px solid var(--ouro);outline-offset:2px}
+.quiz .btn[disabled]{opacity:.4;pointer-events:none}
+.resposta{margin-top:22px;padding:22px;border-radius:12px;background:#151517;box-shadow:inset 3px 0 0 var(--vermelho)}
+.resposta p{margin:0 0 16px;font-size:17px;white-space:pre-line}
+.resposta small{display:block;margin-top:12px;color:var(--suave);font-size:12px}
+.digitando{display:inline-flex;gap:6px}.digitando i{width:8px;height:8px;border-radius:50%;background:var(--vermelho);animation:pul 1s infinite}
+.digitando i:nth-child(2){animation-delay:.15s}.digitando i:nth-child(3){animation-delay:.3s}
+@keyframes pul{0%,100%{opacity:.25}50%{opacity:1}}
+@media (max-width:900px){.quiz .grade{grid-template-columns:1fr}}
+
 /* ===== Celular ===== */
 @media (max-width:900px){
   .menu,.miniaturas{display:none}
@@ -318,9 +340,9 @@ section{position:relative}
     </div>
 
     <ul class="miniaturas" aria-label="Atalhos">
-      <li><a href="#estrutura"><img src="midia/real-bandeiras.webp" width="630" height="560" alt="">Estrutura</a></li>
-      <li><a href="#comunidade"><img src="midia/insta-turma.webp" width="238" height="379" alt="">Comunidade</a></li>
-      <li><a href="#por-do-sol"><img src="midia/real-esteiras-sol.webp" width="720" height="1160" alt="">Pôr do sol</a></li>
+      <li><a href="#estrutura"><img src="midia/real-bandeiras-hd.webp" width="1260" height="1120" alt="">Estrutura</a></li>
+      <li><a href="#comunidade"><img src="midia/insta-turma-hd.webp" width="900" height="1433" alt="">Comunidade</a></li>
+      <li><a href="#por-do-sol"><img src="midia/real-esteiras-sol-hd.webp" width="1400" height="2256" alt="">Pôr do sol</a></li>
     </ul>
 
     <div class="dados"><ul>
@@ -361,7 +383,7 @@ section{position:relative}
       <h2 class="titulo" id="t-sol"><span class="lin"><span>O <span class="ouro">pôr do sol</span></span></span><span class="lin"><span>mais bonito</span></span><span class="lin"><span>de Mineiros</span></span></h2>
       <p>Treine vendo isso todo fim de tarde.</p>
     </div>
-    <div class="reais"><small>De verdade, no nosso Instagram</small><img src="midia/real-esteiras-sol.webp" width="720" height="1160" alt="Pôr do sol real visto das esteiras" loading="lazy"><img src="midia/insta-sol-reel.webp" width="238" height="319" alt="Pôr do sol real visto da academia" loading="lazy"></div>
+    <div class="reais"><small>De verdade, no nosso Instagram</small><img src="midia/real-esteiras-sol-hd.webp" width="1400" height="2256" alt="Pôr do sol real visto das esteiras" loading="lazy"><img src="midia/insta-sol-reel-hd.webp" width="900" height="1206" alt="Pôr do sol real visto da academia" loading="lazy"></div>
   </section>
 
   <!-- EVOLUÇÕES -->
@@ -383,7 +405,7 @@ section{position:relative}
 
   <!-- COMUNIDADE: EVENTOS ESTILO CINEMA -->
   <section class="eventos" id="comunidade" aria-labelledby="t-com" data-eventos='[{"nome": "Anos 80", "tipo": "Festa temática", "desc": "Música, figurino e muito riso: a academia virou pista de dança."}, {"nome": "Halloween", "tipo": "Festa temática", "desc": "Fantasia valendo. Até a bruxa veio treinar de vassoura."}, {"nome": "A turma", "tipo": "Encontro ao ar livre", "desc": "Todo mundo junto debaixo da árvore, longe dos aparelhos."}, {"nome": "Fim de tarde", "tipo": "Todo dia", "desc": "O pôr do sol que virou ritual na esteira."}]'>
-    <div class="ev-fundo" aria-hidden="true"><img src="midia/insta-anos80.webp" width="238" height="379" alt="" loading="lazy" class="on"><img src="midia/insta-halloween.webp" width="238" height="319" alt="" loading="lazy"><img src="midia/insta-turma.webp" width="238" height="379" alt="" loading="lazy"><img src="midia/insta-sol-reel.webp" width="238" height="319" alt="" loading="lazy"></div>
+    <div class="ev-fundo" aria-hidden="true"><img src="midia/insta-anos80-hd.webp" width="900" height="1433" alt="" loading="lazy" class="on"><img src="midia/insta-halloween-hd.webp" width="900" height="1206" alt="" loading="lazy"><img src="midia/insta-turma-hd.webp" width="900" height="1433" alt="" loading="lazy"><img src="midia/insta-sol-reel-hd.webp" width="900" height="1206" alt="" loading="lazy"></div>
     <div class="veu"></div>
     <div class="ev-miolo">
       <div class="ev-texto">
@@ -395,9 +417,29 @@ section{position:relative}
         <a class="btn" href="https://wa.me/5564992319285?text=Ol%C3%A1!%20Quero%20participar%20do%20pr%C3%B3ximo%20evento%20da%20Body%20Gym." target="_blank" rel="noopener">Quero participar do próximo
           <svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M3 9h12M10 4l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
-      <div class="ev-cartao"><img src="midia/insta-anos80.webp" width="238" height="379" alt="Alunos dançando na festa anos 80 da academia" loading="lazy" class="on"><img src="midia/insta-halloween.webp" width="238" height="319" alt="Aluna fantasiada de bruxa no Halloween da academia" loading="lazy"><img src="midia/insta-turma.webp" width="238" height="379" alt="Turma da Body Gym reunida ao ar livre debaixo de uma árvore" loading="lazy"><img src="midia/insta-sol-reel.webp" width="238" height="319" alt="Pôr do sol visto das esteiras da academia" loading="lazy"></div>
+      <div class="ev-cartao"><img src="midia/insta-anos80-hd.webp" width="900" height="1433" alt="Alunos dançando na festa anos 80 da academia" loading="lazy" class="on"><img src="midia/insta-halloween-hd.webp" width="900" height="1206" alt="Aluna fantasiada de bruxa no Halloween da academia" loading="lazy"><img src="midia/insta-turma-hd.webp" width="900" height="1433" alt="Turma da Body Gym reunida ao ar livre debaixo de uma árvore" loading="lazy"><img src="midia/insta-sol-reel-hd.webp" width="900" height="1206" alt="Pôr do sol visto das esteiras da academia" loading="lazy"></div>
     </div>
-    <ul class="ev-tira" aria-label="Eventos"><li class="on"><button type="button" data-ev="0" aria-label="Ver Anos 80"><img src="midia/insta-anos80.webp" width="238" height="379" alt="" loading="lazy"><span>Anos 80</span><span class="barra"><i></i></span></button></li><li><button type="button" data-ev="1" aria-label="Ver Halloween"><img src="midia/insta-halloween.webp" width="238" height="319" alt="" loading="lazy"><span>Halloween</span><span class="barra"><i></i></span></button></li><li><button type="button" data-ev="2" aria-label="Ver A turma"><img src="midia/insta-turma.webp" width="238" height="379" alt="" loading="lazy"><span>A turma</span><span class="barra"><i></i></span></button></li><li><button type="button" data-ev="3" aria-label="Ver Fim de tarde"><img src="midia/insta-sol-reel.webp" width="238" height="319" alt="" loading="lazy"><span>Fim de tarde</span><span class="barra"><i></i></span></button></li></ul>
+    <ul class="ev-tira" aria-label="Eventos"><li class="on"><button type="button" data-ev="0" aria-label="Ver Anos 80"><img src="midia/insta-anos80-hd.webp" width="900" height="1433" alt="" loading="lazy"><span>Anos 80</span><span class="barra"><i></i></span></button></li><li><button type="button" data-ev="1" aria-label="Ver Halloween"><img src="midia/insta-halloween-hd.webp" width="900" height="1206" alt="" loading="lazy"><span>Halloween</span><span class="barra"><i></i></span></button></li><li><button type="button" data-ev="2" aria-label="Ver A turma"><img src="midia/insta-turma-hd.webp" width="900" height="1433" alt="" loading="lazy"><span>A turma</span><span class="barra"><i></i></span></button></li><li><button type="button" data-ev="3" aria-label="Ver Fim de tarde"><img src="midia/insta-sol-reel-hd.webp" width="900" height="1206" alt="" loading="lazy"><span>Fim de tarde</span><span class="barra"><i></i></span></button></li></ul>
+  </section>
+
+  <!-- ASSISTENTE: SEU PRIMEIRO TREINO -->
+  <section class="quiz" id="primeiro-treino" aria-labelledby="t-quiz">
+    <div class="miolo grade">
+      <div class="cabeca">
+        <span class="etiqueta">Seu primeiro treino</span>
+        <h2 class="titulo t-l" id="t-quiz"><span class="lin"><span class="cromo">Por onde</span></span><span class="lin"><span class="rubro">começar?</span></span></h2>
+        <p>Responda 4 perguntas rápidas. Você recebe uma orientação de boas-vindas e já chega no WhatsApp com tudo explicado para a equipe.</p>
+      </div>
+      <form id="quiz" novalidate>
+        <fieldset><legend>Sua idade</legend><div class="opcoes" data-campo="idade"></div></fieldset>
+        <fieldset><legend>Seu objetivo</legend><div class="opcoes" data-campo="objetivo"></div></fieldset>
+        <fieldset><legend>Experiência</legend><div class="opcoes" data-campo="experiencia"></div></fieldset>
+        <fieldset><legend>Melhor horário</legend><div class="opcoes" data-campo="horario"></div></fieldset>
+        <button class="btn" type="submit" id="quiz-enviar" disabled>Ver minha orientação
+          <svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M3 9h12M10 4l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="resposta" id="quiz-resposta" hidden aria-live="polite"></div>
+      </form>
+    </div>
   </section>
 
   <!-- PERDEU O MEDO + CONTATO -->
@@ -460,6 +502,59 @@ section{position:relative}
       qa('[data-agora]').forEach(function(el){ el.classList.toggle('aberto',aberto); el.querySelector('span').innerHTML=txt; });
     }
     try{ agora(); setInterval(agora,60000); }catch(e){}
+  })();
+
+  /* Medição: cada clique de WhatsApp leva um código de origem e avisa o medidor, se houver */
+  var MEDIDOR = window.plausible || window.gtag || null;
+  function mede(evento, dados){
+    try{
+      if(window.plausible) window.plausible(evento,{props:dados||{}});
+      if(window.gtag) window.gtag('event',evento,dados||{});
+      (window.dataLayer=window.dataLayer||[]).push(Object.assign({event:evento},dados||{}));
+    }catch(e){}
+  }
+  qa('a[href*="wa.me/"]').forEach(function(a){
+    var sec=a.closest('section,header,footer'); var origem=(sec&&(sec.id||sec.className.split(' ')[0]))||'pagina';
+    try{ var u=new URL(a.href); var t=u.searchParams.get('text')||'Olá!'; if(t.indexOf('[site')<0){ a.href=u.origin+u.pathname+'?text='+encodeURIComponent(t+' [site · '+origem+']'); } }catch(e){}
+    a.addEventListener('click',function(){ mede('whatsapp',{origem:origem}); });
+  });
+  qa('a[href*="instagram.com"]').forEach(function(a){ a.addEventListener('click',function(){ mede('instagram'); }); });
+  qa('a[href*="google.com/maps"]').forEach(function(a){ a.addEventListener('click',function(){ mede('mapa'); }); });
+
+  /* Assistente: seu primeiro treino */
+  (function(){
+    var OP={idade:['até 17','18 a 29','30 a 44','45 a 59','60 ou mais'],objetivo:['emagrecer','ganhar força e músculo','saúde e disposição','voltar a treinar'],
+      experiencia:['nunca treinei','já treinei, parei','treino hoje'],horario:['manhã cedo (5h–8h)','manhã','almoço','tarde','noite (até 23h)','fim de semana']};
+    var f=q('#quiz'); if(!f) return; var envia=q('#quiz-enviar'), caixa=q('#quiz-resposta');
+    Object.keys(OP).forEach(function(c){ var box=q('[data-campo="'+c+'"]',f);
+      OP[c].forEach(function(v,i){ var id='q-'+c+'-'+i; box.insertAdjacentHTML('beforeend','<input type="radio" name="'+c+'" id="'+id+'" value="'+v+'"><label for="'+id+'">'+v+'</label>'); }); });
+    function resp(){ var r={}; Object.keys(OP).forEach(function(c){ var x=f.querySelector('input[name="'+c+'"]:checked'); r[c]=x?x.value:null; }); return r; }
+    f.addEventListener('change',function(){ var r=resp(); envia.disabled=Object.keys(r).some(function(k){return !r[k]}); });
+    function local(r){
+      var cuidado = (r.idade==='60 ou mais'||r.experiencia==='nunca treinei') ? ' O professor acompanha você desde o primeiro dia e adapta tudo ao seu ritmo.' : '';
+      var hora = r.horario==='fim de semana' ? 'no sábado (8h–16h) ou domingo (8h–12h)' : 'no horário da '+r.horario.replace(/ \(.*\)/,'');
+      return 'Que bom ter você por aqui! Para '+r.objetivo+', o melhor começo é uma conversa rápida com a equipe para montar um plano do seu jeito, '+hora+'.'+cuidado+' Chame no WhatsApp e venha conhecer a Body Gym.';
+    }
+    function zap(r){
+      var m='Olá! Vim pelo site (Seu primeiro treino). Idade: '+r.idade+'. Objetivo: '+r.objetivo+'. Experiência: '+r.experiencia+'. Horário: '+r.horario+'.';
+      return 'https://wa.me/5564992319285?text='+encodeURIComponent(m+' [site · primeiro-treino]');
+    }
+    function mostra(texto, ia){
+      caixa.hidden=false; caixa.innerHTML='<p></p><a class="btn" target="_blank" rel="noopener">Falar com a equipe no WhatsApp</a><small></small>';
+      q('p',caixa).textContent=texto; var a=q('a',caixa); a.href=zap(resp()); a.addEventListener('click',function(){ mede('whatsapp',{origem:'primeiro-treino'}); });
+      q('small',caixa).textContent = ia ? 'Orientação gerada por IA. Não substitui a avaliação do professor.' : 'Orientação geral. O professor monta seu treino na avaliação.';
+      if(window.gsap && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) gsap.from(caixa,{y:16,opacity:0,duration:.7,ease:'expo.out'});
+    }
+    f.addEventListener('submit',function(e){
+      e.preventDefault(); var r=resp(); if(envia.disabled) return;
+      mede('primeiro_treino',{objetivo:r.objetivo});
+      caixa.hidden=false; caixa.innerHTML='<span class="digitando" aria-label="Escrevendo"><i></i><i></i><i></i></span>'; envia.disabled=true;
+      var pronto=false, timer=setTimeout(function(){ if(!pronto){ pronto=true; mostra(local(r),false); envia.disabled=false; } },9000);
+      fetch('/api/primeiro-treino',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(r)})
+        .then(function(x){ return x.ok?x.json():null; })
+        .then(function(d){ if(pronto) return; pronto=true; clearTimeout(timer); mostra(d&&d.texto?d.texto:local(r), !!(d&&d.texto)); envia.disabled=false; })
+        .catch(function(){ if(pronto) return; pronto=true; clearTimeout(timer); mostra(local(r),false); envia.disabled=false; });
+    });
   })();
 
   var calmo = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -588,11 +683,10 @@ section{position:relative}
   function iniciaTour(desk){
     var sec=q('.tour'), cv=q('#tour-canvas'), rot=q('.tour-rotulo');
     var PARADAS=[
-      {ate:.18,num:'01 / 05',nome:'Nossa parede',desc:'Goiás, Body Gym e Brasil: as bandeiras que recebem você.'},
-      {ate:.36,num:'02 / 05',nome:'A vista',desc:'Janelões de ponta a ponta, de frente para o pasto e os morros.'},
-      {ate:.54,num:'03 / 05',nome:'Musculação',desc:'Leg press, máquinas e halteres, da catraca ao último aparelho.'},
-      {ate:.92,num:'04 / 05',nome:'Cardio',desc:'Esteiras de frente para o pôr do sol.'},
-      {ate:1.01,num:'05 / 05',nome:'Seu lugar',desc:'Venha conhecer. O próximo treino pode ter essa vista.'}
+      {ate:.2,num:'01 / 04',nome:'Nossa parede',desc:'Goiás, Body Gym e Brasil: as bandeiras que recebem você.'},
+      {ate:.5,num:'02 / 04',nome:'A vista',desc:'Janelões de ponta a ponta, de frente para o pasto e os morros.'},
+      {ate:.8,num:'03 / 04',nome:'Musculação',desc:'Leg press, máquinas e halteres, da catraca ao último aparelho.'},
+      {ate:1.01,num:'04 / 04',nome:'Cardio',desc:'Esteiras lado a lado, de frente para a janela.'}
     ];
     var atual=-1;
     function mostra(i){
@@ -623,19 +717,14 @@ section{position:relative}
     var p1=esfera('midia/tour-1.webp',500,ABERT[0]), p2=esfera('midia/tour-2.webp',480,ABERT[1]); p2.material.opacity=0; p2.renderOrder=1;
     var E={yaw:60,fov:44,z:0,mix:0,pitch:13,brilho:0};
     var G={yaw:0,pitch:0};
-    var tl=gsap.timeline({defaults:{ease:'sine.inOut'},scrollTrigger:{trigger:sec,start:'top top',end:'bottom bottom',scrub:1.6,snap:{snapTo:[0,.17,.35,.53,.86,1],duration:{min:.4,max:1.2},delay:.15,ease:'power2.inOut'},
+    var tl=gsap.timeline({defaults:{ease:'sine.inOut'},scrollTrigger:{trigger:sec,start:'top top',end:'bottom bottom',scrub:1.6,snap:{snapTo:[0,.33,.66,1],inertia:false,duration:{min:.4,max:1.2},delay:.15,ease:'power2.inOut'},
       onUpdate:function(st){ var p=st.progress; gsap.set('.tour-barra i',{scaleY:p});
         for(var i=0;i<PARADAS.length;i++){ if(p<PARADAS[i].ate){ mostra(i); break; } } }}});
-    tl.to(E,{yaw:-4,fov:66,pitch:0,duration:.17},0)
-      .to(E,{yaw:-4,fov:58,z:-40,duration:.18},.17)
-      .to(E,{yaw:-48,fov:62,z:-30,duration:.18},.35)
-      .to(E,{yaw:-5,fov:30,z:-230,pitch:1,duration:.17},.53)
-      .to(E,{fov:20,z:-300,duration:.06,ease:'power2.in'},.70)
-      .to('.tour-luz',{opacity:1,duration:.06,ease:'power2.in'},.70)
-      .set(E,{mix:1,fov:76,z:60,yaw:-14,pitch:0},.76)
-      .to('.tour-luz',{opacity:0,duration:.07,ease:'power2.out'},.76)
-      .to(E,{yaw:-6,fov:62,z:0,duration:.1},.76)
-      .to(E,{yaw:0,fov:32,z:-220,pitch:2,duration:.14},.86)
+    tl.to(E,{yaw:-4,fov:66,pitch:0,duration:.33},0)
+      .to(E,{yaw:-48,fov:62,duration:.33},.33)
+      .to(E,{yaw:-10,fov:66,duration:.2},.66)
+      .to(E,{mix:1,duration:.14,ease:'power1.inOut'},.72)
+      .to(E,{yaw:0,fov:64,duration:.14},.86)
       .to('.tour-cab',{opacity:0,y:-30,duration:.08,ease:'power2.in'},.06)
       .to('.tour-dica',{opacity:0,duration:.05},.04);
     if(window.matchMedia('(pointer:fine)').matches){
@@ -679,7 +768,7 @@ section{position:relative}
       }});
     }
     var st=ScrollTrigger.create({trigger:sec,start:'top top',end:'+='+(n*90)+'%',pin:true,scrub:true,
-      snap:{snapTo:1/(n-1),duration:{min:.3,max:.9},delay:.1,ease:'power2.inOut'},
+      snap:{snapTo:1/(n-1),inertia:false,duration:{min:.3,max:.9},delay:.1,ease:'power2.inOut'},
       onUpdate:function(s){
         var p=s.progress*(n-1), i=Math.round(p);
         barras.forEach(function(b,k){ gsap.set(b,{scaleX:gsap.utils.clamp(0,1,p-k+1)}); });
