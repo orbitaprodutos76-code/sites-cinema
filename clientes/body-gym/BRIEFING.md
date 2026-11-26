@@ -141,3 +141,11 @@
 - Feito: fundo preto liso + pontinhos 2D trocados por **atmosfera em WebGL** (`#atmo`): projetor atrás e acima com **raios irregulares** que se mexem, **névoa/fumaça viva** (ruído fractal com distorção) que só aparece onde a luz bate, **poeira com profundidade de campo** (900 grãos no PC, 420 no celular: perto = bokeh grande e desfocado, no foco = pontos nítidos que acendem no feixe, fundo = finos) e **as batidas empurram o ar** (onda que espalha a poeira + nuvens de giz), no lugar das faíscas. No TREINO a luz toda vira vermelha. Renderizada em 75% (PC) / 60% (celular) da resolução para não pesar.
 - Quadro: `referencias/abertura-v11-atmosfera.jpg`. Link: https://claude.ai/artifact/SiZfdtPofuUnTWTvBvRoEq (versão 6).
 - Risco: desempenho em celular fraco (não testado em aparelho real). PENDENTE: nota do senhor.
+
+## Abertura v12: preto, metal, faíscas (26/11/2026)
+- **Nota do senhor para a v11: 5.** Pedidos: fundo todo preto dando destaque às palavras; sons meio metálicos; faíscas realistas a cada impacto; leve tremor de tela para imersão; vermelho do TREINO fraco. "Já perdemos tempo demais nessa parte."
+- Análise (por que parecia básica): palavras chapadas (WordArt), toda palavra entrava igual, impacto sem consequência física, fundo disputando contraste, vermelho de tinta (não de luz), som desconectado do material.
+- Feito: fundo **preto absoluto** (atmosfera removida); palavras de **aço** (chanfro pegando luz, faixa escura no meio, sombra de peso) com **reflexo que corre** no impacto; **faíscas realistas** saindo da base de cada palavra (nascem branco-amarelas, esfriam laranja → vermelho, caem com gravidade, rastro de movimento, clarão no ponto do golpe, brasas flutuando); **tremor de câmera leve** que sente o golpe e assenta (com rotação mínima); **TREINO incandescente** (miolo quente, vermelho #ff1a2b com brilho em camadas, luz vermelha vazando na tela); anel de choque removido; **sons metálicos** em camadas (ver `midia/som/CREDITOS.md`).
+- Quadros: `referencias/abertura-v12-metal.jpg`. Link: https://claude.ai/artifact/SiZfdtPofuUnTWTvBvRoEq (versão 7).
+- Dúvida aberta: trocar a Anton por fonte mais pesada/larga de cinema? (sem resposta; seguiu com Anton).
+- PENDENTE: nota do senhor.

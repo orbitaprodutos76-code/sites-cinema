@@ -35,14 +35,15 @@ html,body{margin:0;height:100%;background:#030304;color:#fff;font-family:var(--f
   -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;padding:.12em .02em .06em;margin:-.12em -.02em -.06em}
 .treino-caixa{position:relative;font-size:clamp(100px,22vw,380px)}
 .treino-caixa .T{letter-spacing:.02em}
-.treino-caixa .base{color:var(--v);text-shadow:0 0 60px rgba(215,25,42,.55),0 0 140px rgba(215,25,42,.35)}
+.treino-caixa .base{color:#ff1a2b;text-shadow:0 0 1px #ff8a70,0 0 10px rgba(255,60,50,.95),0 0 34px rgba(255,10,30,.9),0 0 90px rgba(255,0,25,.7),0 0 180px rgba(255,0,25,.45)}
+.treino-caixa .nucleo{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,#ffd0a8 0%,#ff6a3c 30%,#ff1a1a 55%,#c4000f 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;opacity:0}
 .treino-caixa .rgb{position:absolute;inset:0;mix-blend-mode:screen;opacity:0}
 .treino-caixa .ciano{color:#00d8ff}
 .treino-caixa .rosa{color:#ff2a3d}
 .onda{position:absolute;left:50%;top:50%;width:60vmin;height:60vmin;margin:-30vmin 0 0 -30vmin;border-radius:50%;opacity:0;pointer-events:none;
   box-shadow:0 0 0 2px rgba(255,210,200,.7),0 0 40px 8px rgba(215,25,42,.35),inset 0 0 40px 6px rgba(215,25,42,.25)}
 .flash{position:absolute;inset:0;opacity:0;pointer-events:none;mix-blend-mode:screen;background:radial-gradient(circle at 50% 50%,#fff6ea 0%,rgba(255,200,170,.5) 30%,rgba(215,25,42,.25) 55%,rgba(0,0,0,0) 80%)}
-#gl,#atmo{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#gl,#faiscas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 #gl{opacity:0}
 .reserva{position:absolute;inset:0;display:none;place-items:center}
 .reserva span{font-family:var(--fonte-titulo);font-size:22vw;line-height:.85;text-transform:uppercase;background:url(midia/real-esteiras-sol-hd.webp) 50% 42%/cover;-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -60,9 +61,21 @@ html,body{margin:0;height:100%;background:#030304;color:#fff;font-family:var(--f
 .pular{position:absolute;z-index:7;right:var(--calha-d);bottom:calc(env(safe-area-inset-bottom,0px) + 18px);cursor:pointer;font:700 11px/1 var(--fonte-texto);letter-spacing:.32em;text-transform:uppercase;color:#d6d6da;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.22);border-radius:40px;padding:12px 18px}
 #painel{position:fixed;z-index:20;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 64px);transform:translateX(-50%);display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:max-content;max-width:94vw;opacity:0;pointer-events:none;transition:opacity .4s}
 #painel.fim{opacity:1;pointer-events:auto}
-.palavra{position:absolute;font-size:clamp(110px,21vw,380px);letter-spacing:.015em;color:#f4f4f5;opacity:0;will-change:transform;text-shadow:0 0 50px rgba(255,236,210,.18)}
-.palavra.menor{font-size:clamp(80px,13vw,230px);color:#d9d9dd}
-.palavra.simples{font-size:clamp(100px,19vw,340px);letter-spacing:.03em;text-shadow:none;filter:drop-shadow(0 0 40px rgba(255,236,210,.15))}
+/* palavras de metal: aço escovado, borda chanfrada pegando luz, sombra de peso, reflexo que corre no impacto */
+.palavra{position:absolute;font-size:clamp(110px,21vw,380px);letter-spacing:.015em;opacity:0;will-change:transform}
+.palavra.menor{font-size:clamp(80px,13vw,230px)}
+.palavra.simples{font-size:clamp(100px,19vw,340px);letter-spacing:.03em}
+.metal{position:relative;display:inline-block}
+.metal .txt{display:block;padding:.12em .02em .06em;margin:-.12em -.02em -.06em;
+  background:linear-gradient(180deg,#fbfbfc 0%,#d9dbdf 30%,#7b7f86 48%,#2e3034 50%,#c3c6cb 53%,#eef0f2 64%,#9da1a8 82%,#55585e 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 -1px 0 rgba(255,255,255,.55)) drop-shadow(0 2px 0 #121315) drop-shadow(0 3px 0 #0b0b0c) drop-shadow(0 24px 30px rgba(0,0,0,.9))}
+.metal .ref{position:absolute;top:0;bottom:0;left:0;width:16%;overflow:hidden;pointer-events:none;mix-blend-mode:screen;
+  -webkit-mask-image:linear-gradient(90deg,rgba(0,0,0,0),#000 50%,rgba(0,0,0,0));mask-image:linear-gradient(90deg,rgba(0,0,0,0),#000 50%,rgba(0,0,0,0))}
+.metal .ref span{position:absolute;top:0;left:0;white-space:nowrap;padding:.12em .02em .06em;margin-top:-.12em;
+  background:linear-gradient(180deg,#fff 0%,#fff6e4 45%,#ffd796 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+/* luz vermelha que vaza na tela no TREINO */
+.vaza{position:absolute;inset:0;opacity:0;pointer-events:none;background:radial-gradient(55% 45% at 50% 50%,rgba(255,20,35,.42),rgba(255,0,20,.12) 45%,rgba(0,0,0,0) 75%)}
 .som{position:absolute;z-index:7;left:max(20px,env(safe-area-inset-left,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 18px);display:flex;align-items:center;gap:8px;cursor:pointer;
   font:700 11px/1 var(--fonte-texto);letter-spacing:.24em;text-transform:uppercase;color:#d6d6da;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.22);border-radius:40px;padding:9px 16px 9px 12px}
 .som svg{width:20px;height:20px}
@@ -82,13 +95,13 @@ button:focus-visible{outline:3px solid var(--o);outline-offset:3px}
 <body>
 <div class="abertura" id="abertura" role="img" aria-label="Abertura: Além de um simples treino. Body Gym.">
   <div class="palco">
-    <canvas id="atmo" aria-hidden="true"></canvas>
+    <div class="vaza" id="vaza"></div>
     <div class="flare" id="flare"></div>
-    <div class="cena"><div class="T palavra" id="w-alem">Além</div></div>
-    <div class="cena"><div class="T palavra menor" id="w-deum">de um</div></div>
-    <div class="cena"><div class="T palavra simples cromo" id="w-simples">Simples</div></div>
+    <div class="cena"><div class="T palavra" id="w-alem"><span class="metal"><span class="txt">Além</span><span class="ref"><span>Além</span></span></span></div></div>
+    <div class="cena"><div class="T palavra menor" id="w-deum"><span class="metal"><span class="txt">de um</span><span class="ref"><span>de um</span></span></span></div></div>
+    <div class="cena"><div class="T palavra simples" id="w-simples"><span class="metal"><span class="txt">Simples</span><span class="ref"><span>Simples</span></span></span></div></div>
     <div class="cena"><div class="treino-caixa" id="treino">
-      <div class="T base">Treino</div><div class="T rgb ciano">Treino</div><div class="T rgb rosa">Treino</div>
+      <div class="T base">Treino</div><div class="T nucleo">Treino</div><div class="T rgb ciano">Treino</div><div class="T rgb rosa">Treino</div>
     </div></div>
     <div class="onda" id="onda"></div>
     <canvas id="gl"></canvas>
@@ -97,6 +110,7 @@ button:focus-visible{outline:3px solid var(--o);outline-offset:3px}
     <div class="assina" id="assina-baixo"><span class="linha"></span><span class="sub">Mineiros · GO <b>—</b> desde 2019</span></div>
     <div class="flare ouro" id="flare-o"></div>
     <div class="flash" id="flash"></div>
+    <canvas id="faiscas" aria-hidden="true"></canvas>
   </div>
   <div class="grao"></div>
   <div class="cine c"></div><div class="cine b"></div>
@@ -123,91 +137,42 @@ qa('#painel button').forEach(function(b){ b.classList.toggle('on',+b.dataset.vel
 function letras(el,txt,cls){ txt.split('').forEach(function(c){ var s=document.createElement('span'); if(c===' '){ s.className='esp'; } else { s.className='l '+(cls||''); s.textContent=c; } el.appendChild(s); }); return qa('.l,span:not(.esp)',el).filter(function(x){return x.textContent}); }
 
 
-/* ---------- Atmosfera realista (WebGL): projetor atrás, névoa viva, poeira com profundidade de campo ---------- */
+/* ---------- Faíscas realistas (metal batendo): riscos que nascem branco-amarelos, esfriam para laranja e vermelho e caem ---------- */
 var W=innerWidth, H=innerHeight, dpr=Math.min(devicePixelRatio||1,2);
-var POEIRA={a:0}, LUZ={b:0,v:0};          // POEIRA.a: quanto de poeira aparece · LUZ.b: força do projetor · LUZ.v: luz vermelha (TREINO)
-var Atmo=(function(){
-  var cv=q('#atmo'), g=null; try{ g=cv.getContext('webgl',{antialias:false,alpha:false}); }catch(e){}
-  var ESC=desk?.75:.6, RW=0, RH=0, t0=performance.now(), tempo=0;
-  function ajusta(){ W=innerWidth; H=innerHeight; RW=Math.round(W*dpr*ESC); RH=Math.round(H*dpr*ESC); cv.width=RW; cv.height=RH; if(g) g.viewport(0,0,RW,RH); }
-  ajusta();
-  if(!g){ cv.style.background='radial-gradient(60% 40% at 50% 45%,rgba(255,232,196,.10),rgba(0,0,0,0) 70%),#030304'; return {desenha:function(){},impulso:function(){}}; }
-  function sh(t,src){ var o=g.createShader(t); g.shaderSource(o,src); g.compileShader(o); if(!g.getShaderParameter(o,g.COMPILE_STATUS)) throw g.getShaderInfoLog(o); return o; }
-  function programa(vs,fs){ var p=g.createProgram(); g.attachShader(p,sh(g.VERTEX_SHADER,vs)); g.attachShader(p,sh(g.FRAGMENT_SHADER,fs)); g.linkProgram(p); return p; }
-  // névoa + raios do projetor
-  var pNevoa=programa('attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}',[
-    'precision highp float; uniform vec2 uRes; uniform float uT,uLuz,uVerm;',
-    'float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}',
-    'float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1.,0.)),f.x),mix(h(i+vec2(0.,1.)),h(i+vec2(1.,1.)),f.x),f.y);}',
-    'float fbm(vec2 p){float s=0.,a=.5;for(int i=0;i<4;i++){s+=a*n(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return s;}',
-    'void main(){ vec2 uv=gl_FragCoord.xy/uRes; float asp=uRes.x/uRes.y; vec2 p=vec2(uv.x*asp,uv.y);',
-    '  vec2 d=p-vec2(.5*asp,1.12); float ang=atan(d.x,-d.y); float dist=length(d);',
-    '  float raios=fbm(vec2(ang*6.,uT*.07))*.75+fbm(vec2(ang*17.+3.,uT*.05))*.45;',
-    '  float cone=exp(-pow(ang/.5,2.))*smoothstep(1.9,.25,dist);',
-    '  vec2 q=p*1.6+vec2(uT*.035,-uT*.014); float fum=fbm(q+1.5*fbm(q*1.6+vec2(uT*.04,0.)));',
-    '  float faixa=exp(-pow((uv.y-.5)/.19,2.));',
-    '  float luz=(cone*raios*.8+faixa*.3)*(.08+pow(fum,1.6)*1.9);',
-    '  vec3 cor=mix(vec3(1.,.85,.64),vec3(1.,.13,.17),uVerm);',
-    '  vec3 c=cor*luz*uLuz*.45; c*=smoothstep(1.3,.3,length((uv-.5)*vec2(asp*.75,1.)));',
-    '  c+=vec3(.012,.011,.013)+h(gl_FragCoord.xy+uT)*.006;',
-    '  gl_FragColor=vec4(c,1.); }'].join('\n'));
-  // poeira e nuvens de giz (pontos com desfoque de lente)
-  var pPo=programa(['attribute vec2 aP; attribute float aT,aA,aB; varying float vA,vB;',
-    'void main(){ gl_Position=vec4(aP,0.,1.); gl_PointSize=aT; vA=aA; vB=aB; }'].join('\n'),[
-    'precision mediump float; varying float vA,vB; uniform vec3 uCor;',
-    'void main(){ float d=length(gl_PointCoord-.5)*2.; if(d>1.) discard; float f;',
-    '  if(vB<0.){ f=exp(-d*d*3.2); }',
-    '  else { float nit=exp(-d*d*7.); float disco=smoothstep(1.,.55,d)*(.78+.22*smoothstep(.4,.95,d)); f=mix(nit,disco,vB); }',
-    '  gl_FragColor=vec4(uCor*f*vA,1.); }'].join('\n'));
-  var bTela=g.createBuffer(); g.bindBuffer(g.ARRAY_BUFFER,bTela); g.bufferData(g.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),g.STATIC_DRAW);
-  var bPo=g.createBuffer(), MAXP=g.getParameter(g.ALIASED_POINT_SIZE_RANGE)[1]||64;
-  var uN={res:g.getUniformLocation(pNevoa,'uRes'),t:g.getUniformLocation(pNevoa,'uT'),luz:g.getUniformLocation(pNevoa,'uLuz'),verm:g.getUniformLocation(pNevoa,'uVerm')};
-  var uCor=g.getUniformLocation(pPo,'uCor'), aP=g.getAttribLocation(pPo,'aP'), aT=g.getAttribLocation(pPo,'aT'), aA=g.getAttribLocation(pPo,'aA'), aB=g.getAttribLocation(pPo,'aB'), aTela=g.getAttribLocation(pNevoa,'p');
-
-  // grãos: x,y em px, z = profundidade (0 fundo, 1 colado na lente)
-  var N=desk?900:420, gr=[], FOCO=.5;
-  for(var k=0;k<N;k++){ var z=Math.pow(Math.random(),1.6); if(Math.random()<.025) z=.88+Math.random()*.12;
-    gr.push({x:Math.random()*W,y:Math.random()*H,z:z,vx:0,vy:0,f:Math.random()*6.28,b:.35+Math.random()*.65}); }
-  var nuvens=[];
-  function luzEm(x,y){ var dx=(x-W/2)/H, dy=(y+.12*H)/H, ang=Math.atan2(dx,dy); return Math.exp(-Math.pow(ang/.5,2))*.8+Math.exp(-Math.pow((y-H/2)/(H*.19),2))*.55; }
-  // batida: a onda de ar empurra a poeira e levanta nuvens de giz
-  function impulso(forca,qtd){ var cx=W/2, cy=H/2;
-    gr.forEach(function(p){ var dx=p.x-cx, dy=p.y-cy, d=Math.sqrt(dx*dx+dy*dy)+30, k=forca*(260+900*p.z)/(1+d/(H*.45))*(.6+Math.random()*.8);
-      p.vx+=dx/d*k; p.vy+=dy/d*k*.8; });
-    for(var i=0;i<qtd;i++){ var lado=Math.random()<.5?-1:1;
-      nuvens.push({x:cx+(Math.random()-.5)*W*.5,y:cy+(Math.random()-.3)*H*.18,vx:lado*(40+Math.random()*260)*forca,vy:-(10+Math.random()*80)*forca,
-        r:(desk?40:26)+Math.random()*60,cr:(desk?220:140)+Math.random()*260,v:1.6+Math.random()*1.8,m:0,a:.05+Math.random()*.07}); nuvens[nuvens.length-1].m=nuvens[nuvens.length-1].v; } }
-  var dados=new Float32Array((N+400)*5);
-  function desenha(dt){
-    tempo+=dt;
-    g.disable(g.BLEND);
-    g.useProgram(pNevoa); g.bindBuffer(g.ARRAY_BUFFER,bTela); g.enableVertexAttribArray(aTela); g.vertexAttribPointer(aTela,2,g.FLOAT,false,0,0);
-    g.uniform2f(uN.res,RW,RH); g.uniform1f(uN.t,tempo+3.); g.uniform1f(uN.luz,LUZ.b+LUZ.v*.9); g.uniform1f(uN.verm,LUZ.v/(LUZ.b+LUZ.v+1e-4));
-    g.drawArrays(g.TRIANGLES,0,3); g.disableVertexAttribArray(aTela);
-    // partículas
-    var n=0, ilum=POEIRA.a*(.35+LUZ.b*.65+LUZ.v*.6), esc=dpr*ESC;
-    for(var i=0;i<gr.length;i++){ var p=gr[i], par=.25+p.z*1.4;
-      p.f+=dt*(.6+p.z); p.vx+=(Math.sin(p.f*1.7+i)*6+5)*dt*par; p.vy+=(Math.cos(p.f*1.3+i*.7)*6-2)*dt*par;
-      p.vx*=Math.pow(.18,dt); p.vy*=Math.pow(.18,dt); p.x+=p.vx*dt*par; p.y+=p.vy*dt*par;
-      if(p.x<-60) p.x+=W+120; if(p.x>W+60) p.x-=W+120; if(p.y<-60) p.y+=H+120; if(p.y>H+60) p.y-=H+120;
-      var borr=Math.min(1,Math.abs(p.z-FOCO)*2.3), tam=(.9+p.z*2.4)*(1+borr*(p.z>FOCO?9:2.5)), a=ilum*p.b*luzEm(p.x,p.y)*(.55+.45*Math.sin(p.f*2.))/Math.pow(1+borr*(p.z>FOCO?9:2.5),1.35)*(p.z>FOCO?1.:(.35+p.z));
-      if(a<.004) continue; var o=n*5; dados[o]=p.x/W*2-1; dados[o+1]=1-p.y/H*2; dados[o+2]=Math.min(MAXP,tam*esc); dados[o+3]=Math.min(1,a*(borr<.25?2.6:1.3)); dados[o+4]=borr; n++; }
-    for(var j=nuvens.length-1;j>=0;j--){ var c=nuvens[j]; c.v-=dt; if(c.v<=0){ nuvens.splice(j,1); continue; }
-      c.vx*=Math.pow(.25,dt); c.vy=c.vy*Math.pow(.35,dt)-8*dt; c.x+=c.vx*dt; c.y+=c.vy*dt;
-      var idade=c.m-c.v, r=c.r+(c.cr-c.r)*(1-Math.pow(1-Math.min(1,idade/c.m*1.3),3)), al=c.a*Math.min(1,idade*7)*Math.min(1,c.v/c.m*1.8)*(.4+luzEm(c.x,c.y));
-      if(n>=N+399) break; var o2=n*5; dados[o2]=c.x/W*2-1; dados[o2+1]=1-c.y/H*2; dados[o2+2]=Math.min(MAXP,r*2*esc); dados[o2+3]=al; dados[o2+4]=-1; n++; }
-    if(n){ g.enable(g.BLEND); g.blendFunc(g.ONE,g.ONE); g.useProgram(pPo);
-      var vm=LUZ.v/(LUZ.b+LUZ.v+1e-4); g.uniform3f(uCor,1.,.9-.62*vm,.76-.6*vm);
-      g.bindBuffer(g.ARRAY_BUFFER,bPo); g.bufferData(g.ARRAY_BUFFER,dados.subarray(0,n*5),g.DYNAMIC_DRAW);
-      [[aP,2,0],[aT,1,8],[aA,1,12],[aB,1,16]].forEach(function(x){ g.enableVertexAttribArray(x[0]); g.vertexAttribPointer(x[0],x[1],g.FLOAT,false,20,x[2]); });
-      g.drawArrays(g.POINTS,0,n);
-      [aP,aT,aA,aB].forEach(function(x){ g.disableVertexAttribArray(x); }); }
+var POEIRA={a:0}, LUZ={b:0,v:0};   // mantidos por compatibilidade (fundo agora é preto absoluto)
+var Faisca=(function(){
+  var cv=q('#faiscas'), c=cv.getContext('2d'), P=[], brasas=[], clarões=[];
+  function ajusta(){ W=innerWidth; H=innerHeight; cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); c.setTransform(dpr,0,0,dpr,0,0); }
+  ajusta(); addEventListener('resize',ajusta);
+  // solta faíscas da base de um elemento (como metal batendo no chão)
+  function solta(el,qtd,forca){ var r=(typeof el==='string'?q(el):el); if(!r) return; var b=r.getBoundingClientRect(); if(!b.width) return;
+    var base=b.bottom-b.height*.16, n=Math.round(qtd*(desk?1:.6));
+    for(var i=0;i<n;i++){ var x=b.left+b.width*(.06+Math.random()*.88), lado=(x-(b.left+b.width/2))/(b.width/2);
+      var ang=-Math.PI/2+lado*.9+(Math.random()-.5)*1.5, v=(320+Math.random()*1100)*forca*(desk?1:.75);
+      P.push({x:x,y:base+(Math.random()-.5)*8,vx:Math.cos(ang)*v,vy:Math.sin(ang)*v,t:1,vida:.35+Math.random()*.85,peso:.7+Math.random()*.6,w:.6+Math.random()*1.3}); }
+    for(var k=0;k<Math.round(6*forca);k++) clarões.push({x:b.left+b.width*(.15+Math.random()*.7),y:base,v:.16,m:.16,r:(40+Math.random()*80)*forca});
+    for(var j=0;j<Math.round(n*.12);j++) brasas.push({x:b.left+Math.random()*b.width,y:base-Math.random()*b.height*.3,vx:(Math.random()-.5)*40,vy:-(20+Math.random()*60),v:1.2+Math.random()*1.6,m:2.8,r:.8+Math.random()*1.2});
   }
-  addEventListener('resize',ajusta);
-  return {desenha:desenha,impulso:impulso};
+  function cor(t,a){ return t>.72?'rgba(255,246,214,'+a+')':t>.45?'rgba(255,188,84,'+a+')':t>.22?'rgba(255,112,34,'+a+')':'rgba(214,38,16,'+a+')'; }
+  function desenha(dt){
+    c.clearRect(0,0,W,H); if(!dt&&!P.length&&!brasas.length) return; c.globalCompositeOperation='lighter'; c.lineCap='round';
+    for(var k=clarões.length-1;k>=0;k--){ var f=clarões[k]; f.v-=dt; if(f.v<=0){ clarões.splice(k,1); continue; } var a=f.v/f.m;
+      var gr=c.createRadialGradient(f.x,f.y,0,f.x,f.y,f.r); gr.addColorStop(0,'rgba(255,240,210,'+(.55*a)+')'); gr.addColorStop(.3,'rgba(255,150,60,'+(.22*a)+')'); gr.addColorStop(1,'rgba(255,80,20,0)');
+      c.fillStyle=gr; c.beginPath(); c.arc(f.x,f.y,f.r,0,6.283); c.fill(); }
+    for(var i=P.length-1;i>=0;i--){ var p=P[i]; p.vida-=dt; if(p.vida<=0){ P.splice(i,1); continue; }
+      p.t=Math.max(0,p.t-dt*(1.1+.9/p.peso)); p.vx*=Math.pow(.42,dt); p.vy=p.vy*Math.pow(.42,dt)+1500*p.peso*dt;
+      var x0=p.x, y0=p.y; p.x+=p.vx*dt; p.y+=p.vy*dt;
+      var rastro=.022+.018*p.t, xa=p.x-p.vx*rastro, ya=p.y-p.vy*rastro, a=Math.min(1,p.vida*3)*(.35+.65*p.t);
+      c.strokeStyle=cor(p.t,a*.35); c.lineWidth=p.w*3.2; c.beginPath(); c.moveTo(xa,ya); c.lineTo(p.x,p.y); c.stroke();
+      c.strokeStyle=cor(p.t+.2,a); c.lineWidth=p.w; c.beginPath(); c.moveTo(xa,ya); c.lineTo(p.x,p.y); c.stroke(); }
+    for(var j=brasas.length-1;j>=0;j--){ var b=brasas[j]; b.v-=dt; if(b.v<=0){ brasas.splice(j,1); continue; }
+      b.vx+=(Math.random()-.5)*30*dt; b.vy-=10*dt; b.x+=b.vx*dt; b.y+=b.vy*dt; var al=Math.min(1,b.v)*(.5+.5*Math.sin(b.v*14));
+      c.fillStyle='rgba(255,'+(110+Math.round(b.v*30))+',40,'+(al*.8)+')'; c.beginPath(); c.arc(b.x,b.y,b.r,0,6.283); c.fill(); }
+    c.globalCompositeOperation='source-over';
+  }
+  return {solta:solta,desenha:desenha};
 })();
-/* compatível com as chamadas da coreografia */
-function estoura(x,y,n,f){ if(n) Atmo.impulso(f/600, Math.round(n/(desk?6:5))); }
+function estoura(){}
 
 /* ---------- WebGL: BODY GYM com o pôr do sol dentro ---------- */
 var U={entra:0,borrão:1,zoom:1,aberr:0,ondaT:0,ondaA:0,luz:-.6,cheio:0,brilho:0,alfa:0};
@@ -278,8 +243,8 @@ function renderGL(){
 var Som=(function(){
   var ac=null, mestre=null, ligado=false, buf={}, carregando=null;
   // pico = segundo, dentro do arquivo, em que a batida acontece; vol = mixagem
-  var SONS={alem:{pico:.084,vol:.85},deum:{pico:.07,vol:.7},simples:{pico:.145,vol:.9},treino:{pico:.047,vol:1},treino2:{pico:.155,vol:.75},
-            marca:{pico:.985,vol:1},brilho:{pico:.939,vol:.4},mergulho:{pico:.632,vol:.85}};
+  var SONS={alem:{pico:.265,vol:.9},deum:{pico:.169,vol:.8},simples:{pico:.324,vol:.95},treino:{pico:.93,vol:1},
+            marca:{pico:.985,vol:1},brilho:{pico:.939,vol:.35},mergulho:{pico:.632,vol:.85}};
   try{ ligado=localStorage.getItem('bg-som')==='1'; }catch(e){}
   function cria(){ if(ac) return; var C=window.AudioContext||window.webkitAudioContext; if(!C) return; ac=new C();
     mestre=ac.createDynamicsCompressor(); mestre.threshold.value=-6; mestre.ratio.value=4; var g=ac.createGain(); g.gain.value=.95; mestre.connect(g); g.connect(ac.destination); carrega(); }
@@ -301,7 +266,9 @@ function somEm(n,T){ var p=Som.pico(n); tl.add(function(){ Som.toca(n, Math.max(
 
 /* ---------- coreografia ---------- */
 var palco=q('.palco'), tl=gsap.timeline({paused:true,onComplete:fim});
-function treme(t,f,n){ for(var i=0;i<n;i++){ var k=Math.pow(1-i/n,1.5); tl.to(palco,{x:(Math.random()-.5)*f*k,y:(Math.random()-.5)*f*.7*k,duration:.035,ease:'none'},t+i*.035); } tl.to(palco,{x:0,y:0,duration:.1,ease:'power2.out'},t+n*.035); }
+function treme(t,f,n){ var ph=Math.random()*6.28; n=n+3; for(var i=0;i<n;i++){ var k=Math.exp(-i*.45), s=Math.sin(ph+i*2.3), c2=Math.cos(ph*1.3+i*1.9);
+    tl.to(palco,{x:s*f*k*.7,y:(i===0?f*.9:c2*f*k*.5),rotation:s*f*k*.018,duration:.032,ease:'sine.inOut'},t+i*.032); }
+  tl.to(palco,{x:0,y:0,rotation:0,duration:.18,ease:'power2.out'},t+n*.032); }
 function montaTimeline(){
   gsap.set('.palavra',{opacity:0}); gsap.set('#treino .base',{opacity:0,scale:2.4}); gsap.set('.assina .linha',{scaleX:0});
   var TOTAL=5.6;
@@ -315,10 +282,11 @@ function montaTimeline(){
       .fromTo(sel,{scale:1.32,filter:'blur(8px)'},{scale:1,filter:'blur(0px)',duration:.24,ease:'expo.out',immediateRender:false},t)
       .to(sel,{scale:1.06,duration:dur,ease:'none'},t+.24)
       .fromTo('#flash',{opacity:0},{opacity:.22*forca,duration:.03,ease:'none',immediateRender:false},t).to('#flash',{opacity:0,duration:.3},t+.03)
-      .add(function(){ estoura(W/2,H/2+H*.08,Math.round((desk?40:24)*forca),420*forca,.15); },t)
+      .add(function(){ Faisca.solta(q(sel+' .metal'),110*forca,forca); },t)
+      .add(function(){ var m=q(sel+' .metal'), w=m.offsetWidth; gsap.fromTo(q('.ref',m),{x:-.2*w},{x:w*1.05,duration:.55/VEL,ease:'power2.out'}); gsap.fromTo(q('.ref span',m),{x:.2*w},{x:-w*1.05,duration:.55/VEL,ease:'power2.out'}); },t+.02)
       .set(sel,{opacity:0},t+dur);
     if(flare) tl.fromTo('#flare',{opacity:.9,scaleX:.2},{opacity:0,scaleX:1.1,duration:.5,ease:'expo.out',immediateRender:false},t);
-    treme(t,(desk?16:10)*forca,4);
+    treme(t,(desk?9:6)*forca,4);
   }
   bate('#w-alem',.3,.42,.8,true,'alem');
   bate('#w-deum',.78,.34,.7,false,'deum');
@@ -331,16 +299,17 @@ function montaTimeline(){
     .to(LUZ,{v:1.1,duration:.08},T)
     .fromTo('#treino .ciano',{opacity:.95,x:-34},{opacity:0,x:0,duration:.45,ease:'expo.out',immediateRender:false},T)
     .fromTo('#treino .rosa',{opacity:.95,x:34},{opacity:0,x:0,duration:.45,ease:'expo.out',immediateRender:false},T)
-    .fromTo('#onda',{opacity:1,scale:.3},{opacity:0,scale:2.8,duration:.8,ease:'expo.out',immediateRender:false},T)
-    .fromTo('#flash',{opacity:0},{opacity:.7,duration:.03,ease:'none',immediateRender:false},T).to('#flash',{opacity:0,duration:.45},T+.03)
-    .add(function(){ estoura(W/2,H/2,desk?150:90,desk?800:520,.45); },T)
+    .fromTo('#flash',{opacity:0},{opacity:.45,duration:.03,ease:'none',immediateRender:false},T).to('#flash',{opacity:0,duration:.35},T+.03)
+    .add(function(){ Faisca.solta('#treino .base',240,1.35); },T)
+    .fromTo('#vaza',{opacity:0},{opacity:1,duration:.06,ease:'none',immediateRender:false},T).to('#vaza',{opacity:.55,duration:.6,ease:'power2.out'},T+.06).to('#vaza',{opacity:0,duration:.3},T+.97)
+    .fromTo('#treino .nucleo',{opacity:1},{opacity:.55,duration:.6,ease:'power2.out',immediateRender:false},T)
     .to('#treino .base',{scale:1.07,duration:.75,ease:'none'},T+.22)
     .set('#treino',{opacity:0},T+.97)
     .to(LUZ,{v:0,b:.55,duration:.35},T+.97)
     .to(POEIRA,{a:.35,duration:.4},T+.97);
-  treme(T,desk?40:26,9);
+  treme(T,desk?16:11,6);
   // BODY GYM com o pôr do sol dentro (WebGL): vem de trás rápido e bate
-  somEm('treino',T); somEm('treino2',T);
+  somEm('treino',T);
   var B=T+1.0;
   somEm('marca',B+.3); somEm('brilho',B+1.05);
   tl.set('#gl',{opacity:1},B)
@@ -348,7 +317,7 @@ function montaTimeline(){
     .fromTo(U,{aberr:.012},{aberr:0,duration:.4,ease:'expo.out',immediateRender:false},B+.3)
     .fromTo(U,{ondaT:0,ondaA:.35},{ondaT:1.4,ondaA:0,duration:.8,ease:'power2.out',immediateRender:false},B+.3)
     .fromTo('#flash',{opacity:0},{opacity:.5,duration:.03,ease:'none',immediateRender:false},B+.3).to('#flash',{opacity:0,duration:.45},B+.33)
-    .add(function(){ estoura(W/2,H/2,desk?90:50,desk?600:380,.2); },B+.3)
+    .add(function(){ var r={getBoundingClientRect:function(){ return {left:W*.12,width:W*.76,bottom:caixaTxt.base+(caixaTxt.base-caixaTxt.topo)*.16,height:caixaTxt.base-caixaTxt.topo}; }}; Faisca.solta(r,200,1.15); },B+.3)
     .to('.cine.c,.cine.b',{scaleY:0,duration:.8,ease:'expo.inOut'},B+.32)
     .fromTo(U,{brilho:1,luz:-.6},{luz:1.9,duration:1.05,ease:'power2.inOut',immediateRender:false},B+.45)
     .fromTo('.assina .logo',{opacity:0,y:14,scale:.85},{opacity:1,y:0,scale:1,duration:.6,ease:'expo.out'},B+.42)
@@ -357,7 +326,7 @@ function montaTimeline(){
     .fromTo('#flare-o',{opacity:0,scaleX:0,y:function(){ return caixaTxt.topo-H/2+10; }},{opacity:.8,scaleX:1,duration:.6,ease:'expo.out'},B+.5)
     .to('#flare-o',{opacity:0,duration:.3},B+1.15)
     .to(U,{zoom:1.05,duration:.95,ease:'none'},B+.3);
-  treme(B+.3,desk?24:16,7);
+  treme(B+.3,desk?12:8,5);
   // mergulho no "O"
   var M=B+1.5;
   somEm('mergulho',M+.79);
@@ -372,12 +341,12 @@ q('.pular').addEventListener('click',function(){ tl.progress(1); });
 addEventListener('keydown',function(e){ if(e.key==='Escape') tl.progress(1); });
 
 var ult=performance.now();
-gsap.ticker.add(function(){ var t=performance.now(), dt=Math.min(.05,(t-ult)/1000)*(PAUSA!==null?0:VEL); ult=t; Atmo.desenha(dt); renderGL(); });
+gsap.ticker.add(function(){ var t=performance.now(), dt=Math.min(.05,(t-ult)/1000)*(PAUSA!==null?0:VEL); ult=t; Faisca.desenha(dt); renderGL(); });
 
 Promise.all([document.fonts.load('400 100px Anton'),document.fonts.load('500 20px Barlow'),img.decode?img.decode().catch(function(){}):Promise.resolve()]).then(function(){
   iniciaGL(); montaTimeline();
   if(calmo){ tl.progress(.73).pause(); LUZ.b=.6; POEIRA.a=.6; U.zoom=1; U.borrão=0; U.alfa=1; gsap.set('.assina .logo,.assina .sub',{opacity:1}); gsap.set('.assina .linha',{scaleX:1}); fim(); return; }
-  if(PAUSA!==null){ tl.seek(PAUSA).pause(); for(var k=0;k<40;k++) Atmo.desenha(1/60); return; }
+  if(PAUSA!==null){ tl.seek(PAUSA).pause(); var ev=P.get('faisca'); if(ev){ Faisca.solta(q(ev),160,1.2); for(var k=0;k<+(P.get('f')||8);k++) Faisca.desenha(1/60); } return; }
   tl.timeScale(VEL).play(0);
 });
 window.abertura={tl:tl,U:U,Som:Som};
