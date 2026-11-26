@@ -25,7 +25,8 @@ Formato: data · projeto · entrega · nota · reação do senhor · o que fez a
 ## Body Gym Academia
 - 26/11 · BG · topo v6 (título à esquerda, foto puxada ao vermelho, giz) + abertura v6 (fotos de IA trocando) · **3 (est.)** · "ficou bem ruim, falar a verdade" · imagens paradas trocando = slide; IA genérica; marca fraca.
 - 26/11 · BG · abertura v7 (anilha preta recortada caindo, nuvem de giz, BODY GYM letra a letra) · **3 (est.)** · "que trem feio, seu padrão é melhor que esse" · composição de IA com movimento CSS = montagem barata.
-- 26/11 · BG · abertura v8 de filme (ALÉM DE UM SIMPLES TREINO + BODY GYM com o pôr do sol real nas letras, WebGL, mergulho no O) · **7,5 (est.) · aguardando nota do senhor** · ideia e foto real do senhor ("achei bem bonito").
+- 26/11 · BG · abertura v8 de filme (ALÉM DE UM SIMPLES TREINO + BODY GYM com o pôr do sol real nas letras, WebGL, mergulho no O) · **7,5 (est.)** · "sinto que falta impacto nas palavras", pediu som e mais rapidez · palavras finas demais, 7 s longo.
+- 26/11 · BG · abertura v9 (palavras como batidas de trailer, 5,6 s, som sintetizado com botão) · **8 (est.) · aguardando nota do senhor** · impacto e ritmo resolvidos; som não ouvido por mim.
 
 ### Lições da Body Gym
 6. Imagem de IA animada em camadas CSS cai para "montagem barata". Preferir foto real + tipografia + luz.

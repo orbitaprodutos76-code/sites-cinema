@@ -122,3 +122,10 @@
 - Quadro da marca: `referencias/abertura-v8-marca.jpg`. Link: https://claude.ai/artifact/SiZfdtPofuUnTWTvBvRoEq (versão 3).
 - Conversa: o senhor suspeitou que a nuvem piorou o trabalho; conferido que o modelo é o mesmo. Causas reais: processo (codar sem referência), avaliar movimento por fotos soltas (agora é quadro a quadro exato) e falta de material real. Recomendação mantida: próxima fase pelo PC (celular na rede local, GPU real).
 - PENDENTE: veredito da v8 → depois integrar no site e refazer o topo partindo do pôr do sol (fim do mergulho).
+
+## Abertura v9: batidas + som (26/11/2026)
+- Pedido do senhor sobre a v8 (nota não informada): "falta impacto nas palavras", som com opção de ativar, mais rápida.
+- Feito: cada palavra (ALÉM · DE UM · SIMPLES · TREINO · BODY GYM) entra como **batida de trailer**: surge inteira, encaixa em 0,24 s com desfoque saindo, clarão, tremor, fagulhas e **corte seco** para a próxima; força crescente até TREINO (separação de cores, onda, estrondo). **5,6 s** no total (era 7,2).
+- **Som** gerado no navegador (Web Audio, sem arquivo/direitos): grave a cada palavra, estrondo grave rasgado no TREINO, chiado subindo antes do BODY GYM e do mergulho, brilho agudo quando a luz passa. Botão "Ativar som" (canto inferior esquerdo), lembra a escolha; desligado por padrão (navegador bloqueia som automático). No fim: "Rever com som".
+- Não consegui OUVIR o som aqui (sem saída de áudio no container): só conferi que roda sem erro. PENDENTE: o senhor ouvir e dar nota.
+- Link: https://claude.ai/artifact/SiZfdtPofuUnTWTvBvRoEq (versão 4).
