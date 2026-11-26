@@ -307,11 +307,12 @@ function monta() {
     .to('.final', { scale: 1, duration: .3, ease: 'none' }, 5.02).set({}, {}, 5);
 }
 
-let acabou = false;
-function fim() { if (acabou) return; acabou = true; q('#painel').classList.add('fim'); }
-q('.pular').addEventListener('click', () => tl.progress(1));
+let acabou = false; const EMBUTIDA = P.has('embed');
+if (EMBUTIDA) q('#painel').remove();
+function fim() { if (acabou) return; acabou = true; if (EMBUTIDA) { try { parent.postMessage('abertura-fim', '*'); } catch (e) {} return; } q('#painel').classList.add('fim'); }
+q('.pular').addEventListener('click', () => { tl.progress(1); fim(); });
 addEventListener('keydown', e => { if (e.key === 'Escape') tl.progress(1); });
-qa('#painel button').forEach(b => { b.classList.toggle('on', +b.dataset.vel === VEL);
+if (!EMBUTIDA) qa('#painel button').forEach(b => { b.classList.toggle('on', +b.dataset.vel === VEL);
   b.addEventListener('click', () => { VEL = +b.dataset.vel; if (b.dataset.som) Som.liga(true); qa('#painel button').forEach(x => x.classList.toggle('on', x === b)); q('#painel').classList.remove('fim'); acabou = false;
     tempo = 0; Som.pronto().then(() => tl.timeScale(VEL).restart()); }); });
 
@@ -330,7 +331,7 @@ new FontLoader().load('midia/anton-3d.json', fonte => {
   if (calmo) { tl.seek(4.2).pause(); LUZ.n = 1; render(0); fim(); return; }
   if (PAUSA !== null) { tl.seek(PAUSA).pause(); tempo = PAUSA; if (PAUSA > 2.3 && PAUSA < 2.9) { estouraBrasas(PAL.treino.userData.larg, PAL.treino.userData.alt); passoBrasas(PAUSA - 2.3); } render(0); return; }
   tl.timeScale(VEL).play(0);
-}, undefined, () => document.documentElement.classList.add('sem3d'));
+}, undefined, () => { document.documentElement.classList.add('sem3d'); setTimeout(fim, 1800); });
 window.abertura = { tl, LUZ, C };
 </script>
 </body>

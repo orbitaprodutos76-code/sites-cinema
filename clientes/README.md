@@ -14,7 +14,7 @@ Sites novos começam copiando `template/` (Astro). Os sites antigos, importados 
 | `garimpados/provador-3d/` | Provador 3D (corpo + roupas em WebGL) | Importado | https://claude.ai/artifact/6vg9p3GsxTTYjffMhSwnzz |
 | `garimpados/garimpos-do-chefe/` | Garimpos do Chefe (primeira versão da vitrine) | Importado | https://claude.ai/artifact/JFA8yjPDts7dWc8D78aerx |
 | `fernanda-melo/` | Barbearia Fernanda Melo | Site completo v1 em aprovação (topo aprovado) | https://claude.ai/artifact/2VGMNqR3EGJL4pEGDk979n |
-| `body-gym/` | Body Gym Academia (Mineiros-GO) | v6 reprovada; abertura v7 isolada em revisão: https://claude.ai/artifact/SiZfdtPofuUnTWTvBvRoEq | https://claude.ai/artifact/YbigACjfUkiwTn5zf8DWVZ |
+| `body-gym/` | Body Gym Academia (Mineiros-GO) | v7: abertura aprovada no site + topo com pôr do sol real · abertura isolada: https://claude.ai/artifact/SiZfdtPofuUnTWTvBvRoEq | https://claude.ai/artifact/YbigACjfUkiwTn5zf8DWVZ |
 | `lord-lumberjack/` | Barbearia Lord Lumberjack, Mineiros-GO | Abertura aprovada · site v6 em revisão | https://claude.ai/artifact/5n89DQHieagr6b2KLe1PPV |
 
 Peça ao Claude: *"novo site para <empresa>"*.

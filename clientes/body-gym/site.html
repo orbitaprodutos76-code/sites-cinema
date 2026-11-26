@@ -1,10 +1,11 @@
+<meta charset="utf-8">
 <title>Body Gym Academia</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Body Gym Academia em Mineiros (GO): musculação, cardio com vista para o pôr do sol e uma turma que acolhe todo mundo. Seg a sex 5h às 23h.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;500;600;700&display=swap">
-<link rel="preload" as="image" href="midia/topo-fundo.webp" fetchpriority="high">
+<link rel="preload" as="image" href="midia/body-por-do-sol.webp" fetchpriority="high">
 <script>
 /* Abertura: toca uma vez por visita; nunca com "reduzir movimento". */
 (function(){try{
@@ -12,7 +13,7 @@
   try{visto=sessionStorage.getItem('bg-abertura')&&location.hash!=='#abertura'}catch(e){}
   if(calmo||visto) return;
   document.documentElement.classList.add('com-abertura');
-  ['midia/abertura-queda.webp','midia/abertura-impacto.webp'].forEach(function(h){var l=document.createElement('link');l.rel='preload';l.as='image';l.href=h;document.head.appendChild(l)});
+  ['midia/body-por-do-sol.webp','midia/logo-emblema.webp'].forEach(function(h){var l=document.createElement('link');l.rel='preload';l.as='image';l.href=h;document.head.appendChild(l)});
   setTimeout(function(){document.documentElement.classList.remove('com-abertura')},12000);
 }catch(e){}})();
 </script>
@@ -28,7 +29,7 @@
 <link rel="icon" href="midia/favicon.png">
 <meta property="og:title" content="Body Gym Academia · Mineiros – GO">
 <meta property="og:description" content="Você além de um simples treino. Musculação, cardio com vista para o pôr do sol e uma turma que acolhe todo mundo.">
-<meta property="og:image" content="midia/topo-fundo.webp">
+<meta property="og:image" content="midia/body-por-do-sol.webp">
 <meta property="og:locale" content="pt_BR">
 
 <style>
@@ -83,49 +84,21 @@ a{color:inherit}
 .btn-contorno:hover{background:rgba(255,255,255,.1)}
 a:focus-visible,button:focus-visible{outline:3px solid var(--ouro);outline-offset:3px}
 
-/* ===== Abertura (tela cheia, ~5,5 s, uma vez por visita) ===== */
-.abertura{position:fixed;inset:0;z-index:100;background:#000;overflow:hidden;display:none;contain:strict}
+/* ===== Abertura (aprovada): roda em abertura.html, por cima do site; termina no pôr do sol, igual ao fundo do topo ===== */
+.abertura{position:fixed;inset:0;z-index:100;width:100%;height:100%;border:0;display:none;background:#000}
 .com-abertura .abertura{display:block}
 .com-abertura body{overflow:hidden}
-.ab-cam,.ab-cena,.ab-haze,.ab-flash,.ab-giz,.ab-marca{position:absolute;inset:0}
-.ab-cena{opacity:0}
-.ab-cena img{width:100%;height:100%;object-fit:cover;object-position:56% 62%}
-.ab-haze{background:radial-gradient(70% 60% at 50% 52%,rgba(150,10,24,.55),rgba(0,0,0,0) 72%),radial-gradient(130% 100% at 50% 50%,rgba(0,0,0,0) 45%,rgba(0,0,0,.85) 100%);opacity:0}
-.ab-luz{position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;transform:scaleX(0);opacity:0;
-  background:linear-gradient(90deg,rgba(246,180,69,0) 0%,#ffd58a 50%,rgba(246,180,69,0) 100%);box-shadow:0 0 26px 5px rgba(246,180,69,.5)}
-.ab-flash{opacity:0;mix-blend-mode:screen;background:radial-gradient(circle at 56% 74%,#fff6e0 0%,#ffc56b 22%,rgba(215,25,42,.55) 50%,rgba(0,0,0,0) 78%)}
-.ab-giz{width:100%;height:100%;pointer-events:none}
-.ab-marca{display:grid;place-items:center;pointer-events:none}
-.ab-logo{position:absolute;left:50%;top:50%;width:min(78vw,78vh);height:min(78vw,78vh);margin:calc(min(78vw,78vh)/-2) 0 0 calc(min(78vw,78vh)/-2);
-  border-radius:50%;opacity:0;mix-blend-mode:screen;filter:saturate(1.25) brightness(1.1);
-  -webkit-mask-image:radial-gradient(circle at 50% 47%,#000 26%,rgba(0,0,0,0) 52%);mask-image:radial-gradient(circle at 50% 47%,#000 26%,rgba(0,0,0,0) 52%)}
-.ab-nome{position:relative;display:inline-block;opacity:0;font-family:var(--fonte-titulo);font-size:clamp(74px,16vw,270px);line-height:.9;letter-spacing:.015em;text-transform:uppercase;white-space:nowrap}
-.ab-nome .cromo{display:block}
-.ab-brilho{position:absolute;top:0;bottom:0;left:0;width:16%;overflow:hidden;pointer-events:none;
-  -webkit-mask-image:linear-gradient(90deg,rgba(0,0,0,0),#000 50%,rgba(0,0,0,0));mask-image:linear-gradient(90deg,rgba(0,0,0,0),#000 50%,rgba(0,0,0,0))}
-.ab-brilho span{position:absolute;top:0;left:0;white-space:nowrap;padding:.22em .02em .12em;margin-top:-.22em;
-  background:linear-gradient(180deg,#fff7e2 0%,#ffd27a 45%,#c98a22 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
-.ab-sub{position:absolute;left:0;right:0;top:calc(50% + clamp(54px,9.5vw,160px));text-align:center;opacity:0;
-  font:700 clamp(11px,1vw,14px)/1 var(--fonte-texto);letter-spacing:.5em;text-transform:uppercase;color:var(--ouro)}
-.ab-barra{position:absolute;left:0;right:0;height:12.5%;background:#000;z-index:4}
-.ab-barra.cima{top:0;transform-origin:50% 0}
-.ab-barra.baixo{bottom:0;transform-origin:50% 100%}
-.ab-progresso{position:absolute;left:0;right:0;bottom:0;height:2px;z-index:5;transform:scaleX(0);transform-origin:0 50%;background:linear-gradient(90deg,var(--vermelho),var(--ouro))}
-.ab-pular{position:absolute;z-index:6;right:var(--calha-d);bottom:calc(env(safe-area-inset-bottom,0px) + 22px);cursor:pointer;
-  font:600 11px/1 var(--fonte-texto);letter-spacing:.32em;text-transform:uppercase;color:#d6d6da;background:rgba(0,0,0,.35);
-  border:1px solid rgba(255,255,255,.22);border-radius:40px;padding:12px 18px;transition:background-color .3s,border-color .3s}
-.ab-pular:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.5)}
 
 /* ===== Topo ===== */
 .topo{position:relative;height:clamp(640px,100svh,1100px);overflow:hidden;isolation:isolate;background:#000}
 .camada{position:absolute;inset:0;pointer-events:none}
 .camada img{width:100%;height:100%;object-fit:cover;object-position:50% 40%}
-.palco{position:absolute;inset:0;transform:translateX(15%) scale(1.1);transform-origin:50% 60%}
-.palco img{filter:saturate(.72) contrast(1.12) brightness(.8)}
+.palco{position:absolute;inset:0}
+.palco img{object-position:50% 62%}
 .atleta{z-index:1}
-.tinta{z-index:2;background:#a8101c;mix-blend-mode:color;opacity:.36}
+.tinta{display:none}
 .veu{z-index:2;background:
-  linear-gradient(90deg,rgba(0,0,0,.94) 0%,rgba(0,0,0,.78) 28%,rgba(0,0,0,.2) 56%,rgba(0,0,0,0) 74%),
+  linear-gradient(90deg,rgba(0,0,0,.86) 0%,rgba(0,0,0,.6) 30%,rgba(0,0,0,.1) 58%,rgba(0,0,0,0) 74%),
   linear-gradient(180deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,0) 22%,rgba(0,0,0,0) 58%,rgba(0,0,0,.92) 100%),
   radial-gradient(130% 95% at 66% 45%,rgba(0,0,0,0) 52%,rgba(0,0,0,.6) 100%)}
 .giz{z-index:3;width:100%;height:100%}
@@ -367,31 +340,13 @@ section{position:relative}
 </style>
 
 <!-- ABERTURA: só visual (aria-hidden); o conteúdo real está no topo logo abaixo -->
-<div class="abertura" id="abertura" aria-hidden="true">
-  <div class="ab-cam">
-    <div class="ab-cena" id="ab-queda"><img src="midia/abertura-queda.webp" width="1536" height="864" alt="" decoding="async"></div>
-    <div class="ab-cena" id="ab-impacto"><img src="midia/abertura-impacto.webp" width="1536" height="864" alt="" decoding="async"></div>
-    <div class="ab-haze"></div>
-    <div class="ab-luz"></div>
-    <div class="ab-flash"></div>
-    <canvas class="ab-giz"></canvas>
-    <div class="ab-marca">
-      <img class="ab-logo" src="midia/logo.webp" width="476" height="476" alt="">
-      <div class="ab-nome"><span class="cromo">Body Gym</span><span class="ab-brilho"><span>Body Gym</span></span></div>
-      <span class="ab-sub">Mineiros · GO — desde 2019</span>
-    </div>
-  </div>
-  <div class="ab-barra cima"></div><div class="ab-barra baixo"></div>
-  <div class="ab-progresso"></div>
-  <button class="ab-pular" type="button" tabindex="-1">Pular</button>
-</div>
+<iframe class="abertura" id="abertura" title="Abertura animada da Body Gym" aria-hidden="true" tabindex="-1" allow="autoplay"></iframe>
 
 <main>
   <!-- TOPO -->
   <section class="topo" id="topo" aria-label="Body Gym Academia">
     <div class="palco">
-      <div class="camada fundo" data-prof="8"><img src="midia/topo-fundo.webp" srcset="midia/topo-fundo-960.webp 960w, midia/topo-fundo.webp 1536w" sizes="100vw" width="1536" height="864" alt="Atleta treinando com cordas na Body Gym, com o pôr do sol nos morros atrás dos janelões"></div>
-      <div class="camada atleta" data-prof="22"><img src="midia/topo-atleta.webp" width="1536" height="864" alt=""></div>
+      <div class="camada fundo" data-prof="8"><picture><source media="(max-width: 760px)" srcset="midia/real-esteiras-sol-hd.webp"><img src="midia/body-por-do-sol.webp" width="1260" height="780" alt="Alunos nas esteiras da Body Gym de frente para os janelões, com o pôr do sol nos morros de Mineiros" fetchpriority="high"></picture></div>
     </div>
     <div class="camada tinta"></div>
     <div class="camada veu"></div>
@@ -690,7 +645,7 @@ section{position:relative}
   /* Topo: onde ficam as mãos/cordas do atleta na tela (acompanha o enquadramento do .palco) */
   function maos(){
     var r=q('.topo').getBoundingClientRect(), d=desk;
-    return { x:r.width*(d?.665:.5), y:r.height*(d?.6:.42), w:r.width*(d?.22:.5), h:r.height*.16 };
+    return { x:r.width*(d?.56:.5), y:r.height*(d?.66:.55), w:r.width*(d?.3:.6), h:r.height*.12 };
   }
   var cvGiz=q('.topo .giz'), giz=Giz(cvGiz,{max:desk?240:130, ambiente:desk?14:8, gravidade:-5, origem:maos});
   var topo=q('.topo');
@@ -706,8 +661,7 @@ section{position:relative}
     var tl=gsap.timeline({defaults:{ease:'expo.out'}});
     if(depoisDaAbertura){ gsap.set(cortina,{opacity:0}); }
     else { tl.to(cortina,{opacity:0,duration:1.6,ease:'power2.inOut'},0); }
-    tl.from('.fundo img',{scale:depoisDaAbertura?1.35:1.22,duration:depoisDaAbertura?2.4:3,ease:'power3.out'},0)
-      .from('.atleta img',{scale:depoisDaAbertura?1.3:1.08,y:40,duration:2.2,ease:'power4.out'},0)
+    tl.from('.fundo img',{scale:depoisDaAbertura?1.06:1.22,duration:depoisDaAbertura?1.6:3,ease:'power3.out'},0)
       .from('.topo .frase',{opacity:0,x:-24,duration:1.4},.45)
       .from('.topo .frase i',{scaleX:0,transformOrigin:'0 50%',duration:1.4},.45)
       .from('.topo h1 .lin > span',{yPercent:112,duration:1.5,stagger:.12},.55)
@@ -720,66 +674,25 @@ section{position:relative}
     return tl;
   }
 
-  /* Abertura de cinema */
+  /* Abertura de cinema (aprovada): abertura.html em tela cheia; ao terminar no pôr do sol, o topo (mesma foto) aparece por baixo */
   function abertura(){
-    var A=q('#abertura'); var raiz=document.documentElement;
+    var A=q('#abertura'), raiz=document.documentElement;
     if(!raiz.classList.contains('com-abertura') || !A){ entraTopo(false); return; }
     try{ sessionStorage.setItem('bg-abertura','1'); }catch(e){}
     if(lenis) lenis.stop();
-    var cvA=q('.ab-giz',A), gA=Giz(cvA,{max:desk?420:220, gravidade:9});
-    var nome=q('.ab-nome',A), brilho=q('.ab-brilho',A), brilhoTxt=q('.ab-brilho span',A), pular=q('.ab-pular',A);
     var acabou=false;
-    function fim(){ if(acabou) return; acabou=true; raiz.classList.remove('com-abertura'); gA.liga(false); if(lenis) lenis.start(); ScrollTrigger.refresh(); }
-    var tl=gsap.timeline({paused:true, defaults:{ease:'expo.out'}, onComplete:fim});
-    var W=innerWidth, H=innerHeight;
-    function treme(t,forca,n){ for(var i=0;i<n;i++){ var k=1-i/n; tl.to('.ab-cam',{x:(Math.random()-.5)*forca*k,y:(Math.random()-.5)*forca*k,duration:.045,ease:'none'},t+i*.045); } tl.to('.ab-cam',{x:0,y:0,duration:.08,ease:'power2.out'},t+n*.045); }
-
-    // 0 – 0,8 s · preto + fio de luz dourada
-    tl.to('.ab-progresso',{scaleX:1,duration:5.4,ease:'none'},0)
-      .to('.ab-luz',{opacity:1,duration:.25,ease:'power2.out'},.12)
-      .to('.ab-luz',{scaleX:1,duration:.9,ease:'expo.inOut'},.12)
-    // 0,8 – 2,2 s · câmera lenta: desce rente ao piso atrás da anilha
-      .to('.ab-luz',{scaleY:60,opacity:0,duration:.6,ease:'power3.in'},.85)
-      .to('#ab-queda',{opacity:1,duration:.5,ease:'power2.out'},.95)
-      .fromTo('#ab-queda img',{scale:1.42,yPercent:-7,rotation:-3},{scale:1.14,yPercent:0,rotation:0,duration:1.45,ease:'power2.inOut'},.95)
-      .to('.ab-haze',{opacity:.9,duration:1.2,ease:'power2.out'},.95)
-    // 2,2 – 3,2 s · IMPACTO
-      .set('#ab-queda',{opacity:0},2.3)
-      .set('#ab-impacto',{opacity:1},2.3)
-      .fromTo('#ab-impacto img',{scale:1.2},{scale:1.02,duration:1.1,ease:'power4.out'},2.3)
-      .fromTo('.ab-flash',{opacity:0},{opacity:1,duration:.05,ease:'none'},2.28)
-      .to('.ab-flash',{opacity:0,duration:.7,ease:'power2.out'},2.33)
-      .add(function(){ var x=W*(desk?.56:.6), y=H*.72; gA.explode(x,y,desk?260:150,desk?900:620); gA.explode(x,y,desk?120:70,420); },2.3);
-    treme(2.3,desk?42:28,9);
-    // 2,9 s · as faixas de cinema abrem: tela inteira
-    tl.to('.ab-barra.cima,.ab-barra.baixo',{scaleY:0,duration:1.1,ease:'expo.inOut'},2.75)
-    // 3,2 – 4,4 s · a marca carimba em cromo
-      .to('#ab-impacto',{opacity:.22,duration:.5,ease:'power2.out'},3.1)
-      .fromTo('.ab-logo',{opacity:0,scale:1.25},{opacity:.42,scale:1,duration:1.4,ease:'power3.out'},3.05)
-      .fromTo(nome,{opacity:0,scale:2.3},{opacity:1,scale:1,duration:.42,ease:'power4.in'},3.15)
-      .add(function(){ gA.explode(W*.5,H*.56,desk?140:80,520); },3.57);
-    treme(3.57,desk?26:18,7);
-    tl.fromTo('.ab-sub',{opacity:0,y:12},{opacity:1,y:0,duration:.9},3.8)
-      .add(function(){ var w=nome.offsetWidth; gsap.fromTo(brilho,{x:-.25*w},{x:w*1.05,duration:.9,ease:'power2.inOut'}); gsap.fromTo(brilhoTxt,{x:.25*w},{x:-w*1.05,duration:.9,ease:'power2.inOut'}); },3.75)
-    // 4,4 – 5,5 s · a câmera avança e vira o novo topo
-      .add(function(){ entraTopo(true); },4.55)
-      .to('.ab-cam',{scale:1.6,duration:1.05,ease:'power3.in'},4.45)
-      .to(A,{opacity:0,duration:.6,ease:'power2.in'},4.85);
-
-    function corta(){ if(acabou) return; tl.pause(); gsap.to(A,{opacity:0,duration:.4,ease:'power2.out',onComplete:fim}); if(tl.time()<4.55) entraTopo(false); }
-    pular.addEventListener('click',corta);
-    addEventListener('keydown',function k(e){ if(e.key==='Escape'){ corta(); removeEventListener('keydown',k); } });
-
-    // espera as imagens (no máximo 1 s) e roda
-    var imgs=qa('.ab-cena img',A).map(function(i){ return i.decode?i.decode().catch(function(){}):Promise.resolve(); });
-    Promise.race([Promise.all(imgs), new Promise(function(r){setTimeout(r,1000)})]).then(function(){ tl.play(0); });
+    function fim(){ if(acabou) return; acabou=true; entraTopo(true);
+      gsap.to(A,{opacity:0,duration:.7,ease:'power2.inOut',onComplete:function(){ raiz.classList.remove('com-abertura'); A.remove(); if(lenis) lenis.start(); ScrollTrigger.refresh(); }}); }
+    addEventListener('message',function(e){ if(e.source===A.contentWindow && e.data==='abertura-fim') fim(); });
+    addEventListener('keydown',function k(e){ if(e.key==='Escape'){ fim(); removeEventListener('keydown',k); } });
+    setTimeout(fim,15000);   // segurança: nunca prender o visitante
+    A.src='abertura.html?embed=1';
   }
   abertura();
 
   /* Topo: rolagem separa as camadas */
   gsap.timeline({scrollTrigger:{trigger:'.topo',start:'top top',end:'bottom top',scrub:true}})
     .to('.fundo img',{scale:1.12,yPercent:6,ease:'none'},0)
-    .to('.atleta img',{yPercent:-4,scale:1.06,ease:'none'},0)
     .to('.topo-texto',{yPercent:-18,opacity:0,ease:'none'},0)
     .to('.rolar',{opacity:0,ease:'none'},0);
 

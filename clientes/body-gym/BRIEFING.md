@@ -181,3 +181,10 @@
 - Quadros: `referencias/abertura-v15-quadros.jpg`. Link: https://claude.ai/artifact/SiZfdtPofuUnTWTvBvRoEq (versão 10).
 - PENDENTE: nota do senhor; logo original em alta resolução (o atual tem 476 px).
 - **v16 (acabamento, pedido "sobe pro 9, mas rápido"):** legenda sem encostar no GYM no celular; qualidade automática (mede os primeiros quadros: se o aparelho engasgar, baixa a resolução e desliga o desfoque de lente); sem 3D mostra BODY GYM com o pôr do sol nas letras; fonte e fotos pré-carregadas. Link: https://claude.ai/artifact/SiZfdtPofuUnTWTvBvRoEq (versão 11). PENDENTE: nota do senhor → integrar no site + topo.
+
+## Site v7: abertura aprovada no site (26/11/2026)
+- **Abertura APROVADA pelo senhor** ("aprovado, implemente no site").
+- Feito: a abertura roda como está (`abertura.html?embed=1`, em iframe por cima do site, uma vez por visita, nunca com "reduzir movimento"); no fim (ou no "Pular"/Esc, ou em 15 s por segurança) ela avisa o site, some em 0,7 s e o **topo aparece por baixo com a mesma foto do pôr do sol** — passagem contínua. **Topo:** saiu o atleta de IA e o filtro vermelho; entrou a **foto real** (`midia/body-por-do-sol.webp` no PC, `midia/real-esteiras-sol-hd.webp` em pé no celular); giz agora sobe do sol. Título "ALÉM DO TREINO.", botões, horário e dados mantidos. `<meta charset>` declarado.
+- Testado (navegador sem placa de vídeo): abertura sai e o topo aparece, PC e celular, sem erros nem rolagem lateral. Quadro: `referencias/site-v7-topo.jpg`. Script: `referencias/teste-site.js`.
+- Link do site: https://claude.ai/artifact/YbigACjfUkiwTn5zf8DWVZ (versão 7; o senhor já deixou "qualquer pessoa com o link").
+- PENDENTE: nota do senhor no celular; logo em alta resolução; demais pendências da academia (aula experimental, evoluções autorizadas, medidor, chave da API) e migrar para o template Astro na entrega.
