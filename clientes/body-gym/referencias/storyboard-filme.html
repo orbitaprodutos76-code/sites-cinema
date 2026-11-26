@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Storyboard filme</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@500;700&family=Cinzel:wght@500;700&display=swap">
+<style>
+/* Quadros de referência da abertura "de filme" (?f=1..6). Não é o site. */
+:root{--v:#D7192A;--o:#f6b445}
+html,body{margin:0;height:100%;background:#030304;color:#fff;overflow:hidden;font-family:Barlow,sans-serif}
+.q{position:fixed;inset:0;display:none;overflow:hidden;background:#030304}
+.q.on{display:block}
+.cine{position:absolute;left:0;right:0;height:12%;background:#000;z-index:5}.cine.c{top:0}.cine.b{bottom:0}
+.grao{position:absolute;inset:0;opacity:.12;mix-blend-mode:overlay;z-index:4;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.centro{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.fino{font:500 clamp(14px,1.6vw,24px)/1 Barlow;letter-spacing:1.1em;text-transform:uppercase;color:#cfcfd4;padding-left:1.1em}
+.T{font-family:Anton,Impact,sans-serif;text-transform:uppercase;line-height:.85;white-space:nowrap}
+/* feixe de luz que revela a palavra */
+.feixe{position:absolute;left:0;right:0;top:50%;height:42vh;margin-top:-21vh;pointer-events:none;
+  background:radial-gradient(60% 50% at 50% 50%,rgba(255,236,200,.14),rgba(255,236,200,0) 70%)}
+.flare{position:absolute;left:-10%;right:-10%;top:50%;height:2px;margin-top:-1px;background:linear-gradient(90deg,rgba(120,170,255,0),rgba(190,215,255,.9) 50%,rgba(120,170,255,0));
+  box-shadow:0 0 18px 3px rgba(150,190,255,.35)}
+.flare.ouro{background:linear-gradient(90deg,rgba(246,180,69,0),#ffe2a8 50%,rgba(246,180,69,0));box-shadow:0 0 22px 4px rgba(246,180,69,.4)}
+.ponto{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff3dc}
+.revela{-webkit-mask-image:linear-gradient(90deg,#000 0%,#000 52%,rgba(0,0,0,.15) 60%,rgba(0,0,0,0) 70%);mask-image:linear-gradient(90deg,#000 0%,#000 52%,rgba(0,0,0,.15) 60%,rgba(0,0,0,0) 70%)}
+.cromo{background:linear-gradient(180deg,#fff 0%,#dcdde0 30%,#8b8e94 52%,#f5f5f6 63%,#a2a4a9 82%,#55575c 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.rubro{background:linear-gradient(180deg,#ff5a63 0%,#e3192b 45%,#9e0d1c 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 40px rgba(215,25,42,.55))}
+.legenda{position:absolute;left:28px;bottom:calc(12% + 16px);z-index:6;font:700 11px/1 Barlow;letter-spacing:.3em;color:var(--o)}
+</style></head><body>
+
+<!-- 1: ALÉM DE UM, fino e espaçado, um feixe de luz passa -->
+<section class="q" data-f="1">
+  <div class="feixe"></div>
+  <div class="centro"><span class="fino">Além de um</span></div>
+  <div class="flare" style="opacity:.55;transform:scaleX(.7)"></div>
+  <div class="grao"></div><div class="cine c"></div><div class="cine b"></div><span class="legenda">00:00.8 · letras se aproximam devagar</span>
+</section>
+
+<!-- 2: SIMPLES revelado pela luz que corre da esquerda para a direita -->
+<section class="q" data-f="2">
+  <div class="feixe" style="background:radial-gradient(30% 50% at 56% 50%,rgba(255,236,200,.22),rgba(255,236,200,0) 70%)"></div>
+  <div class="centro"><span class="T cromo revela" style="font-size:17vw;letter-spacing:.04em">Simples</span></div>
+  <div class="flare" style="left:30%;right:20%;top:38%;opacity:.8"></div>
+  <div class="grao"></div><div class="cine c"></div><div class="cine b"></div><span class="legenda">00:01.8 · a luz revela a palavra</span>
+</section>
+
+<!-- 3: TREINO vermelho com flare e poeira na luz -->
+<section class="q" data-f="3">
+  <div class="feixe" style="background:radial-gradient(55% 45% at 50% 50%,rgba(215,25,42,.22),rgba(215,25,42,0) 70%)"></div>
+  <div class="centro"><span class="T rubro" style="font-size:22vw;letter-spacing:.02em">Treino</span></div>
+  <div class="flare" style="opacity:.9"></div>
+  <div id="po"></div>
+  <div class="grao"></div><div class="cine c"></div><div class="cine b"></div><span class="legenda">00:02.9 · respira 1 s no preto</span>
+</section>
+
+<!-- 4: BODY GYM cromo + logo + fio dourado (as faixas de cinema se abrem) -->
+<section class="q" data-f="4">
+  <div class="feixe" style="height:70vh;margin-top:-35vh;background:radial-gradient(60% 50% at 50% 50%,rgba(255,236,200,.12),rgba(255,236,200,0) 70%)"></div>
+  <div class="centro">
+    <img src="../midia/logo.webp" alt="" style="width:92px;height:92px;border-radius:50%;margin-bottom:26px;box-shadow:0 0 0 2px rgba(215,25,42,.9),0 0 50px rgba(215,25,42,.45)">
+    <span class="T" style="font-size:16vw;letter-spacing:.02em"><span class="cromo">Body</span> <span class="rubro">Gym</span></span>
+    <span style="display:block;width:44vw;height:1px;margin-top:26px;background:linear-gradient(90deg,rgba(246,180,69,0),var(--o),rgba(246,180,69,0))"></span>
+    <span class="fino" style="margin-top:20px;font-size:13px;letter-spacing:.6em;color:var(--o)">Mineiros · GO · desde 2019</span>
+  </div>
+  <div class="flare ouro" style="top:47%;left:40%;right:8%;opacity:.85"></div>
+  <div class="grao"></div><span class="legenda">00:04.2 · brilho dourado passa nas letras</span>
+</section>
+
+<!-- 5: variação mais rica: palavra com a academia real dentro, por 1 instante -->
+<section class="q" data-f="5">
+  <div class="centro"><span class="T" style="font-size:22vw;letter-spacing:.02em;background:url(../midia/real-esteiras-sol-hd.webp) 50% 42%/100% auto;-webkit-background-clip:text;background-clip:text;color:transparent;filter:contrast(1.15) brightness(1.1)">Treino</span></div>
+  <div class="grao"></div><div class="cine c"></div><div class="cine b"></div><span class="legenda">extra opcional · 0,4 s da academia dentro da palavra</span>
+</section>
+
+<!-- 6: saída: a câmera avança, o topo do site aparece por trás -->
+<section class="q" data-f="6">
+  <div style="position:absolute;inset:0;background:url(../midia/topo-fundo.webp) 60% 40%/cover;filter:grayscale(.2) brightness(.55)"></div>
+  <div class="centro"><span class="T" style="font-size:44vw;letter-spacing:.02em;opacity:.35"><span class="cromo">Body</span></span></div>
+  <div class="grao"></div><span class="legenda">00:05.2 · a marca cresce e some, o site entra</span>
+</section>
+
+<script>
+var f=new URLSearchParams(location.search).get('f')||'1';
+document.querySelector('[data-f="'+f+'"]').classList.add('on');
+/* poeira na luz (quadro 3) */
+var po=document.getElementById('po'); if(po){ for(var i=0;i<90;i++){ var d=document.createElement('i'); d.className='ponto';
+  var x=20+Math.random()*60, y=30+Math.random()*40; d.style.left=x+'vw'; d.style.top=y+'vh'; d.style.opacity=(.15+Math.random()*.6).toFixed(2);
+  var s=(1+Math.random()*2.5).toFixed(1); d.style.width=d.style.height=s+'px'; po.appendChild(d);} }
+</script>
+</body></html>
