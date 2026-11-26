@@ -103,3 +103,5 @@
 - Testado: 1440 e 390 px, sem rolagem lateral, sem erros, Pular, não repete na mesma visita, reduzir movimento. Link: https://claude.ai/artifact/YbigACjfUkiwTn5zf8DWVZ (versão 6).
 - PENDENTE: veredito do senhor; vídeo do story; demais pendências acima.
 - **Veredito da v6: REPROVADA** ("a primeira parte ficou bem ruim", topo e abertura). O senhor vai recriar com o ChatGPT: prompt com ajustes em `clientes/body-gym/PROMPT-CHATGPT-TOPO.md`. PENDENTE: trazer o resultado do ChatGPT para o repositório e encaixar no site.
+- Resultado do ChatGPT: "incrivelmente decepcionante", mas ele se saiu melhor na **"cena da nuvem"** (a confirmar o que é). O senhor reforçou: a abertura v6 **não ficou boa e não está nos padrões**; vamos melhorar ela primeiro, isolada.
+- Abertura isolada para conferência: `clientes/body-gym/abertura.html` → https://claude.ai/artifact/SiZfdtPofuUnTWTvBvRoEq (rever 1x / 0,5x / 0,25x). PENDENTE: o que exatamente está ruim + o que é a "cena da nuvem".
