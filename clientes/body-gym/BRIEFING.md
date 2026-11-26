@@ -36,4 +36,7 @@
 ## Direção travada (26/11/2026)
 - Cena do topo: **força da Rockway + o pôr do sol da Body Gym**. Cores: **escuro + vermelho + luz dourada** (prata nos detalhes). Fotos de pessoas: **as do Instagram**.
 - 3 opções de topo geradas (IA): `referencias/topo-a-cordas.png`, `topo-b-esteiras.png`, `topo-c-levantamento.png`. Arquivo Figma: https://www.figma.com/design/BkWBCQSpT6AGzs4XkY639e
-- Atenção: A e C mostram só atleta de elite, o que conflita com o público variado. PENDENTE: escolha.
+- Atenção: A e C mostram só atleta de elite, o que conflita com o público variado (JARVIS recomendou B).
+- O senhor escolheu **misturar**: cena e título da **A** (atleta nas cordas, "ALÉM DO" em cromo atrás + "TREINO" em vermelho na frente) + **barra de dados** (B) + **anilha em primeiro plano** (B) + **miniaturas laterais** Estrutura/Comunidade/Pôr do sol (C) + **dois botões** "Agendar aula experimental" e "Ver planos" (C). Resultado: `referencias/topo-d-mistura.png`. Erro da IA a não levar: marca "ROGUE" na anilha.
+- Resto do site: **as 3 seções de comunidade aprovadas** (Antes e depois/Evoluções, Eventos, "Perdeu o medo?").
+- PENDENTE: veredito da D.
