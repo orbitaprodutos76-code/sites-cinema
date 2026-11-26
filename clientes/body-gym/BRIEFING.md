@@ -164,3 +164,4 @@
 - Quadro parado de referência feito com o BODY GYM (Three.js: pedra com relevo, rachaduras de lava, costura de lava em volta de cada letra, brasas, fumaça, foco raso): `referencias/quadro-lava.jpg` (gerado por `referencias/quadro-lava.html`). Lava em vermelho da marca, não laranja.
 - Novo limite do senhor: **abertura com apenas 5 segundos**, animações equilibradas.
 - PENDENTE: aprovação do quadro + decidir se a frase "Além de um simples treino" entra nos 5 s.
+- Resposta do senhor ao quadro lava: "este modelo vermelho com veias deve ser **apenas o TREINO**; vou mandar outro modelo **metálico** para ser o resto; [o modelo dele] está em má qualidade, então busque um jeito de melhorar". Frase: marcou "Só BODY GYM". PENDENTE: o modelo metálico que ele vai mandar + confirmar a sequência de palavras.
