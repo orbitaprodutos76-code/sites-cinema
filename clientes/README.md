@@ -13,7 +13,7 @@ Sites novos começam copiando `template/` (Astro). Os sites antigos, importados 
 | `garimpados/arara/` | Arara Garimpados (vitrine em arara) | Importado | https://claude.ai/artifact/1QrC3epavudKLUwbgAZ1Xq |
 | `garimpados/provador-3d/` | Provador 3D (corpo + roupas em WebGL) | Importado | https://claude.ai/artifact/6vg9p3GsxTTYjffMhSwnzz |
 | `garimpados/garimpos-do-chefe/` | Garimpos do Chefe (primeira versão da vitrine) | Importado | https://claude.ai/artifact/JFA8yjPDts7dWc8D78aerx |
-| `fernanda-melo/` | Barbearia Fernanda Melo | Topo da navalha v1 APROVADO; seções de baixo pendentes | https://claude.ai/artifact/7TiLwdkJs8SC15TtjwT3N2 |
+| `fernanda-melo/` | Barbearia Fernanda Melo | Site completo v1 em aprovação (topo aprovado) | https://claude.ai/artifact/2VGMNqR3EGJL4pEGDk979n |
 | `lord-lumberjack/` | Barbearia Lord Lumberjack, Mineiros-GO | Abertura aprovada · site v6 em revisão | https://claude.ai/artifact/5n89DQHieagr6b2KLe1PPV |
 
 Peça ao Claude: *"novo site para <empresa>"*.
