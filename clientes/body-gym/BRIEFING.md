@@ -46,4 +46,5 @@
 - ATENÇÃO: nas Evoluções, pessoas, nomes, idades e depoimentos são INVENTADOS pela IA. No site só entram alunos reais (destaque "Antes e Depois" do Instagram) **com autorização**. "Aula experimental grátis" e "professor acompanha o primeiro treino" também são suposições: confirmar com a academia.
 - Veredito: **2 Pôr do sol, 3 Evoluções, 4 Comunidade e 5 Perdeu o medo APROVADAS.** **1 Estrutura: "sinto uma estranheza"** → o senhor quer algo com IA e **efeitos de câmera mostrando a academia toda**, com pouco recurso.
 - Planos: **sem preços no site, "consulte no WhatsApp"**.
-- PENDENTE: escolher o caminho do tour da estrutura.
+- Estrutura: caminho **1, vídeo de passeio** (o senhor grava ~30 s na horizontal: catraca → musculação → peso livre → bandeiras → esteiras na janela no pôr do sol; devagar, sem gente na frente). No site a rolagem controla o vídeo (estilo páginas da Apple) com o nome de cada área aparecendo; IA só para nitidez/cor. Tour 100% por IA foi descartado (mostraria uma academia que não existe).
+- PENDENTE: o vídeo do passeio. Enquanto não chega, dá para montar o resto do site (topo, pôr do sol, evoluções, comunidade, perdeu o medo).
