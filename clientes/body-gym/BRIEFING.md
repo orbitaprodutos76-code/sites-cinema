@@ -90,3 +90,5 @@
 - **Abertura: 1 Anilha**, mas a partir de um **vídeo que a própria academia já usou como abertura** (o senhor vai caçar). Plano: refinar ao máximo com **efeitos de câmera no estilo da Lord Lumberjack** (câmera que persegue, decola, mergulha e para na logo; site entra com força depois).
 - **Topo: refinar a qualidade, "algo de extrema importância"** + **5 Giz que reage** (partículas em WebGL com o mouse/dedo). Sem timelapse do pôr do sol (4) e sem espartano 3D (2) por ora. Letras-janela (3) não foi escolhida.
 - PENDENTE: o vídeo de abertura da academia → depois, referência visual (quadros) para o senhor aprovar **antes de qualquer código**.
+- Escopo confirmado pelo senhor: **estamos refazendo a primeira parte do site (topo) e criando a abertura**. Abertura em **tela cheia**, o mais cinematográfica possível; cores preto e vermelho, **dourado só em pequenos pontos**.
+- Vídeo-fonte: story nos destaques "Novidades.." de @bodygymacademia (link enviado pelo senhor). Do story, usar só a animação, ignorar as informações. Instagram exige login para baixar story → o senhor vai mandar o arquivo (gravação de tela ou original).
