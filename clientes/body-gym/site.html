@@ -5,6 +5,21 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;500;600;700&display=swap">
 <link rel="preload" as="image" href="midia/topo-fundo.webp" fetchpriority="high">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ExerciseGym","name":"Body Gym Academia","slogan":"Você além de um simples treino","foundingDate":"2019",
+"telephone":"+55 64 99231-9285","url":"https://www.instagram.com/bodygymacademia","sameAs":["https://www.instagram.com/bodygymacademia"],
+"address":{"@type":"PostalAddress","streetAddress":"Av. Afonso José Carrijo, Qd. 13, Lt. 8, Res. Parque Flamboyant","addressLocality":"Mineiros","addressRegion":"GO","postalCode":"75832-204","addressCountry":"BR"},
+"openingHoursSpecification":[
+{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"05:00","closes":"23:00"},
+{"@type":"OpeningHoursSpecification","dayOfWeek":"Saturday","opens":"08:00","closes":"16:00"},
+{"@type":"OpeningHoursSpecification","dayOfWeek":"Sunday","opens":"08:00","closes":"12:00"}]}
+</script>
+<link rel="icon" href="midia/favicon.png">
+<meta property="og:title" content="Body Gym Academia · Mineiros – GO">
+<meta property="og:description" content="Você além de um simples treino. Musculação, cardio com vista para o pôr do sol e uma turma que acolhe todo mundo.">
+<meta property="og:image" content="midia/topo-fundo.webp">
+<meta property="og:locale" content="pt_BR">
+
 <style>
 /* Layout: topo em camadas (fundo / título / atleta) → estrutura (trilho horizontal) → pôr do sol (cena de cinema fixa) → evoluções → comunidade (polaroides) → perdeu o medo + contato. Visual único escuro. */
 :root{
@@ -87,6 +102,13 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--ouro);outline-offse
 .dados ul{list-style:none;margin:0;padding:22px 0 0;display:flex;gap:44px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.22);max-width:760px}
 .dados li{display:flex;align-items:center;gap:10px;font:500 15px var(--fonte-texto)}
 .dados svg{width:20px;height:20px;color:var(--vermelho)}
+.agora{display:inline-flex;align-items:center;gap:9px;font-weight:600}
+.agora i{width:9px;height:9px;border-radius:50%;background:#9a9aa0;box-shadow:0 0 0 0 rgba(46,204,113,.6)}
+.agora.aberto i{background:#2ecc71;animation:pulso 2s infinite}
+.agora.aberto b{color:#5ee08f}
+.agora b{font-weight:700}
+@keyframes pulso{0%{box-shadow:0 0 0 0 rgba(46,204,113,.55)}70%{box-shadow:0 0 0 10px rgba(46,204,113,0)}100%{box-shadow:0 0 0 0 rgba(46,204,113,0)}}
+@media (prefers-reduced-motion:reduce){.agora.aberto i{animation:none}}
 .miniaturas{position:absolute;right:var(--calha-d);top:60%;transform:translateY(-50%);z-index:6;display:flex;flex-direction:column;gap:18px;list-style:none;margin:0;padding:0}
 .miniaturas a{display:block;width:96px;text-decoration:none;font:600 13px var(--fonte-texto);text-align:center}
 .miniaturas img{width:96px;height:84px;object-fit:cover;border-radius:8px;box-shadow:0 0 0 1px rgba(255,255,255,.35),0 10px 24px rgba(0,0,0,.6);margin-bottom:7px;transition:transform .5s cubic-bezier(.16,1,.3,1)}
@@ -98,7 +120,7 @@ section{position:relative}
 .cabeca p{margin:0;max-width:46ch;color:var(--suave)}
 
 /* Estrutura: tour 360 */
-.tour{height:520vh;background:#000}
+.tour{height:760vh;background:#000}
 .tour-palco{position:sticky;top:0;height:100svh;overflow:hidden}
 .tour-palco canvas,.tour-reserva{position:absolute;inset:0;width:100%;height:100%;display:block}
 .tour-reserva{object-fit:cover}
@@ -106,7 +128,9 @@ section{position:relative}
 .tour-veu{position:absolute;inset:0;pointer-events:none;background:
   radial-gradient(ellipse 80% 70% at 50% 50%,rgba(0,0,0,0) 55%,rgba(0,0,0,.6) 100%),
   linear-gradient(180deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,0) 28%,rgba(0,0,0,0) 62%,rgba(0,0,0,.75) 100%)}
-.tour-cab{position:absolute;left:var(--calha);right:var(--calha-d);top:clamp(70px,9vh,110px);display:flex;flex-direction:column;gap:16px;pointer-events:none}
+.tour-cab{position:absolute;left:var(--calha);right:var(--calha-d);top:clamp(70px,9vh,110px);display:flex;flex-direction:column;align-items:flex-end;text-align:right;gap:16px;pointer-events:none}
+.tour-cab .horario{justify-content:flex-end}
+.tour-cab .etiqueta{flex-direction:row-reverse}
 .tour-cab .horario{margin-top:6px}
 .horario{display:flex;gap:12px;flex-wrap:wrap}
 .horario span{display:inline-flex;gap:10px;align-items:baseline;padding:10px 16px;border-radius:6px;background:rgba(10,10,11,.6);backdrop-filter:blur(8px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);font-weight:600;font-size:15px}
@@ -196,6 +220,16 @@ section{position:relative}
 .rodape .miolo{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;color:var(--suave);font-size:14px}
 .rodape .marca img{width:44px;height:44px}
 
+/* Faixa do lema */
+.faixa-lema{overflow:hidden;padding-block:clamp(22px,3vw,40px);background:var(--vermelho);border-block:1px solid #ff4655}
+.faixa-lema .trem{display:flex;width:max-content;will-change:transform}
+.faixa-lema span{font-family:var(--fonte-titulo);font-size:clamp(44px,6vw,96px);line-height:1;text-transform:uppercase;white-space:nowrap;padding-right:.5em;color:#fff}
+.faixa-lema span i{font-style:normal;-webkit-text-stroke:2px #fff;color:transparent;margin-left:.5em}
+.ch{display:inline-block;will-change:transform}
+.pal{display:inline-block;white-space:nowrap}
+.btn:active{scale:.96}
+.contador{font-variant-numeric:tabular-nums}
+
 /* ===== Celular ===== */
 @media (max-width:900px){
   .menu,.miniaturas{display:none}
@@ -226,7 +260,13 @@ section{position:relative}
   .trilho{overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
   .quadro{width:78vw;scroll-snap-align:start}
   .sol .reais{display:none}
+  .tour-cab .horario{display:none}
+  .tour-cab .titulo{font-size:15vw}
   .faixa{height:9%}
+  .mural{display:block}
+  .mural .polaroide{position:sticky;top:calc(84px + var(--i,0) * 16px);max-width:78%;margin:0 auto 28vh}
+  .mural .polaroide:nth-child(5){max-width:78%}
+  .mural .polaroide:last-child{margin-bottom:6vh}
 }
 @media (prefers-reduced-motion:reduce){.btn,.polaroide,.menu a::after,.miniaturas img{transition:none}}
 </style>
@@ -270,16 +310,19 @@ section{position:relative}
     </ul>
 
     <div class="dados"><ul>
+      <li class="agora" data-agora><i></i><span>Horário de hoje</span></li>
       <li><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Desde 2019</li>
-      <li><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="9" cy="8" r="3.5" stroke="currentColor" stroke-width="1.8"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5M16 4.8a3.3 3.3 0 0 1 0 6.4M18 14.8c1.9.7 3 2.4 3.5 5.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>5.100+ seguidores</li>
+      <li><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="9" cy="8" r="3.5" stroke="currentColor" stroke-width="1.8"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5M16 4.8a3.3 3.3 0 0 1 0 6.4M18 14.8c1.9.7 3 2.4 3.5 5.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span><span class="contador" data-ate="5100">5.100</span>+ seguidores</span></li>
       <li><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21Z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9.5" r="2.5" stroke="currentColor" stroke-width="1.8"/></svg>Mineiros – GO</li>
     </ul></div>
   </section>
 
+  <div class="faixa-lema" aria-hidden="true"><div class="trem"><span>Você além de um simples treino<i>Body Gym</i></span><span>Você além de um simples treino<i>Body Gym</i></span><span>Você além de um simples treino<i>Body Gym</i></span></div></div>
+
   <!-- ESTRUTURA: TOUR 360 -->
   <section class="tour" id="estrutura" aria-labelledby="t-estrutura">
     <div class="tour-palco">
-      <img class="tour-reserva" src="midia/tour-1.webp" width="1536" height="864" alt="Vista panorâmica do salão: racks, bandeiras, janelões com vista para os morros e área de halteres" loading="lazy">
+      <img class="tour-reserva" src="midia/tour-1.webp" width="1536" height="864" alt="Vista panorâmica do salão: parede preta com as bandeiras de Goiás, Body Gym e Brasil, esteiras de frente para os janelões e aparelhos de musculação" loading="lazy">
       <canvas id="tour-canvas" aria-hidden="true"></canvas>
       <div class="tour-veu"></div>
       <div class="tour-luz"></div>
@@ -359,7 +402,7 @@ section{position:relative}
       <aside class="contato" aria-label="Contato">
         <h3>Venha <span>conhecer</span></h3>
         <dl>
-          <div class="lin"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><div><dt>Horário</dt><dd>Seg a sex 5h às 23h · Sáb 8h às 16h · Dom 8h às 12h</dd></div></div>
+          <div class="lin"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><div><dt>Horário</dt><dd>Seg a sex 5h às 23h · Sáb 8h às 16h · Dom 8h às 12h<br><span class="agora" data-agora><i></i><span></span></span></dd></div></div>
           <div class="lin"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21Z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9.5" r="2.5" stroke="currentColor" stroke-width="1.8"/></svg><div><dt>Endereço</dt><dd>Av. Afonso José Carrijo, Qd. 13, Lt. 8 · Res. Parque Flamboyant · Mineiros – GO<br><a href="https://www.google.com/maps/search/?api=1&amp;query=Body%20Gym%20Academia%20Av.%20Afonso%20Jos%C3%A9%20Carrijo%20Mineiros%20GO" target="_blank" rel="noopener">Abrir no mapa</a></dd></div></div>
           <div class="lin"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><div><dt>WhatsApp</dt><dd>(64) 9 9231-9285</dd></div></div>
         </dl>
@@ -389,6 +432,22 @@ section{position:relative}
   qa('.comparar').forEach(function(c){
     var i=q('input',c); function f(){c.style.setProperty('--pos',i.value+'%')} i.addEventListener('input',f); f();
   });
+
+  /* Aberto agora (horário de Brasília) */
+  (function(){
+    var H={0:[8,12],1:[5,23],2:[5,23],3:[5,23],4:[5,23],5:[5,23],6:[8,16]};
+    var NOMES=['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
+    function agora(){
+      var p={}; new Intl.DateTimeFormat('en-US',{timeZone:'America/Sao_Paulo',weekday:'short',hour:'numeric',minute:'numeric',hour12:false}).formatToParts(new Date()).forEach(function(x){p[x.type]=x.value});
+      var d=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(p.weekday), h=(+p.hour%24)+(+p.minute)/60;
+      var t=H[d], txt, aberto=false;
+      if(h>=t[0]&&h<t[1]){ aberto=true; txt='<b>Aberto agora</b> · fecha às '+t[1]+'h'; }
+      else if(h<t[0]){ txt='<b>Fechado</b> · abre hoje às '+t[0]+'h'; }
+      else { var n=(d+1)%7; txt='<b>Fechado</b> · abre '+(n===((d+1)%7)?'amanhã':NOMES[n])+' às '+H[n][0]+'h'; }
+      qa('[data-agora]').forEach(function(el){ el.classList.toggle('aberto',aberto); el.querySelector('span').innerHTML=txt; });
+    }
+    try{ agora(); setInterval(agora,60000); }catch(e){}
+  })();
 
   var calmo = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var cortina = q('#cortina');
@@ -428,9 +487,60 @@ section{position:relative}
   }
 
   /* Títulos sobem da máscara */
-  qa('section:not(.topo):not(.sol):not(.tour) .titulo .lin > span').forEach(function(el){
-    gsap.from(el,{yPercent:110,duration:1.3,ease:'expo.out',scrollTrigger:{trigger:el,start:'top 90%'}});
+
+
+  /* Títulos letra a letra */
+  function quebra(el){
+    var cls=el.classList.contains('cromo')?'cromo':el.classList.contains('rubro')?'rubro':'';
+    var txt=el.textContent; el.textContent=''; if(cls){ el.classList.remove(cls); el.style.padding='0'; el.style.margin='0'; }
+    txt.split(/(\s+)/).forEach(function(pal){
+      if(!pal) return;
+      if(/^\s+$/.test(pal)){ el.appendChild(document.createTextNode(' ')); return; }
+      var w=document.createElement('span'); w.className='pal';
+      pal.split('').forEach(function(c){ var sp=document.createElement('span'); sp.className='ch'+(cls?' '+cls:''); sp.textContent=c; w.appendChild(sp); });
+      el.appendChild(w);
+    });
+  }
+  qa('section:not(.topo) .titulo .cromo, section:not(.topo) .titulo .rubro').forEach(quebra);
+  qa('section.comunidade .titulo .lin > span').forEach(function(el){
+    Array.prototype.slice.call(el.childNodes).forEach(function(n){ if(n.nodeType===3&&n.textContent.trim()){ var w=document.createElement('span'); w.textContent=n.textContent; el.replaceChild(w,n); quebra(w);} });
   });
+  qa('section:not(.topo):not(.sol) .titulo').forEach(function(t){
+    var ch=qa('.ch',t); if(!ch.length) return;
+    gsap.from(ch,{yPercent:120,rotationX:-85,opacity:0,transformOrigin:'50% 100%',transformPerspective:600,duration:1.1,ease:'expo.out',stagger:.028,
+      scrollTrigger:{trigger:t,start:'top 88%'}});
+  });
+
+  /* Faixa do lema: corre e inclina com a velocidade da rolagem */
+  qa('.faixa-lema .trem').forEach(function(tr){
+    var larg=tr.scrollWidth/3, x=0, inc=0, dir=-1;
+    var sk=gsap.quickTo(tr,'skewX',{duration:.5,ease:'power3.out'});
+    ScrollTrigger.create({trigger:tr,start:'top bottom',end:'bottom top',onUpdate:function(st){ var v=st.getVelocity(); dir=v<0?1:-1; sk(gsap.utils.clamp(-14,14,v/-180)); inc=Math.min(6,Math.abs(v)/400); }});
+    gsap.ticker.add(function(){ x+=dir*(.8+inc); inc*=.94; if(x<=-larg) x+=larg; if(x>0) x-=larg; gsap.set(tr,{x:x}); });
+  });
+
+  /* Contador */
+  qa('.contador').forEach(function(el){
+    var o={v:0}, ate=+el.dataset.ate;
+    gsap.to(o,{v:ate,duration:2.4,ease:'power3.out',delay:1.9,onUpdate:function(){ el.textContent=Math.round(o.v).toLocaleString('pt-BR'); }});
+  });
+
+  /* Comunidade no celular: cartas empilhando */
+  if(!desk){
+    qa('.mural .polaroide').forEach(function(f,i,all){
+      f.style.setProperty('--i',i);
+      if(i<all.length-1) gsap.to(f,{scale:.9,opacity:.55,ease:'none',scrollTrigger:{trigger:all[i+1],start:'top 85%',end:'top 30%',scrub:true}});
+    });
+  }
+
+  /* Botões magnéticos (mouse) */
+  if(window.matchMedia('(pointer:fine)').matches){
+    qa('.btn').forEach(function(b){
+      var bx=gsap.quickTo(b,'x',{duration:.6,ease:'power3.out'}), by=gsap.quickTo(b,'y',{duration:.6,ease:'power3.out'});
+      b.addEventListener('pointermove',function(e){var r=b.getBoundingClientRect(); bx((e.clientX-r.left-r.width/2)*.25); by((e.clientY-r.top-r.height/2)*.35);});
+      b.addEventListener('pointerleave',function(){bx(0);by(0);});
+    });
+  }
 
   /* Estrutura: tour 360 com a câmera avançando */
   iniciaTour(desk);
@@ -454,7 +564,7 @@ section{position:relative}
   });
 
   /* Comunidade: fotos caem na mesa */
-  gsap.from('.polaroide',{y:desk?-160:-70,rotation:function(i){return [-18,14,-10,20,-14][i]},opacity:0,duration:1.4,ease:'back.out(1.3)',stagger:.12,scrollTrigger:{trigger:'.mural',start:'top 80%'}});
+  if(desk) gsap.from('.polaroide',{y:-160,rotation:function(i){return [-18,14,-10,20,-14][i]},opacity:0,duration:1.4,ease:'back.out(1.3)',stagger:.12,scrollTrigger:{trigger:'.mural',start:'top 80%'}});
 
   /* Contato */
   gsap.from('.passos li',{x:-30,opacity:0,duration:1,ease:'expo.out',stagger:.12,scrollTrigger:{trigger:'.passos',start:'top 88%'}});
@@ -462,9 +572,9 @@ section{position:relative}
   function iniciaTour(desk){
     var sec=q('.tour'), cv=q('#tour-canvas'), rot=q('.tour-rotulo');
     var PARADAS=[
-      {ate:.18,num:'01 / 05',nome:'Peso livre',desc:'Racks, anilhas e a nossa parede: Goiás, Brasil e Body Gym.'},
-      {ate:.36,num:'02 / 05',nome:'A vista',desc:'Janelões de ponta a ponta, de frente para os morros.'},
-      {ate:.54,num:'03 / 05',nome:'Musculação',desc:'Máquinas e halteres para todos os níveis, do primeiro dia ao avançado.'},
+      {ate:.18,num:'01 / 05',nome:'Nossa parede',desc:'Goiás, Body Gym e Brasil: as bandeiras que recebem você.'},
+      {ate:.36,num:'02 / 05',nome:'A vista',desc:'Janelões de ponta a ponta, de frente para o pasto e os morros.'},
+      {ate:.54,num:'03 / 05',nome:'Musculação',desc:'Leg press, máquinas e halteres, da catraca ao último aparelho.'},
       {ate:.92,num:'04 / 05',nome:'Cardio',desc:'Esteiras de frente para o pôr do sol.'},
       {ate:1.01,num:'05 / 05',nome:'Seu lugar',desc:'Venha conhecer. O próximo treino pode ter essa vista.'}
     ];
@@ -483,8 +593,9 @@ section{position:relative}
     var R; try{ R=new THREE.WebGLRenderer({canvas:cv,antialias:true,powerPreference:'high-performance'}); }catch(e){ sec.classList.add('calmo'); return; }
     R.setPixelRatio(Math.min(2,devicePixelRatio||1));
     var cena=new THREE.Scene(), cam=new THREE.PerspectiveCamera(70,1,1,2000);
-    var H=200*Math.PI/180, V=H/(1536/864);
-    function esfera(url,raio){
+    var ABERT=[140,150];
+    function esfera(url,raio,graus){
+      var H=graus*Math.PI/180, V=H/(1536/864);
       var g=new THREE.SphereGeometry(raio,96,48,1.5*Math.PI-H/2,H,(Math.PI-V)/2,V); g.scale(-1,1,1);
       var t=new THREE.TextureLoader().load(url,function(){ sec.classList.add('vivo'); });
       if(THREE.sRGBEncoding) t.encoding=THREE.sRGBEncoding;
@@ -493,21 +604,21 @@ section{position:relative}
       var me=new THREE.Mesh(g,m); cena.add(me); return me;
     }
     if(THREE.sRGBEncoding) R.outputEncoding=THREE.sRGBEncoding;
-    var p1=esfera('midia/tour-1.webp',500), p2=esfera('midia/tour-2.webp',480); p2.material.opacity=0; p2.renderOrder=1;
-    var E={yaw:52,fov:76,z:0,mix:0,pitch:-2,brilho:0};
+    var p1=esfera('midia/tour-1.webp',500,ABERT[0]), p2=esfera('midia/tour-2.webp',480,ABERT[1]); p2.material.opacity=0; p2.renderOrder=1;
+    var E={yaw:60,fov:44,z:0,mix:0,pitch:13,brilho:0};
     var G={yaw:0,pitch:0};
-    var tl=gsap.timeline({defaults:{ease:'sine.inOut'},scrollTrigger:{trigger:sec,start:'top top',end:'bottom bottom',scrub:1.2,
+    var tl=gsap.timeline({defaults:{ease:'sine.inOut'},scrollTrigger:{trigger:sec,start:'top top',end:'bottom bottom',scrub:1.6,snap:{snapTo:[0,.17,.35,.53,.86,1],duration:{min:.4,max:1.2},delay:.15,ease:'power2.inOut'},
       onUpdate:function(st){ var p=st.progress; gsap.set('.tour-barra i',{scaleY:p});
         for(var i=0;i<PARADAS.length;i++){ if(p<PARADAS[i].ate){ mostra(i); break; } } }}});
-    tl.to(E,{yaw:0,fov:70,duration:.18},0)
-      .to(E,{yaw:0,fov:62,z:-40,duration:.18},.18)
-      .to(E,{yaw:-46,fov:66,z:-40,duration:.18},.36)
-      .to(E,{yaw:2,fov:30,z:-230,pitch:1,duration:.16},.54)
+    tl.to(E,{yaw:-4,fov:66,pitch:0,duration:.17},0)
+      .to(E,{yaw:-4,fov:58,z:-40,duration:.18},.17)
+      .to(E,{yaw:-48,fov:62,z:-30,duration:.18},.35)
+      .to(E,{yaw:-5,fov:30,z:-230,pitch:1,duration:.17},.53)
       .to(E,{fov:20,z:-300,duration:.06,ease:'power2.in'},.70)
       .to('.tour-luz',{opacity:1,duration:.06,ease:'power2.in'},.70)
-      .set(E,{mix:1,fov:78,z:60,yaw:-18,pitch:0},.76)
+      .set(E,{mix:1,fov:76,z:60,yaw:-14,pitch:0},.76)
       .to('.tour-luz',{opacity:0,duration:.07,ease:'power2.out'},.76)
-      .to(E,{yaw:-10,fov:62,z:0,duration:.1},.76)
+      .to(E,{yaw:-6,fov:62,z:0,duration:.1},.76)
       .to(E,{yaw:0,fov:32,z:-220,pitch:2,duration:.14},.86)
       .to('.tour-cab',{opacity:0,y:-30,duration:.08,ease:'power2.in'},.06)
       .to('.tour-dica',{opacity:0,duration:.05},.04);
@@ -523,9 +634,9 @@ section{position:relative}
       var retrato=cam.aspect<1, fator=retrato?1.35:1;
       cam.fov=Math.min(100,E.fov*fator);
       var hfov=2*Math.atan(Math.tan(cam.fov*Math.PI/360)*cam.aspect)*180/Math.PI;
-      var lim=Math.max(0,100-hfov/2-4);
+      var lim=Math.max(0,ABERT[E.mix>.5?1:0]/2-hfov/2-2);
       var alvo=Math.max(-lim,Math.min(lim,E.yaw+G.yaw));
-      y+=(alvo-y)*.12; pi+=((E.pitch+G.pitch)-pi)*.12;
+      y+=(alvo-y)*.12; pi+=((E.pitch*(retrato?.45:1)+G.pitch)-pi)*.12;
       cam.rotation.order='YXZ'; cam.rotation.y=y*Math.PI/180; cam.rotation.x=pi*Math.PI/180;
       var d=-E.z, yr=y*Math.PI/180; cam.position.set(-Math.sin(yr)*d, 0, -Math.cos(yr)*d);
       p2.material.opacity=E.mix; p1.visible=E.mix<1;

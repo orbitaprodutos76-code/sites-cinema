@@ -67,3 +67,10 @@
 - Seção Estrutura virou **tour em Three.js**: tela fixa enquanto rola; a câmera gira das bandeiras para o janelão, vira para a musculação, avança até a janela, entra num clarão de sol e sai nas esteiras, avançando até o sol. 5 paradas com nome grande (Peso livre, A vista, Musculação, Cardio, Seu lugar), barra de progresso vermelha, mouse olha em volta. Selo discreto "Ambiente recriado em 3D". Reduced motion / sem WebGL: imagem parada.
 - Quadros: `referencias/tour-v1-quadros-pc.png`, `tour-v1-quadros-celular.png`. Mesmo link do site (versão 2).
 - PENDENTE: veredito do tour; plano de melhoria das animações do resto do site.
+
+## Tour v2 + melhorias (26/11/2026)
+- Tour v1 REPROVADO: "não parece a Body Gym", ritmo/controle, "corrija a bandeira, é importante que estejam corretas".
+- Tour v2: nova panorâmica descrevendo o espaço REAL (teto de zinco com treliças, janelões para o pasto, catracas com seta verde, esfera de acrílico, leg press, parede preta) → `referencias/pano-3-real.png`; **bandeiras recortadas da foto real e aplicadas em perspectiva** (Goiás, Body Gym, Brasil, penduradas como na parede de verdade) → `pano-3-bandeiras.png`; janela/esteiras → `pano-4-janela-real.png`. Câmera começa olhando as bandeiras; mais rolagem (760vh) e **para em cada área** (snap).
+- Tentativa pelo Canva com as fotos reais como referência gerou uma imagem boa, mas o Canva não deixa baixar em resolução (só miniatura); criar página para exportar falhou.
+- Melhorias aprovadas e feitas: **selo "Aberto agora / Fechado · abre às…"** (horário de Brasília) no topo e no contato · **dados estruturados ExerciseGym** + Open Graph + favicon · `GUIA-GOOGLE.md` para o dono criar o Perfil da Empresa · **animações**: títulos letra a letra (sem quebrar palavra), faixa vermelha do lema que corre e inclina com a velocidade da rolagem, contador 5.100, polaroides empilhando como cartas no celular, botões magnéticos no computador.
+- PENDENTE: veredito; aula experimental; fotos de evolução com autorização.
