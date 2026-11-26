@@ -168,3 +168,9 @@
 - Sequência confirmada (5 s): **ALÉM DE UM SIMPLES em metal (modelo do senhor) → TREINO em lava vermelha com veias → BODY GYM em metal.** PENDENTE: o modelo metálico do senhor.
 - Referência 2 do senhor (para o metal): https://pin.it/gmfJuRXR3 → template "Cinematic Title 2" (Mixmedia 87, Envato Elements). Folha: `referencias/ref-cinematic-title-2-folha.jpg`. Técnica: metal martelado frio, macro com foco raso, estilhaços de metal voando, clarão de lente horizontal azul revelando a palavra, névoa azul-petróleo e poucas brasas laranja. O vídeo é 720p; refeito em 3D na resolução da tela.
 - Quadros parados (metal + TREINO lava): `referencias/quadro-metal.jpg` (de `referencias/quadro-metal.html?palavra=&quadro=&estilo=`). PENDENTE: aprovação para animar os 5 s.
+
+## Abertura v14: 5 s nas referências do senhor (26/11/2026)
+- Pedidos: metal (ref. 2) em ALÉM DE UM SIMPLES e BODY GYM; lava com veias só no TREINO (ref. 1); 5 s; "efeitos de câmera e algumas piscadas rápidas como se apagassem a luz".
+- Feito (`abertura.html`, tudo num arquivo, Three.js r160): metal martelado frio, estilhaços de metal, névoa azul-petróleo, risco de luz azul; TREINO em pedra com veias de lava vermelha. **Piscadas de luz** entre os cortes (apaga 2–3 quadros, volta falhando como fluorescente, com estalo de energia no som). **Truque do TREINO:** a luz apaga e só as veias de lava acendem no escuro, depois estoura (brasas, tremor). **Câmera por corte:** ALÉM desliza rente ao metal (macro, foco raso) · DE UM de baixo para cima · SIMPLES giro de lado + risco azul · TREINO avanço lento · BODY GYM recua da macro até a marca inteira, estilhaços soprados para fora, risco azul, "Mineiros · GO — desde 2019". Sons de metal da v12.
+- `palavras3d.js` (v13) não é mais usado. Quadros: `referencias/abertura-v14-quadros.jpg`. Link: https://claude.ai/artifact/SiZfdtPofuUnTWTvBvRoEq (versão 9).
+- PENDENTE: nota do senhor; teste no celular real.
