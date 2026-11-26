@@ -60,3 +60,10 @@
 - Fontes: Anton + Barlow. Cores: preto, vermelho #D7192A, cromo, ouro do sol.
 - A CONFIRMAR com a academia: "aula experimental" (botão do topo); CEP.
 - PENDENTE: veredito; vídeo do passeio; fotos de evolução com autorização; fotos do Instagram em boa resolução (as atuais são prints).
+
+## Tour 360 com câmera avançando (26/11/2026)
+- Senhor: animações do site "básicas e amadoras" no celular; tour "longe do esperado"; pediu **imagem 360 da academia feita por IA com efeito de câmera avançando** (decisão dele, mesmo sabendo que não é a academia real).
+- Panorâmicas (IA): `referencias/pano-1-centro.png` (racks, bandeiras, janelões, halteres, catracas) e `pano-2-janela.png` (esteiras na janela ao pôr do sol). Viraram `midia/tour-1.webp` e `tour-2.webp`.
+- Seção Estrutura virou **tour em Three.js**: tela fixa enquanto rola; a câmera gira das bandeiras para o janelão, vira para a musculação, avança até a janela, entra num clarão de sol e sai nas esteiras, avançando até o sol. 5 paradas com nome grande (Peso livre, A vista, Musculação, Cardio, Seu lugar), barra de progresso vermelha, mouse olha em volta. Selo discreto "Ambiente recriado em 3D". Reduced motion / sem WebGL: imagem parada.
+- Quadros: `referencias/tour-v1-quadros-pc.png`, `tour-v1-quadros-celular.png`. Mesmo link do site (versão 2).
+- PENDENTE: veredito do tour; plano de melhoria das animações do resto do site.

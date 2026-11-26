@@ -97,22 +97,32 @@ section{position:relative}
 .cabeca{display:flex;flex-direction:column;gap:20px;margin-bottom:clamp(36px,5vw,70px)}
 .cabeca p{margin:0;max-width:46ch;color:var(--suave)}
 
-/* Estrutura */
-.estrutura{padding-top:clamp(90px,10vw,150px);overflow:hidden}
-.trilho{display:flex;gap:clamp(16px,2vw,28px);padding-left:var(--calha);padding-right:var(--calha-d);padding-bottom:clamp(90px,10vw,150px);will-change:transform}
-.quadro{flex:0 0 auto;width:clamp(260px,30vw,440px);margin:0}
-.quadro .foto{position:relative;aspect-ratio:3/4;overflow:hidden;border-radius:10px;background:var(--carvao)}
-.quadro .foto img{width:100%;height:116%;object-fit:cover;transform:translateY(-6%)}
-.quadro figcaption{display:flex;justify-content:space-between;align-items:baseline;margin-top:16px;gap:12px}
-.quadro figcaption b{font-family:var(--fonte-titulo);font-weight:400;font-size:28px;letter-spacing:.02em;text-transform:uppercase}
-.quadro figcaption span{font-size:14px;color:var(--suave)}
-.quadro.aviso .foto{display:grid;place-items:center;text-align:center;padding:30px;background:
-  repeating-linear-gradient(135deg,#17171a 0 14px,#121214 14px 28px);box-shadow:inset 0 0 0 1.5px rgba(215,25,42,.6)}
-.quadro.aviso .foto p{margin:0;color:var(--suave);font-size:15px}
-.quadro.aviso .foto strong{display:block;font-family:var(--fonte-titulo);font-weight:400;font-size:34px;color:#fff;text-transform:uppercase;margin-bottom:10px}
-.horario{display:flex;gap:16px;flex-wrap:wrap;margin-top:28px}
-.horario span{display:inline-flex;gap:10px;align-items:baseline;padding:12px 18px;border-radius:6px;background:var(--carvao);box-shadow:inset 0 0 0 1px var(--linha);font-weight:600}
-.horario em{font-style:normal;color:var(--vermelho);font-family:var(--fonte-titulo);font-size:20px;letter-spacing:.02em}
+/* Estrutura: tour 360 */
+.tour{height:520vh;background:#000}
+.tour-palco{position:sticky;top:0;height:100svh;overflow:hidden}
+.tour-palco canvas,.tour-reserva{position:absolute;inset:0;width:100%;height:100%;display:block}
+.tour-reserva{object-fit:cover}
+.tour.vivo .tour-reserva{display:none}
+.tour-veu{position:absolute;inset:0;pointer-events:none;background:
+  radial-gradient(ellipse 80% 70% at 50% 50%,rgba(0,0,0,0) 55%,rgba(0,0,0,.6) 100%),
+  linear-gradient(180deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,0) 28%,rgba(0,0,0,0) 62%,rgba(0,0,0,.75) 100%)}
+.tour-cab{position:absolute;left:var(--calha);right:var(--calha-d);top:clamp(70px,9vh,110px);display:flex;flex-direction:column;gap:16px;pointer-events:none}
+.tour-cab .horario{margin-top:6px}
+.horario{display:flex;gap:12px;flex-wrap:wrap}
+.horario span{display:inline-flex;gap:10px;align-items:baseline;padding:10px 16px;border-radius:6px;background:rgba(10,10,11,.6);backdrop-filter:blur(8px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);font-weight:600;font-size:15px}
+.horario em{font-style:normal;color:var(--vermelho);font-family:var(--fonte-titulo);font-size:19px;letter-spacing:.02em}
+.tour-rotulo{position:absolute;left:var(--calha);bottom:clamp(40px,8vh,80px);right:var(--calha-d);pointer-events:none}
+.tour-rotulo .num{display:block;font:700 13px var(--fonte-texto);letter-spacing:.3em;color:var(--vermelho);margin-bottom:8px}
+.tour-rotulo .nome{display:block;font-family:var(--fonte-titulo);font-size:clamp(54px,8vw,130px);line-height:.9;text-transform:uppercase;overflow:hidden;padding-top:.1em}
+.tour-rotulo .nome span{display:inline-block}
+.tour-rotulo .desc{display:block;margin-top:10px;font-size:clamp(16px,1.4vw,20px);font-weight:500;max-width:36ch;text-shadow:0 2px 12px rgba(0,0,0,.7)}
+.tour-luz{position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 45%,#fff6dc 0%,#ffd27a 35%,#f59a2e 70%,#7a2a08 100%)}
+.tour-barra{position:absolute;right:var(--calha-d);top:50%;transform:translateY(-50%);height:38vh;width:2px;background:rgba(255,255,255,.18)}
+.tour-barra i{position:absolute;left:0;top:0;width:100%;height:100%;background:var(--vermelho);transform-origin:top;transform:scaleY(0)}
+.tour-dica{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);font:600 11px var(--fonte-texto);letter-spacing:.3em;text-transform:uppercase;color:#ddd;opacity:.8}
+.tour-nota{position:absolute;right:var(--calha-d);bottom:18px;font-size:11px;color:#bbb;opacity:.7}
+.tour.calmo{height:auto}
+.tour.calmo .tour-palco{position:relative;height:clamp(520px,80svh,820px)}
 
 /* Pôr do sol */
 .sol{height:clamp(600px,100svh,1000px);overflow:hidden;background:#000}
@@ -266,21 +276,22 @@ section{position:relative}
     </ul></div>
   </section>
 
-  <!-- ESTRUTURA -->
-  <section class="estrutura" id="estrutura" aria-labelledby="t-estrutura">
-    <div class="miolo cabeca">
-      <span class="etiqueta">O espaço</span>
-      <h2 class="titulo t-xl" id="t-estrutura"><span class="lin"><span class="cromo">A estrutura</span></span></h2>
-      <p>Musculação, peso livre e esteiras de frente para os morros. Seg a sex das 5h às 23h, para caber na sua rotina.</p>
-      <div class="horario"><span><em>Seg–Sex</em> 5h às 23h</span><span><em>Sáb</em> 8h às 16h</span><span><em>Dom</em> 8h às 12h</span></div>
-    </div>
-    <div class="trilho" id="trilho">
-      <figure class="quadro aviso"><div class="foto"><div><strong>Tour de câmera</strong><p>Em gravação: um passeio pela academia inteira, que você controla rolando a página.</p></div></div><figcaption><b>Em breve</b><span>vídeo real</span></figcaption></figure>
-      <figure class="quadro"><div class="foto"><img src="midia/real-bandeiras.webp" width="630" height="560" alt="Parede preta com as bandeiras de Goiás, do Brasil e da Body Gym" loading="lazy"></div><figcaption><b>Nossa parede</b><span>Goiás · Brasil · Body Gym</span></figcaption></figure>
-      <figure class="quadro"><div class="foto"><img src="midia/real-salao-sol.webp" width="720" height="1200" alt="Salão de musculação com luz do fim de tarde e catracas de entrada" loading="lazy"></div><figcaption><b>Musculação</b><span>aparelhos e peso livre</span></figcaption></figure>
-      <figure class="quadro"><div class="foto"><img src="midia/real-janelas.webp" width="720" height="680" alt="Janelões com vista para a mata e os morros" loading="lazy"></div><figcaption><b>A vista</b><span>janelões para os morros</span></figcaption></figure>
-      <figure class="quadro"><div class="foto"><img src="midia/real-esteiras-sol.webp" width="720" height="1160" alt="Alunos nas esteiras de frente para o pôr do sol" loading="lazy"></div><figcaption><b>Cardio</b><span>de frente para o sol</span></figcaption></figure>
-      <figure class="quadro"><div class="foto"><img src="midia/insta-fachada.webp" width="238" height="319" alt="Fachada de vidro da Body Gym" loading="lazy"></div><figcaption><b>A fachada</b><span>Parque Flamboyant</span></figcaption></figure>
+  <!-- ESTRUTURA: TOUR 360 -->
+  <section class="tour" id="estrutura" aria-labelledby="t-estrutura">
+    <div class="tour-palco">
+      <img class="tour-reserva" src="midia/tour-1.webp" width="1536" height="864" alt="Vista panorâmica do salão: racks, bandeiras, janelões com vista para os morros e área de halteres" loading="lazy">
+      <canvas id="tour-canvas" aria-hidden="true"></canvas>
+      <div class="tour-veu"></div>
+      <div class="tour-luz"></div>
+      <div class="tour-cab">
+        <span class="etiqueta">O espaço</span>
+        <h2 class="titulo t-xl" id="t-estrutura"><span class="lin"><span class="cromo">A estrutura</span></span></h2>
+        <div class="horario"><span><em>Seg–Sex</em> 5h às 23h</span><span><em>Sáb</em> 8h às 16h</span><span><em>Dom</em> 8h às 12h</span></div>
+      </div>
+      <div class="tour-rotulo" aria-live="polite"><span class="num"></span><span class="nome"><span></span></span><span class="desc"></span></div>
+      <div class="tour-barra" aria-hidden="true"><i></i></div>
+      <span class="tour-dica" aria-hidden="true">Role para andar</span>
+      <span class="tour-nota">Ambiente recriado em 3D</span>
     </div>
   </section>
 
@@ -366,6 +377,7 @@ section{position:relative}
   <a href="https://www.instagram.com/bodygymacademia" target="_blank" rel="noopener">@bodygymacademia</a>
 </div></footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
@@ -380,7 +392,7 @@ section{position:relative}
 
   var calmo = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var cortina = q('#cortina');
-  if (!window.gsap || calmo){ cortina.style.display='none'; return; }
+  if (!window.gsap || calmo){ cortina.style.display='none'; q('.tour').classList.add('calmo'); var r=q('.tour-rotulo'); q('.num',r).textContent='5 ÁREAS'; q('.nome span',r).textContent='Do rack ao pôr do sol'; q('.desc',r).textContent='Peso livre, musculação, halteres e esteiras de frente para os morros.'; return; }
   gsap.registerPlugin(ScrollTrigger);
 
   var lenis = window.Lenis ? new Lenis({duration:1.15}) : null;
@@ -416,19 +428,12 @@ section{position:relative}
   }
 
   /* Títulos sobem da máscara */
-  qa('section:not(.topo):not(.sol) .titulo .lin > span').forEach(function(el){
+  qa('section:not(.topo):not(.sol):not(.tour) .titulo .lin > span').forEach(function(el){
     gsap.from(el,{yPercent:110,duration:1.3,ease:'expo.out',scrollTrigger:{trigger:el,start:'top 90%'}});
   });
 
-  /* Estrutura: trilho anda na horizontal com a rolagem (computador) */
-  var trilho=q('#trilho');
-  if (desk){
-    var dist=function(){return Math.max(0,trilho.scrollWidth-innerWidth)};
-    gsap.to(trilho,{x:function(){return -dist()},ease:'none',scrollTrigger:{trigger:'.estrutura',start:'top top',end:function(){return '+='+dist()},pin:true,scrub:1,invalidateOnRefresh:true}});
-    qa('.quadro .foto img').forEach(function(img){gsap.fromTo(img,{scale:1.18},{scale:1,ease:'none',scrollTrigger:{trigger:'.estrutura',start:'top top',end:function(){return '+='+dist()},scrub:true}})});
-  }
-  gsap.from('.quadro',{y:60,opacity:0,duration:1.2,ease:'expo.out',stagger:.08,scrollTrigger:{trigger:trilho,start:'top 85%'}});
-  gsap.from('.horario span',{y:16,opacity:0,duration:.8,stagger:.08,scrollTrigger:{trigger:'.horario',start:'top 90%'}});
+  /* Estrutura: tour 360 com a câmera avançando */
+  iniciaTour(desk);
 
   /* Pôr do sol: a câmera recua e as faixas de cinema se abrem */
   gsap.timeline({scrollTrigger:{trigger:'.sol',start:'top top',end:desk?'+=120%':'+=80%',pin:true,scrub:1}})
@@ -454,5 +459,79 @@ section{position:relative}
   /* Contato */
   gsap.from('.passos li',{x:-30,opacity:0,duration:1,ease:'expo.out',stagger:.12,scrollTrigger:{trigger:'.passos',start:'top 88%'}});
   gsap.from('.contato',{y:60,opacity:0,rotationX:12,transformPerspective:900,duration:1.3,ease:'expo.out',scrollTrigger:{trigger:'.contato',start:'top 85%'}});
+  function iniciaTour(desk){
+    var sec=q('.tour'), cv=q('#tour-canvas'), rot=q('.tour-rotulo');
+    var PARADAS=[
+      {ate:.18,num:'01 / 05',nome:'Peso livre',desc:'Racks, anilhas e a nossa parede: Goiás, Brasil e Body Gym.'},
+      {ate:.36,num:'02 / 05',nome:'A vista',desc:'Janelões de ponta a ponta, de frente para os morros.'},
+      {ate:.54,num:'03 / 05',nome:'Musculação',desc:'Máquinas e halteres para todos os níveis, do primeiro dia ao avançado.'},
+      {ate:.92,num:'04 / 05',nome:'Cardio',desc:'Esteiras de frente para o pôr do sol.'},
+      {ate:1.01,num:'05 / 05',nome:'Seu lugar',desc:'Venha conhecer. O próximo treino pode ter essa vista.'}
+    ];
+    var atual=-1;
+    function mostra(i){
+      if(i===atual) return; atual=i; var d=PARADAS[i];
+      gsap.to(rot,{opacity:0,y:12,duration:.25,ease:'power2.in',onComplete:function(){
+        q('.num',rot).textContent=d.num; q('.nome span',rot).textContent=d.nome; q('.desc',rot).textContent=d.desc;
+        gsap.fromTo(rot,{opacity:1,y:0},{opacity:1,y:0,duration:0});
+        gsap.fromTo(q('.nome span',rot),{yPercent:110},{yPercent:0,duration:.9,ease:'expo.out'});
+        gsap.fromTo([q('.num',rot),q('.desc',rot)],{opacity:0,y:10},{opacity:1,y:0,duration:.7,ease:'power3.out',stagger:.06});
+      }});
+    }
+    mostra(0);
+    if(!window.THREE){ sec.classList.add('calmo'); return; }
+    var R; try{ R=new THREE.WebGLRenderer({canvas:cv,antialias:true,powerPreference:'high-performance'}); }catch(e){ sec.classList.add('calmo'); return; }
+    R.setPixelRatio(Math.min(2,devicePixelRatio||1));
+    var cena=new THREE.Scene(), cam=new THREE.PerspectiveCamera(70,1,1,2000);
+    var H=200*Math.PI/180, V=H/(1536/864);
+    function esfera(url,raio){
+      var g=new THREE.SphereGeometry(raio,96,48,1.5*Math.PI-H/2,H,(Math.PI-V)/2,V); g.scale(-1,1,1);
+      var t=new THREE.TextureLoader().load(url,function(){ sec.classList.add('vivo'); });
+      if(THREE.sRGBEncoding) t.encoding=THREE.sRGBEncoding;
+      t.anisotropy=R.capabilities.getMaxAnisotropy();
+      var m=new THREE.MeshBasicMaterial({map:t,transparent:true,opacity:1,depthWrite:false});
+      var me=new THREE.Mesh(g,m); cena.add(me); return me;
+    }
+    if(THREE.sRGBEncoding) R.outputEncoding=THREE.sRGBEncoding;
+    var p1=esfera('midia/tour-1.webp',500), p2=esfera('midia/tour-2.webp',480); p2.material.opacity=0; p2.renderOrder=1;
+    var E={yaw:52,fov:76,z:0,mix:0,pitch:-2,brilho:0};
+    var G={yaw:0,pitch:0};
+    var tl=gsap.timeline({defaults:{ease:'sine.inOut'},scrollTrigger:{trigger:sec,start:'top top',end:'bottom bottom',scrub:1.2,
+      onUpdate:function(st){ var p=st.progress; gsap.set('.tour-barra i',{scaleY:p});
+        for(var i=0;i<PARADAS.length;i++){ if(p<PARADAS[i].ate){ mostra(i); break; } } }}});
+    tl.to(E,{yaw:0,fov:70,duration:.18},0)
+      .to(E,{yaw:0,fov:62,z:-40,duration:.18},.18)
+      .to(E,{yaw:-46,fov:66,z:-40,duration:.18},.36)
+      .to(E,{yaw:2,fov:30,z:-230,pitch:1,duration:.16},.54)
+      .to(E,{fov:20,z:-300,duration:.06,ease:'power2.in'},.70)
+      .to('.tour-luz',{opacity:1,duration:.06,ease:'power2.in'},.70)
+      .set(E,{mix:1,fov:78,z:60,yaw:-18,pitch:0},.76)
+      .to('.tour-luz',{opacity:0,duration:.07,ease:'power2.out'},.76)
+      .to(E,{yaw:-10,fov:62,z:0,duration:.1},.76)
+      .to(E,{yaw:0,fov:32,z:-220,pitch:2,duration:.14},.86)
+      .to('.tour-cab',{opacity:0,y:-30,duration:.08,ease:'power2.in'},.06)
+      .to('.tour-dica',{opacity:0,duration:.05},.04);
+    if(window.matchMedia('(pointer:fine)').matches){
+      addEventListener('pointermove',function(e){ G.yaw=-(e.clientX/innerWidth-.5)*10; G.pitch=-(e.clientY/innerHeight-.5)*6; });
+    }
+    var y=E.yaw, pi=E.pitch, ativo=false;
+    new IntersectionObserver(function(en){ ativo=en[0].isIntersecting; },{rootMargin:'100px'}).observe(sec);
+    function tam(){ var w=cv.clientWidth,h=cv.clientHeight; R.setSize(w,h,false); cam.aspect=w/h; cam.updateProjectionMatrix(); }
+    tam(); addEventListener('resize',tam);
+    gsap.ticker.add(function(){
+      if(!ativo) return;
+      var retrato=cam.aspect<1, fator=retrato?1.35:1;
+      cam.fov=Math.min(100,E.fov*fator);
+      var hfov=2*Math.atan(Math.tan(cam.fov*Math.PI/360)*cam.aspect)*180/Math.PI;
+      var lim=Math.max(0,100-hfov/2-4);
+      var alvo=Math.max(-lim,Math.min(lim,E.yaw+G.yaw));
+      y+=(alvo-y)*.12; pi+=((E.pitch+G.pitch)-pi)*.12;
+      cam.rotation.order='YXZ'; cam.rotation.y=y*Math.PI/180; cam.rotation.x=pi*Math.PI/180;
+      var d=-E.z, yr=y*Math.PI/180; cam.position.set(-Math.sin(yr)*d, 0, -Math.cos(yr)*d);
+      p2.material.opacity=E.mix; p1.visible=E.mix<1;
+      cam.updateProjectionMatrix(); R.render(cena,cam);
+    });
+  }
 })();
+
 </script>
