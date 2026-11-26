@@ -48,3 +48,15 @@
 - Planos: **sem preços no site, "consulte no WhatsApp"**.
 - Estrutura: caminho **1, vídeo de passeio** (o senhor grava ~30 s na horizontal: catraca → musculação → peso livre → bandeiras → esteiras na janela no pôr do sol; devagar, sem gente na frente). No site a rolagem controla o vídeo (estilo páginas da Apple) com o nome de cada área aparecendo; IA só para nitidez/cor. Tour 100% por IA foi descartado (mostraria uma academia que não existe).
 - PENDENTE: o vídeo do passeio. Enquanto não chega, dá para montar o resto do site (topo, pôr do sol, evoluções, comunidade, perdeu o medo).
+
+## Site v1 (26/11/2026)
+- `site.html` → https://claude.ai/artifact/YbigACjfUkiwTn5zf8DWVZ · prints `referencias/site-v1-topo-pc.png`, `site-v1-topo-celular.png`, `site-v1-rolagem-pc.png`.
+- Topo em 3 camadas: fundo de IA (sem texto) → "ALÉM" e "DO" em cromo atrás do atleta, um de cada lado → atleta recortado → "TREINO" em vermelho NA FRENTE (assim o título se lê inteiro). Entrada: tela preta abre, câmera recua, título sobe, clarão do sol pulsa; rolagem separa as camadas; mouse dá profundidade.
+- Estrutura: trilho horizontal fixo com fotos reais do Instagram + cartão "Tour de câmera em gravação" (vídeo do senhor entra aqui).
+- Pôr do sol: imagem de IA em tela cheia, faixas de cinema se abrindo com a rolagem; 2 miniaturas reais "De verdade, no nosso Instagram".
+- Evoluções: 3 comparadores antes/depois funcionando, VAZIOS de propósito (só alunos reais com autorização).
+- Comunidade: polaroides com fotos reais do Instagram caindo na mesa.
+- Contato: 3 passos para iniciantes (sem promessas não confirmadas), horário, endereço com "Abrir no mapa", WhatsApp com mensagem pronta, "planos: consulte no WhatsApp".
+- Fontes: Anton + Barlow. Cores: preto, vermelho #D7192A, cromo, ouro do sol.
+- A CONFIRMAR com a academia: "aula experimental" (botão do topo); CEP.
+- PENDENTE: veredito; vídeo do passeio; fotos de evolução com autorização; fotos do Instagram em boa resolução (as atuais são prints).

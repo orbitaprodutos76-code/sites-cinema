@@ -1,0 +1,458 @@
+<title>Body Gym Academia</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Body Gym Academia em Mineiros (GO): musculação, cardio com vista para o pôr do sol e uma turma que acolhe todo mundo. Seg a sex 5h às 23h.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;500;600;700&display=swap">
+<link rel="preload" as="image" href="midia/topo-fundo.webp" fetchpriority="high">
+<style>
+/* Layout: topo em camadas (fundo / título / atleta) → estrutura (trilho horizontal) → pôr do sol (cena de cinema fixa) → evoluções → comunidade (polaroides) → perdeu o medo + contato. Visual único escuro. */
+:root{
+  --preto:#0a0a0b;
+  --carvao:#151517;
+  --linha:#2a2a2e;
+  --texto:#f3f3f4;
+  --suave:#a9a9b0;
+  --vermelho:#D7192A;
+  --vermelho-escuro:#8e0f1a;
+  --ouro:#f6b445;
+  --fonte-titulo:"Anton","Impact","Arial Narrow Bold",sans-serif;
+  --fonte-texto:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --calha:max(28px,env(safe-area-inset-left,0px));
+  --calha-d:max(28px,env(safe-area-inset-right,0px));
+  color-scheme:dark;
+}
+html,body{background:var(--preto);color:var(--texto)}
+body{font-family:var(--fonte-texto);font-size:17px;line-height:1.55;overflow-x:hidden}
+*{box-sizing:border-box}
+img{display:block;max-width:100%}
+a{color:inherit}
+.miolo{padding-left:var(--calha);padding-right:var(--calha-d);max-width:1440px;margin-inline:auto}
+.so-leitor{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Tipografia */
+.titulo{margin:0;font-family:var(--fonte-titulo);font-weight:400;text-transform:uppercase;line-height:.92;letter-spacing:.005em}
+.titulo .lin{display:block;overflow:hidden;padding-top:.04em}
+.titulo .lin > span{display:inline-block}
+.cromo,.rubro{display:inline-block;padding:.22em .02em .12em;margin:-.22em -.02em -.12em}
+.cromo{background:linear-gradient(180deg,#ffffff 0%,#d9dadd 30%,#8d9096 52%,#f4f4f5 64%,#a4a6ab 82%,#5e6066 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 2px 0 rgba(0,0,0,.6)) drop-shadow(0 14px 22px rgba(0,0,0,.55))}
+.rubro{background:linear-gradient(180deg,#ff4a55 0%,#e01b2c 40%,#a90f1e 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 2px 0 rgba(60,0,6,.7)) drop-shadow(0 14px 22px rgba(0,0,0,.55))}
+.etiqueta{display:inline-flex;align-items:center;gap:12px;font:700 12px/1 var(--fonte-texto);letter-spacing:.32em;text-transform:uppercase;color:var(--vermelho)}
+.etiqueta::before{content:"";width:34px;height:2px;background:var(--vermelho)}
+.t-xl{font-size:clamp(64px,10vw,168px)}
+.t-l{font-size:clamp(52px,7vw,116px)}
+
+/* Botões */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;font:700 15px/1 var(--fonte-texto);letter-spacing:.02em;
+  color:#fff;background:var(--vermelho);padding:17px 26px;border-radius:6px;text-decoration:none;border:0;cursor:pointer;
+  box-shadow:0 14px 30px -14px rgba(215,25,42,.8);transition:translate .5s cubic-bezier(.16,1,.3,1),background-color .3s}
+.btn:hover{background:#f02436;translate:0 -2px}
+.btn svg{width:18px;height:18px;transition:transform .4s cubic-bezier(.16,1,.3,1)}
+.btn:hover svg{transform:translateX(4px)}
+.btn-contorno{background:rgba(0,0,0,.25);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.75);backdrop-filter:blur(6px)}
+.btn-contorno:hover{background:rgba(255,255,255,.1)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--ouro);outline-offset:3px}
+
+/* ===== Topo ===== */
+.topo{position:relative;height:clamp(620px,100svh,1100px);overflow:hidden;isolation:isolate;background:#000}
+.camada{position:absolute;inset:0;pointer-events:none}
+.camada img{width:100%;height:100%;object-fit:cover;object-position:50% 40%}
+.escuro{background:#000}
+.clarao{background:radial-gradient(circle at 60% 38%,rgba(255,196,90,.55) 0%,rgba(255,160,60,.18) 18%,rgba(0,0,0,0) 42%);mix-blend-mode:screen}
+.sombra-topo{background:linear-gradient(180deg,rgba(0,0,0,.65) 0%,rgba(0,0,0,0) 26%,rgba(0,0,0,0) 62%,rgba(0,0,0,.85) 100%)}
+.letreiro{position:absolute;left:0;right:0;top:15%;text-align:center;z-index:1;pointer-events:none}
+.letreiro .frase{display:block;margin-bottom:1.2vw;font:700 clamp(11px,1.05vw,15px)/1 var(--fonte-texto);letter-spacing:.42em;color:#fff;text-transform:uppercase;text-shadow:0 2px 10px rgba(0,0,0,.6)}
+.letreiro h1{font-size:clamp(92px,15.5vw,270px);line-height:.86}
+.letreiro .l1{display:flex;justify-content:space-between;width:min(78vw,1140px);margin-inline:auto;padding-top:.16em}
+.letreiro .frase{width:min(78vw,1140px);margin-inline:auto;text-align:left}
+.letreiro.frente{top:auto;bottom:21%;z-index:3}
+.letreiro.frente .titulo{display:block;font-size:clamp(96px,16.5vw,290px);line-height:.86;letter-spacing:.06em}
+.letreiro .lin{overflow:hidden}
+.atleta{z-index:2}
+.topo .barra{position:absolute;top:0;left:0;right:0;z-index:6;display:flex;align-items:center;justify-content:space-between;gap:20px;
+  padding-top:calc(env(safe-area-inset-top,0px) + 20px);padding-bottom:20px;padding-left:var(--calha);padding-right:var(--calha-d)}
+.marca{display:flex;align-items:center;gap:12px;text-decoration:none}
+.marca img{width:58px;height:58px;border-radius:50%;box-shadow:0 0 0 2px rgba(215,25,42,.9),0 8px 20px rgba(0,0,0,.6)}
+.marca span{font-family:var(--fonte-titulo);font-size:22px;letter-spacing:.04em;line-height:1}
+.menu{display:flex;gap:30px;list-style:none;margin:0;padding:0}
+.menu a{font:600 15px var(--fonte-texto);text-decoration:none;opacity:.9;position:relative;padding-block:6px}
+.menu a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--vermelho);transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.menu a:hover::after{transform:scaleX(1)}
+.topo .acoes{position:absolute;left:var(--calha);bottom:118px;z-index:6;display:flex;gap:14px;flex-wrap:wrap}
+.dados{position:absolute;left:0;right:0;bottom:0;z-index:6;padding-left:var(--calha);padding-right:var(--calha-d);padding-bottom:calc(env(safe-area-inset-bottom,0px) + 26px)}
+.dados ul{list-style:none;margin:0;padding:22px 0 0;display:flex;gap:44px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.22);max-width:760px}
+.dados li{display:flex;align-items:center;gap:10px;font:500 15px var(--fonte-texto)}
+.dados svg{width:20px;height:20px;color:var(--vermelho)}
+.miniaturas{position:absolute;right:var(--calha-d);top:60%;transform:translateY(-50%);z-index:6;display:flex;flex-direction:column;gap:18px;list-style:none;margin:0;padding:0}
+.miniaturas a{display:block;width:96px;text-decoration:none;font:600 13px var(--fonte-texto);text-align:center}
+.miniaturas img{width:96px;height:84px;object-fit:cover;border-radius:8px;box-shadow:0 0 0 1px rgba(255,255,255,.35),0 10px 24px rgba(0,0,0,.6);margin-bottom:7px;transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.miniaturas a:hover img{transform:scale(1.06)}
+
+/* ===== Seções ===== */
+section{position:relative}
+.cabeca{display:flex;flex-direction:column;gap:20px;margin-bottom:clamp(36px,5vw,70px)}
+.cabeca p{margin:0;max-width:46ch;color:var(--suave)}
+
+/* Estrutura */
+.estrutura{padding-top:clamp(90px,10vw,150px);overflow:hidden}
+.trilho{display:flex;gap:clamp(16px,2vw,28px);padding-left:var(--calha);padding-right:var(--calha-d);padding-bottom:clamp(90px,10vw,150px);will-change:transform}
+.quadro{flex:0 0 auto;width:clamp(260px,30vw,440px);margin:0}
+.quadro .foto{position:relative;aspect-ratio:3/4;overflow:hidden;border-radius:10px;background:var(--carvao)}
+.quadro .foto img{width:100%;height:116%;object-fit:cover;transform:translateY(-6%)}
+.quadro figcaption{display:flex;justify-content:space-between;align-items:baseline;margin-top:16px;gap:12px}
+.quadro figcaption b{font-family:var(--fonte-titulo);font-weight:400;font-size:28px;letter-spacing:.02em;text-transform:uppercase}
+.quadro figcaption span{font-size:14px;color:var(--suave)}
+.quadro.aviso .foto{display:grid;place-items:center;text-align:center;padding:30px;background:
+  repeating-linear-gradient(135deg,#17171a 0 14px,#121214 14px 28px);box-shadow:inset 0 0 0 1.5px rgba(215,25,42,.6)}
+.quadro.aviso .foto p{margin:0;color:var(--suave);font-size:15px}
+.quadro.aviso .foto strong{display:block;font-family:var(--fonte-titulo);font-weight:400;font-size:34px;color:#fff;text-transform:uppercase;margin-bottom:10px}
+.horario{display:flex;gap:16px;flex-wrap:wrap;margin-top:28px}
+.horario span{display:inline-flex;gap:10px;align-items:baseline;padding:12px 18px;border-radius:6px;background:var(--carvao);box-shadow:inset 0 0 0 1px var(--linha);font-weight:600}
+.horario em{font-style:normal;color:var(--vermelho);font-family:var(--fonte-titulo);font-size:20px;letter-spacing:.02em}
+
+/* Pôr do sol */
+.sol{height:clamp(600px,100svh,1000px);overflow:hidden;background:#000}
+.sol .camada img{object-position:50% 50%}
+.faixa{position:absolute;left:0;right:0;height:14%;background:#000;z-index:3}
+.faixa.cima{top:0}.faixa.baixo{bottom:0}
+.sol .texto{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding-inline:var(--calha) var(--calha-d)}
+.sol h2{font-size:clamp(50px,7.6vw,132px);line-height:.95;text-shadow:0 8px 40px rgba(0,0,0,.45)}
+.sol h2 .ouro{color:var(--ouro)}
+.sol p{margin:22px 0 0;font-size:clamp(16px,1.4vw,20px);font-weight:500;text-shadow:0 2px 12px rgba(0,0,0,.6)}
+.sol .reais{position:absolute;right:var(--calha-d);bottom:calc(14% + 22px);z-index:4;display:flex;gap:10px;align-items:flex-end}
+.sol .reais img{width:70px;height:100px;object-fit:cover;border-radius:6px;box-shadow:0 0 0 1px rgba(255,255,255,.5)}
+.sol .reais small{font-size:12px;color:#ddd;max-width:12ch;line-height:1.3;margin-right:4px}
+.sol .degrade{background:linear-gradient(180deg,rgba(0,0,0,.35),rgba(0,0,0,.05) 40%,rgba(0,0,0,.45))}
+
+/* Evoluções */
+.evolucoes{padding-block:clamp(100px,11vw,170px);background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(215,25,42,.14),rgba(0,0,0,0) 70%)}
+.evolucoes .cabeca{align-items:center;text-align:center}
+.cartoes{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2vw,30px)}
+.cartao{background:var(--carvao);border-radius:12px;box-shadow:inset 0 0 0 1px var(--linha);overflow:hidden}
+.comparar{position:relative;aspect-ratio:4/3.3;user-select:none;touch-action:pan-y;cursor:ew-resize;--pos:50%}
+.comparar .lado{position:absolute;inset:0;display:grid;place-items:center;font:700 12px var(--fonte-texto);letter-spacing:.3em;color:#6a6a72}
+.comparar .antes{background:linear-gradient(160deg,#1c1c20,#121215)}
+.comparar .depois{background:linear-gradient(160deg,#2a1216,#151517);clip-path:inset(0 0 0 var(--pos))}
+.comparar .pessoa{width:42%;opacity:.25}
+.comparar .marca-lado{position:absolute;top:12px;padding:5px 9px;border-radius:4px;background:rgba(0,0,0,.55);color:#fff;font:700 11px var(--fonte-texto);letter-spacing:.14em}
+.comparar .antes .marca-lado{left:12px}.comparar .depois .marca-lado{right:12px}
+.comparar .puxador{position:absolute;top:0;bottom:0;left:var(--pos);width:2px;background:var(--vermelho);transform:translateX(-1px)}
+.comparar .puxador::after{content:"‹ ›";position:absolute;top:50%;left:50%;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;background:var(--vermelho);color:#fff;display:grid;place-items:center;font:700 16px var(--fonte-texto);box-shadow:0 6px 16px rgba(0,0,0,.5)}
+.comparar input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
+.cartao .info{padding:20px 22px 24px}
+.cartao .info b{font-family:var(--fonte-titulo);font-weight:400;font-size:26px;text-transform:uppercase}
+.cartao .info p{margin:8px 0 0;color:var(--suave);font-size:15px}
+.nota{margin:28px auto 0;text-align:center;color:var(--suave);font-size:14px;max-width:60ch}
+
+/* Comunidade */
+.comunidade{padding-block:clamp(90px,10vw,160px);overflow:hidden}
+.mural{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(12px,1.6vw,26px);align-items:start;margin-top:10px}
+.polaroide{margin:0;background:#f4f1ea;padding:10px 10px 0;border-radius:3px;box-shadow:0 26px 50px -20px rgba(0,0,0,.85);transition:transform .6s cubic-bezier(.16,1,.3,1)}
+.polaroide img{width:100%;aspect-ratio:3/4;object-fit:cover}
+.polaroide figcaption{color:#1b1b1b;font:600 15px var(--fonte-texto);text-align:center;padding:12px 4px 14px}
+.polaroide:nth-child(1){transform:rotate(-5deg) translateY(30px)}
+.polaroide:nth-child(2){transform:rotate(3deg)}
+.polaroide:nth-child(3){transform:rotate(-2deg) translateY(50px)}
+.polaroide:nth-child(4){transform:rotate(4deg) translateY(10px)}
+.polaroide:nth-child(5){transform:rotate(-4deg) translateY(40px)}
+.polaroide:hover{transform:rotate(0) translateY(-8px) scale(1.04);z-index:2}
+.comunidade .rodape-sec{margin-top:clamp(70px,8vw,110px);display:flex;justify-content:center}
+
+/* Perdeu o medo + contato */
+.medo{padding-block:clamp(90px,10vw,150px);background:linear-gradient(180deg,var(--preto),#100608 60%,var(--preto))}
+.medo .grade{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,5vw,80px);align-items:center}
+.medo h2 .rubro{font-size:1.1em}
+.medo .sub{font-size:clamp(20px,1.8vw,26px);font-weight:600;margin:26px 0 0}
+.passos{list-style:none;margin:30px 0 0;padding:0;display:grid;gap:18px;counter-reset:p}
+.passos li{display:flex;gap:16px;align-items:flex-start;counter-increment:p;font-size:17px}
+.passos li::before{content:counter(p);flex:0 0 36px;height:36px;border-radius:50%;background:var(--vermelho);display:grid;place-items:center;font:700 16px var(--fonte-texto)}
+.contato{background:#0f0f11;border-radius:14px;padding:clamp(24px,3vw,38px);box-shadow:inset 0 0 0 1.5px rgba(215,25,42,.75),0 40px 80px -40px rgba(215,25,42,.45)}
+.contato h3{margin:0 0 22px;font-family:var(--fonte-titulo);font-weight:400;font-size:clamp(30px,2.8vw,40px);text-transform:uppercase;letter-spacing:.01em}
+.contato h3 span{color:var(--vermelho)}
+.contato dl{margin:0;display:grid;gap:18px}
+.contato .lin{display:flex;gap:14px}
+.contato .lin svg{flex:0 0 22px;width:22px;height:22px;color:var(--vermelho);margin-top:2px}
+.contato dt{font:700 11px var(--fonte-texto);letter-spacing:.24em;text-transform:uppercase;color:var(--suave)}
+.contato dd{margin:3px 0 0;font-weight:600}
+.contato dd a{color:#fff}
+.contato .btn{width:100%;margin-top:26px;padding-block:20px;font-size:17px}
+.contato .planos{margin:16px 0 0;text-align:center;color:var(--suave);font-size:14px}
+
+.rodape{border-top:1px solid var(--linha);padding-block:40px calc(env(safe-area-inset-bottom,0px) + 40px)}
+.rodape .miolo{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;color:var(--suave);font-size:14px}
+.rodape .marca img{width:44px;height:44px}
+
+/* ===== Celular ===== */
+@media (max-width:900px){
+  .menu,.miniaturas{display:none}
+  .medo .grade{grid-template-columns:1fr}
+  .cartoes{grid-template-columns:1fr}
+  .mural{grid-template-columns:repeat(2,1fr)}
+  .mural .polaroide:nth-child(5){grid-column:1/-1;max-width:55%;margin-inline:auto}
+}
+@media (max-width:760px){
+  :root{--calha:max(16px,env(safe-area-inset-left,0px));--calha-d:max(16px,env(safe-area-inset-right,0px))}
+  .marca img{width:46px;height:46px}
+  .marca span{font-size:19px}
+  .topo .barra .btn{padding:12px 16px;font-size:14px}
+  .topo .camada img{object-position:50% 40%}
+  .letreiro{top:10.5%}
+  .letreiro .frase{display:none}
+  .letreiro h1{font-size:19vw}
+  .letreiro .l1{width:92vw;padding-top:.18em}
+  .letreiro.frente{bottom:33%}
+  .letreiro.frente .titulo{font-size:26vw}
+  .topo .acoes{bottom:118px;left:var(--calha);right:var(--calha-d);gap:10px}
+  .topo .acoes .btn{padding-block:14px}
+  .topo .acoes .btn{flex:1 1 100%}
+  .dados ul{gap:18px 22px;padding-top:16px}
+  .dados li{font-size:13px}
+  .dados ul{gap:10px 18px}
+  .dados svg{width:16px;height:16px}
+  .trilho{overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+  .quadro{width:78vw;scroll-snap-align:start}
+  .sol .reais{display:none}
+  .faixa{height:9%}
+}
+@media (prefers-reduced-motion:reduce){.btn,.polaroide,.menu a::after,.miniaturas img{transition:none}}
+</style>
+
+<main>
+  <!-- TOPO -->
+  <section class="topo" id="topo" aria-label="Body Gym Academia">
+    <div class="camada fundo" data-prof="8"><img src="midia/topo-fundo.webp" srcset="midia/topo-fundo-960.webp 960w, midia/topo-fundo.webp 1536w" sizes="100vw" width="1536" height="864" alt="Atleta treinando com cordas na Body Gym, com o pôr do sol nos morros atrás dos janelões"></div>
+    <div class="camada clarao"></div>
+    <div class="letreiro" data-prof="16">
+      <span class="frase">Você além de um simples treino</span>
+      <h1 class="titulo">
+        <span class="lin l1"><span class="cromo">Além</span><span class="cromo">do</span></span>
+        <span class="so-leitor">treino · Body Gym Academia em Mineiros, Goiás</span>
+      </h1>
+    </div>
+    <div class="camada atleta" data-prof="26"><img src="midia/topo-atleta.webp" width="1536" height="864" alt=""></div>
+    <div class="letreiro frente" data-prof="34" aria-hidden="true"><span class="titulo"><span class="lin"><span class="rubro">Treino</span></span></span></div>
+    <div class="camada sombra-topo"></div>
+    <div class="camada escuro" id="cortina"></div>
+
+    <header class="barra">
+      <a class="marca" href="#topo"><img src="midia/logo.webp" width="476" height="476" alt="Logo da Body Gym: espartano de braços cruzados"><span>BODY GYM</span></a>
+      <nav aria-label="Seções"><ul class="menu">
+        <li><a href="#estrutura">Estrutura</a></li><li><a href="#por-do-sol">Pôr do sol</a></li><li><a href="#evolucoes">Evoluções</a></li><li><a href="#comunidade">Comunidade</a></li><li><a href="#contato">Contato</a></li>
+      </ul></nav>
+      <a class="btn" href="https://wa.me/5564992319285?text=Ol%C3%A1!%20Vi%20o%20site%20e%20quero%20conhecer%20a%20Body%20Gym." target="_blank" rel="noopener">WhatsApp</a>
+    </header>
+
+    <div class="acoes">
+      <a class="btn" href="https://wa.me/5564992319285?text=Ol%C3%A1!%20Quero%20agendar%20uma%20aula%20experimental%20na%20Body%20Gym." target="_blank" rel="noopener">Agendar aula experimental
+        <svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M3 9h12M10 4l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="btn btn-contorno" href="#contato">Ver planos
+        <svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M3 9h12M10 4l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+
+    <ul class="miniaturas" aria-label="Atalhos">
+      <li><a href="#estrutura"><img src="midia/real-bandeiras.webp" width="630" height="560" alt="">Estrutura</a></li>
+      <li><a href="#comunidade"><img src="midia/insta-turma.webp" width="238" height="379" alt="">Comunidade</a></li>
+      <li><a href="#por-do-sol"><img src="midia/real-esteiras-sol.webp" width="720" height="1160" alt="">Pôr do sol</a></li>
+    </ul>
+
+    <div class="dados"><ul>
+      <li><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Desde 2019</li>
+      <li><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="9" cy="8" r="3.5" stroke="currentColor" stroke-width="1.8"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5M16 4.8a3.3 3.3 0 0 1 0 6.4M18 14.8c1.9.7 3 2.4 3.5 5.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>5.100+ seguidores</li>
+      <li><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21Z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9.5" r="2.5" stroke="currentColor" stroke-width="1.8"/></svg>Mineiros – GO</li>
+    </ul></div>
+  </section>
+
+  <!-- ESTRUTURA -->
+  <section class="estrutura" id="estrutura" aria-labelledby="t-estrutura">
+    <div class="miolo cabeca">
+      <span class="etiqueta">O espaço</span>
+      <h2 class="titulo t-xl" id="t-estrutura"><span class="lin"><span class="cromo">A estrutura</span></span></h2>
+      <p>Musculação, peso livre e esteiras de frente para os morros. Seg a sex das 5h às 23h, para caber na sua rotina.</p>
+      <div class="horario"><span><em>Seg–Sex</em> 5h às 23h</span><span><em>Sáb</em> 8h às 16h</span><span><em>Dom</em> 8h às 12h</span></div>
+    </div>
+    <div class="trilho" id="trilho">
+      <figure class="quadro aviso"><div class="foto"><div><strong>Tour de câmera</strong><p>Em gravação: um passeio pela academia inteira, que você controla rolando a página.</p></div></div><figcaption><b>Em breve</b><span>vídeo real</span></figcaption></figure>
+      <figure class="quadro"><div class="foto"><img src="midia/real-bandeiras.webp" width="630" height="560" alt="Parede preta com as bandeiras de Goiás, do Brasil e da Body Gym" loading="lazy"></div><figcaption><b>Nossa parede</b><span>Goiás · Brasil · Body Gym</span></figcaption></figure>
+      <figure class="quadro"><div class="foto"><img src="midia/real-salao-sol.webp" width="720" height="1200" alt="Salão de musculação com luz do fim de tarde e catracas de entrada" loading="lazy"></div><figcaption><b>Musculação</b><span>aparelhos e peso livre</span></figcaption></figure>
+      <figure class="quadro"><div class="foto"><img src="midia/real-janelas.webp" width="720" height="680" alt="Janelões com vista para a mata e os morros" loading="lazy"></div><figcaption><b>A vista</b><span>janelões para os morros</span></figcaption></figure>
+      <figure class="quadro"><div class="foto"><img src="midia/real-esteiras-sol.webp" width="720" height="1160" alt="Alunos nas esteiras de frente para o pôr do sol" loading="lazy"></div><figcaption><b>Cardio</b><span>de frente para o sol</span></figcaption></figure>
+      <figure class="quadro"><div class="foto"><img src="midia/insta-fachada.webp" width="238" height="319" alt="Fachada de vidro da Body Gym" loading="lazy"></div><figcaption><b>A fachada</b><span>Parque Flamboyant</span></figcaption></figure>
+    </div>
+  </section>
+
+  <!-- PÔR DO SOL -->
+  <section class="sol" id="por-do-sol" aria-labelledby="t-sol">
+    <div class="camada"><img src="midia/por-do-sol.webp" width="1536" height="864" alt="Pessoas nas esteiras de frente para os janelões ao pôr do sol" loading="lazy"></div>
+    <div class="camada degrade"></div>
+    <div class="faixa cima"></div><div class="faixa baixo"></div>
+    <div class="texto">
+      <h2 class="titulo" id="t-sol"><span class="lin"><span>O <span class="ouro">pôr do sol</span></span></span><span class="lin"><span>mais bonito</span></span><span class="lin"><span>de Mineiros</span></span></h2>
+      <p>Treine vendo isso todo fim de tarde.</p>
+    </div>
+    <div class="reais"><small>De verdade, no nosso Instagram</small><img src="midia/real-esteiras-sol.webp" width="720" height="1160" alt="Pôr do sol real visto das esteiras" loading="lazy"><img src="midia/insta-sol-reel.webp" width="238" height="319" alt="Pôr do sol real visto da academia" loading="lazy"></div>
+  </section>
+
+  <!-- EVOLUÇÕES -->
+  <section class="evolucoes" id="evolucoes" aria-labelledby="t-evo">
+    <div class="miolo">
+      <div class="cabeca">
+        <span class="etiqueta">Antes e depois</span>
+        <h2 class="titulo t-xl" id="t-evo"><span class="lin"><span><span class="cromo">Evoluções</span> <span class="rubro">reais</span></span></span></h2>
+        <p>Gente de todas as idades e de todos os tamanhos. Arraste para ver a diferença.</p>
+      </div>
+      <div class="cartoes">
+        <article class="cartao"><div class="comparar"><div class="lado antes"><span class="marca-lado">ANTES</span>Foto do aluno</div><div class="lado depois"><span class="marca-lado">DEPOIS</span>Foto do aluno</div><div class="puxador"></div><input type="range" min="0" max="100" value="50" aria-label="Comparar antes e depois, aluno 1"></div><div class="info"><b>Nome do aluno</b><p>Depoimento real, com autorização, vindo do destaque “Antes e Depois”.</p></div></article>
+        <article class="cartao"><div class="comparar"><div class="lado antes"><span class="marca-lado">ANTES</span>Foto do aluno</div><div class="lado depois"><span class="marca-lado">DEPOIS</span>Foto do aluno</div><div class="puxador"></div><input type="range" min="0" max="100" value="50" aria-label="Comparar antes e depois, aluno 2"></div><div class="info"><b>Nome do aluno</b><p>Depoimento real, com autorização, vindo do destaque “Evoluções”.</p></div></article>
+        <article class="cartao"><div class="comparar"><div class="lado antes"><span class="marca-lado">ANTES</span>Foto do aluno</div><div class="lado depois"><span class="marca-lado">DEPOIS</span>Foto do aluno</div><div class="puxador"></div><input type="range" min="0" max="100" value="50" aria-label="Comparar antes e depois, aluno 3"></div><div class="info"><b>Nome do aluno</b><p>Depoimento real, com autorização.</p></div></article>
+      </div>
+      <p class="nota">Espaço reservado: entram aqui só alunos reais da Body Gym, com autorização de uso da imagem.</p>
+    </div>
+  </section>
+
+  <!-- COMUNIDADE -->
+  <section class="comunidade" id="comunidade" aria-labelledby="t-com">
+    <div class="miolo">
+      <div class="cabeca">
+        <span class="etiqueta">Comunidade</span>
+        <h2 class="titulo t-l" id="t-com"><span class="lin"><span>Mais que academia,</span></span><span class="lin"><span>uma <span class="rubro">turma</span></span></span></h2>
+        <p>Festa anos 80, Halloween, encontro debaixo da árvore. Aqui ninguém treina sozinho.</p>
+      </div>
+      <div class="mural">
+        <figure class="polaroide"><img src="midia/insta-turma.webp" width="238" height="379" alt="Turma da Body Gym reunida ao ar livre debaixo de uma árvore" loading="lazy"><figcaption>Encontro da turma</figcaption></figure>
+        <figure class="polaroide"><img src="midia/insta-anos80.webp" width="238" height="379" alt="Alunos dançando na festa anos 80 da academia" loading="lazy"><figcaption>Festa anos 80</figcaption></figure>
+        <figure class="polaroide"><img src="midia/insta-halloween.webp" width="238" height="319" alt="Aluna fantasiada de bruxa no Halloween da academia" loading="lazy"><figcaption>Halloween</figcaption></figure>
+        <figure class="polaroide"><img src="midia/insta-dicas.webp" width="238" height="379" alt="Salão de musculação da Body Gym" loading="lazy"><figcaption>Dicas para perder o medo</figcaption></figure>
+        <figure class="polaroide"><img src="midia/insta-sol-reel.webp" width="238" height="319" alt="Pôr do sol visto das esteiras" loading="lazy"><figcaption>Fim de tarde</figcaption></figure>
+      </div>
+      <div class="rodape-sec"><a class="btn btn-contorno" href="https://www.instagram.com/bodygymacademia" target="_blank" rel="noopener">Ver no Instagram
+        <svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M3 9h12M10 4l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+    </div>
+  </section>
+
+  <!-- PERDEU O MEDO + CONTATO -->
+  <section class="medo" id="contato" aria-labelledby="t-medo">
+    <div class="miolo grade">
+      <div>
+        <h2 class="titulo t-xl" id="t-medo"><span class="lin"><span class="cromo">Perdeu</span></span><span class="lin"><span><span class="cromo">o medo</span><span class="rubro">?</span></span></span></h2>
+        <p class="sub">Nunca treinou? Aqui ninguém começa sozinho.</p>
+        <ol class="passos">
+          <li>Chame no WhatsApp e conte seu objetivo.</li>
+          <li>Comece no seu ritmo, com treino para o seu corpo e a sua idade.</li>
+          <li>Entre para a turma: eventos, fim de tarde e gente que puxa você pra cima.</li>
+        </ol>
+      </div>
+      <aside class="contato" aria-label="Contato">
+        <h3>Venha <span>conhecer</span></h3>
+        <dl>
+          <div class="lin"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><div><dt>Horário</dt><dd>Seg a sex 5h às 23h · Sáb 8h às 16h · Dom 8h às 12h</dd></div></div>
+          <div class="lin"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21Z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9.5" r="2.5" stroke="currentColor" stroke-width="1.8"/></svg><div><dt>Endereço</dt><dd>Av. Afonso José Carrijo, Qd. 13, Lt. 8 · Res. Parque Flamboyant · Mineiros – GO<br><a href="https://www.google.com/maps/search/?api=1&amp;query=Body%20Gym%20Academia%20Av.%20Afonso%20Jos%C3%A9%20Carrijo%20Mineiros%20GO" target="_blank" rel="noopener">Abrir no mapa</a></dd></div></div>
+          <div class="lin"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><div><dt>WhatsApp</dt><dd>(64) 9 9231-9285</dd></div></div>
+        </dl>
+        <a class="btn" href="https://wa.me/5564992319285?text=Ol%C3%A1!%20Vi%20o%20site%20e%20quero%20conhecer%20a%20Body%20Gym." target="_blank" rel="noopener">Chamar no WhatsApp
+          <svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M3 9h12M10 4l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <p class="planos">Planos e valores: consulte pelo WhatsApp.</p>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<footer class="rodape"><div class="miolo">
+  <a class="marca" href="#topo"><img src="midia/logo.webp" width="476" height="476" alt=""><span>BODY GYM</span></a>
+  <span>Body Gym Academia · desde 2019 · Mineiros – GO</span>
+  <a href="https://www.instagram.com/bodygymacademia" target="_blank" rel="noopener">@bodygymacademia</a>
+</div></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(function(){
+  var q=function(s,c){return (c||document).querySelector(s)}, qa=function(s,c){return Array.prototype.slice.call((c||document).querySelectorAll(s))};
+
+  /* Antes e depois: funciona sempre */
+  qa('.comparar').forEach(function(c){
+    var i=q('input',c); function f(){c.style.setProperty('--pos',i.value+'%')} i.addEventListener('input',f); f();
+  });
+
+  var calmo = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var cortina = q('#cortina');
+  if (!window.gsap || calmo){ cortina.style.display='none'; return; }
+  gsap.registerPlugin(ScrollTrigger);
+
+  var lenis = window.Lenis ? new Lenis({duration:1.15}) : null;
+  if (lenis){ lenis.on('scroll',ScrollTrigger.update); gsap.ticker.add(function(t){lenis.raf(t*1000)}); gsap.ticker.lagSmoothing(0);
+    qa('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){var alvo=q(a.getAttribute('href')); if(alvo){e.preventDefault(); lenis.scrollTo(alvo,{duration:1.5})}})}); }
+
+  var desk = window.matchMedia('(min-width: 761px)').matches;
+
+  /* Topo: entrada de cinema */
+  var tl = gsap.timeline({defaults:{ease:'expo.out'}});
+  tl.to(cortina,{opacity:0,duration:1.6,ease:'power2.inOut'},0)
+    .from('.fundo img',{scale:1.22,duration:3,ease:'power3.out'},0)
+    .from('.clarao',{opacity:0,duration:2.2,ease:'power2.out'},.8)
+    .from('.letreiro .frase',{opacity:0,y:14,duration:1.6},.7)
+    .from('.letreiro .lin > span',{yPercent:110,duration:1.5,stagger:.16},.9)
+    .from('.atleta img',{scale:1.08,y:40,duration:2.2,ease:'power4.out'},.5)
+    .from('.barra > *',{y:-20,opacity:0,duration:1,stagger:.08},1.3)
+    .from('.acoes .btn',{y:24,opacity:0,duration:1,stagger:.1},1.5)
+    .from('.miniaturas li',{x:40,opacity:0,duration:1,stagger:.1},1.6)
+    .from('.dados li',{y:16,opacity:0,duration:.9,stagger:.08},1.7);
+  gsap.to('.clarao',{opacity:.55,duration:2.6,ease:'sine.inOut',yoyo:true,repeat:-1,delay:3});
+
+  /* Topo: rolagem separa as camadas */
+  gsap.timeline({scrollTrigger:{trigger:'.topo',start:'top top',end:'bottom top',scrub:true}})
+    .to('.fundo img',{scale:1.12,yPercent:6,ease:'none'},0)
+    .to('.letreiro:not(.frente)',{yPercent:-30,opacity:.2,ease:'none'},0)
+    .to('.letreiro.frente',{yPercent:40,opacity:0,ease:'none'},0)
+    .to('.atleta img',{yPercent:-4,scale:1.06,ease:'none'},0);
+
+  if (desk && window.matchMedia('(pointer:fine)').matches){
+    var alvos=qa('[data-prof]').map(function(el){var p=+el.dataset.prof;return{p:p,x:gsap.quickTo(el,'x',{duration:1.3,ease:'power3.out'}),y:gsap.quickTo(el,'y',{duration:1.3,ease:'power3.out'})}});
+    addEventListener('pointermove',function(e){var nx=e.clientX/innerWidth-.5,ny=e.clientY/innerHeight-.5; alvos.forEach(function(a){a.x(-nx*a.p);a.y(-ny*a.p*.5)})});
+  }
+
+  /* Títulos sobem da máscara */
+  qa('section:not(.topo):not(.sol) .titulo .lin > span').forEach(function(el){
+    gsap.from(el,{yPercent:110,duration:1.3,ease:'expo.out',scrollTrigger:{trigger:el,start:'top 90%'}});
+  });
+
+  /* Estrutura: trilho anda na horizontal com a rolagem (computador) */
+  var trilho=q('#trilho');
+  if (desk){
+    var dist=function(){return Math.max(0,trilho.scrollWidth-innerWidth)};
+    gsap.to(trilho,{x:function(){return -dist()},ease:'none',scrollTrigger:{trigger:'.estrutura',start:'top top',end:function(){return '+='+dist()},pin:true,scrub:1,invalidateOnRefresh:true}});
+    qa('.quadro .foto img').forEach(function(img){gsap.fromTo(img,{scale:1.18},{scale:1,ease:'none',scrollTrigger:{trigger:'.estrutura',start:'top top',end:function(){return '+='+dist()},scrub:true}})});
+  }
+  gsap.from('.quadro',{y:60,opacity:0,duration:1.2,ease:'expo.out',stagger:.08,scrollTrigger:{trigger:trilho,start:'top 85%'}});
+  gsap.from('.horario span',{y:16,opacity:0,duration:.8,stagger:.08,scrollTrigger:{trigger:'.horario',start:'top 90%'}});
+
+  /* Pôr do sol: a câmera recua e as faixas de cinema se abrem */
+  gsap.timeline({scrollTrigger:{trigger:'.sol',start:'top top',end:desk?'+=120%':'+=80%',pin:true,scrub:1}})
+    .fromTo('.sol .camada img',{scale:1.35},{scale:1,ease:'none'},0)
+    .fromTo('.faixa.cima',{yPercent:0},{yPercent:-100,ease:'none'},0)
+    .fromTo('.faixa.baixo',{yPercent:0},{yPercent:100,ease:'none'},0)
+    .from('.sol h2 .lin > span',{yPercent:110,stagger:.12,duration:.5,ease:'power3.out'},.05)
+    .from('.sol p',{opacity:0,y:20,duration:.4},.45)
+    .from('.sol .reais',{opacity:0,y:20,duration:.4},.55);
+
+  /* Evoluções */
+  gsap.from('.cartao',{y:70,opacity:0,duration:1.2,ease:'expo.out',stagger:.12,scrollTrigger:{trigger:'.cartoes',start:'top 85%'}});
+  qa('.comparar').forEach(function(c,i){
+    var inp=q('input',c), o={v:50};
+    ScrollTrigger.create({trigger:c,start:'top 75%',once:true,onEnter:function(){
+      gsap.fromTo(o,{v:15},{v:50,duration:1.6,ease:'expo.out',delay:.3+i*.12,onUpdate:function(){inp.value=o.v;c.style.setProperty('--pos',o.v+'%')}});
+    }});
+  });
+
+  /* Comunidade: fotos caem na mesa */
+  gsap.from('.polaroide',{y:desk?-160:-70,rotation:function(i){return [-18,14,-10,20,-14][i]},opacity:0,duration:1.4,ease:'back.out(1.3)',stagger:.12,scrollTrigger:{trigger:'.mural',start:'top 80%'}});
+
+  /* Contato */
+  gsap.from('.passos li',{x:-30,opacity:0,duration:1,ease:'expo.out',stagger:.12,scrollTrigger:{trigger:'.passos',start:'top 88%'}});
+  gsap.from('.contato',{y:60,opacity:0,rotationX:12,transformPerspective:900,duration:1.3,ease:'expo.out',scrollTrigger:{trigger:'.contato',start:'top 85%'}});
+})();
+</script>
