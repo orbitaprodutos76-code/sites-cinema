@@ -84,3 +84,9 @@
 - Medição: todo link de WhatsApp leva a origem no fim da mensagem (ex.: "[site · topo]", "[site · primeiro-treino]") — o dono conta contatos por seção no próprio WhatsApp. Eventos prontos para Plausible/GA4 (`mede()`), mas **nenhum medidor instalado ainda** (decidir: Plausible é sem cookies, melhor para LGPD).
 - Assistente "Seu primeiro treino": 4 perguntas (idade, objetivo, experiência, horário) → `/api/primeiro-treino` (função Vercel em `api/primeiro-treino.js`, SDK `@anthropic-ai/sdk`, modelo claude-opus-5-5, effort low, fallback de recusa ligado, limite 5/min por IP, nunca prescreve treino/dieta) → resposta + botão WhatsApp com as respostas. Sem servidor (prévia do claude.ai) usa um texto pronto local. Para ligar: na Vercel, variável `ANTHROPIC_API_KEY`. Custo estimado: centavos por uso; dá para trocar para claude-haiku-5-5 se o senhor quiser baratear.
 - PENDENTE: veredito; decidir medidor; chave da API no deploy; vídeo para tour 3D real; aula experimental; evoluções.
+
+## Abertura e primeira dobra: escolha do senhor (JARVIS 12, 26/11/2026)
+- Problema (palavras do senhor): "falta de abertura e falta de qualidade na primeira página".
+- **Abertura: 1 Anilha**, mas a partir de um **vídeo que a própria academia já usou como abertura** (o senhor vai caçar). Plano: refinar ao máximo com **efeitos de câmera no estilo da Lord Lumberjack** (câmera que persegue, decola, mergulha e para na logo; site entra com força depois).
+- **Topo: refinar a qualidade, "algo de extrema importância"** + **5 Giz que reage** (partículas em WebGL com o mouse/dedo). Sem timelapse do pôr do sol (4) e sem espartano 3D (2) por ora. Letras-janela (3) não foi escolhida.
+- PENDENTE: o vídeo de abertura da academia → depois, referência visual (quadros) para o senhor aprovar **antes de qualquer código**.
