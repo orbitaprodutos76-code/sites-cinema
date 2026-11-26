@@ -21,7 +21,7 @@
 <meta property="og:locale" content="pt_BR">
 
 <style>
-/* Layout: topo em camadas (fundo / título / atleta) → estrutura (trilho horizontal) → pôr do sol (cena de cinema fixa) → evoluções → comunidade (polaroides) → perdeu o medo + contato. Visual único escuro. */
+/* Layout: topo em camadas (fundo / título / atleta) → estrutura (trilho horizontal) → pôr do sol (cena de cinema fixa) → evoluções → comunidade (eventos estilo cinema, fixa) → perdeu o medo + contato. Visual único escuro. */
 :root{
   --preto:#0a0a0b;
   --carvao:#151517;
@@ -182,19 +182,32 @@ section{position:relative}
 .cartao .info p{margin:8px 0 0;color:var(--suave);font-size:15px}
 .nota{margin:28px auto 0;text-align:center;color:var(--suave);font-size:14px;max-width:60ch}
 
-/* Comunidade */
-.comunidade{padding-block:clamp(90px,10vw,160px);overflow:hidden}
-.mural{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(12px,1.6vw,26px);align-items:start;margin-top:10px}
-.polaroide{margin:0;background:#f4f1ea;padding:10px 10px 0;border-radius:3px;box-shadow:0 26px 50px -20px rgba(0,0,0,.85);transition:transform .6s cubic-bezier(.16,1,.3,1)}
-.polaroide img{width:100%;aspect-ratio:3/4;object-fit:cover}
-.polaroide figcaption{color:#1b1b1b;font:600 15px var(--fonte-texto);text-align:center;padding:12px 4px 14px}
-.polaroide:nth-child(1){transform:rotate(-5deg) translateY(30px)}
-.polaroide:nth-child(2){transform:rotate(3deg)}
-.polaroide:nth-child(3){transform:rotate(-2deg) translateY(50px)}
-.polaroide:nth-child(4){transform:rotate(4deg) translateY(10px)}
-.polaroide:nth-child(5){transform:rotate(-4deg) translateY(40px)}
-.polaroide:hover{transform:rotate(0) translateY(-8px) scale(1.04);z-index:2}
-.comunidade .rodape-sec{margin-top:clamp(70px,8vw,110px);display:flex;justify-content:center}
+/* Comunidade: eventos estilo cinema */
+.eventos{position:relative;height:100svh;min-height:600px;overflow:hidden;background:#000;isolation:isolate}
+.ev-fundo,.ev-fundo img{position:absolute;inset:0;width:100%;height:100%}
+.ev-fundo img{object-fit:cover;filter:blur(28px) saturate(1.25) brightness(.55);transform:scale(1.25);opacity:0}
+.ev-fundo img.on{opacity:1}
+.eventos .veu{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.85) 0%,rgba(0,0,0,.35) 55%,rgba(0,0,0,.2) 100%),linear-gradient(0deg,rgba(0,0,0,.8),rgba(0,0,0,0) 40%)}
+.ev-miolo{position:relative;z-index:2;height:100%;display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center;padding:110px var(--calha-d) 170px var(--calha)}
+.ev-texto .etiqueta{margin-bottom:18px}
+.ev-nome{display:block;font-family:var(--fonte-titulo);font-size:clamp(70px,11vw,190px);line-height:.88;text-transform:uppercase;position:relative}
+.ev-nome .eco{position:absolute;left:.06em;top:.06em;color:transparent;-webkit-text-stroke:2px var(--vermelho);z-index:-1}
+.ev-tipo{display:block;margin-top:18px;font:700 14px var(--fonte-texto);letter-spacing:.28em;text-transform:uppercase;color:var(--vermelho)}
+.ev-desc{margin:12px 0 26px;max-width:40ch;font-size:clamp(17px,1.4vw,20px);color:#e6e6e8}
+.ev-cartao{justify-self:center;position:relative;width:min(340px,30vw);aspect-ratio:9/14}
+.ev-cartao img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:14px;box-shadow:0 0 0 1px rgba(255,255,255,.2),0 40px 80px -20px rgba(0,0,0,.9);opacity:0}
+.ev-cartao img.on{opacity:1}
+.ev-cartao::after{content:"";position:absolute;inset:-10px;border-radius:20px;box-shadow:inset 0 0 0 1.5px rgba(215,25,42,.85);pointer-events:none}
+.ev-tira{position:absolute;z-index:3;left:var(--calha);right:var(--calha-d);bottom:clamp(24px,4vh,44px);display:flex;gap:14px;list-style:none;margin:0;padding:0}
+.ev-tira li{flex:1;max-width:190px}
+.ev-tira button{all:unset;cursor:pointer;display:block;width:100%}
+.ev-tira img{width:100%;height:76px;object-fit:cover;border-radius:8px;opacity:.5;filter:grayscale(.6);transition:opacity .4s,filter .4s}
+.ev-tira span{display:block;margin-top:8px;font:600 13px var(--fonte-texto);color:#cfcfd4}
+.ev-tira .barra{display:block;height:2px;margin-top:8px;background:rgba(255,255,255,.18);position:relative;overflow:hidden}
+.ev-tira .barra i{position:absolute;inset:0;background:var(--vermelho);transform-origin:left;transform:scaleX(0)}
+.ev-tira li.on img{opacity:1;filter:none;box-shadow:0 0 0 2px var(--vermelho)}
+.ev-tira li.on span{color:#fff}
+.ev-tira button:focus-visible img{outline:3px solid var(--ouro);outline-offset:2px}
 
 /* Perdeu o medo + contato */
 .medo{padding-block:clamp(90px,10vw,150px);background:linear-gradient(180deg,var(--preto),#100608 60%,var(--preto))}
@@ -235,8 +248,6 @@ section{position:relative}
   .menu,.miniaturas{display:none}
   .medo .grade{grid-template-columns:1fr}
   .cartoes{grid-template-columns:1fr}
-  .mural{grid-template-columns:repeat(2,1fr)}
-  .mural .polaroide:nth-child(5){grid-column:1/-1;max-width:55%;margin-inline:auto}
 }
 @media (max-width:760px){
   :root{--calha:max(16px,env(safe-area-inset-left,0px));--calha-d:max(16px,env(safe-area-inset-right,0px))}
@@ -263,10 +274,13 @@ section{position:relative}
   .tour-cab .horario{display:none}
   .tour-cab .titulo{font-size:15vw}
   .faixa{height:9%}
-  .mural{display:block}
-  .mural .polaroide{position:sticky;top:calc(84px + var(--i,0) * 16px);max-width:78%;margin:0 auto 28vh}
-  .mural .polaroide:nth-child(5){max-width:78%}
-  .mural .polaroide:last-child{margin-bottom:6vh}
+  .ev-miolo{grid-template-columns:1fr;align-content:end;gap:18px;padding-top:90px;padding-bottom:150px}
+  .ev-cartao{position:absolute;top:84px;right:var(--calha-d);width:44vw;justify-self:auto}
+  .ev-nome{font-size:17vw}
+  .ev-desc{font-size:16px;margin-bottom:18px}
+  .ev-tira{gap:8px}
+  .ev-tira img{height:52px}
+  .ev-tira span{font-size:11px}
 }
 @media (prefers-reduced-motion:reduce){.btn,.polaroide,.menu a::after,.miniaturas img{transition:none}}
 </style>
@@ -367,24 +381,23 @@ section{position:relative}
     </div>
   </section>
 
-  <!-- COMUNIDADE -->
-  <section class="comunidade" id="comunidade" aria-labelledby="t-com">
-    <div class="miolo">
-      <div class="cabeca">
-        <span class="etiqueta">Comunidade</span>
-        <h2 class="titulo t-l" id="t-com"><span class="lin"><span>Mais que academia,</span></span><span class="lin"><span>uma <span class="rubro">turma</span></span></span></h2>
-        <p>Festa anos 80, Halloween, encontro debaixo da árvore. Aqui ninguém treina sozinho.</p>
+  <!-- COMUNIDADE: EVENTOS ESTILO CINEMA -->
+  <section class="eventos" id="comunidade" aria-labelledby="t-com" data-eventos='[{"nome": "Anos 80", "tipo": "Festa temática", "desc": "Música, figurino e muito riso: a academia virou pista de dança."}, {"nome": "Halloween", "tipo": "Festa temática", "desc": "Fantasia valendo. Até a bruxa veio treinar de vassoura."}, {"nome": "A turma", "tipo": "Encontro ao ar livre", "desc": "Todo mundo junto debaixo da árvore, longe dos aparelhos."}, {"nome": "Fim de tarde", "tipo": "Todo dia", "desc": "O pôr do sol que virou ritual na esteira."}]'>
+    <div class="ev-fundo" aria-hidden="true"><img src="midia/insta-anos80.webp" width="238" height="379" alt="" loading="lazy" class="on"><img src="midia/insta-halloween.webp" width="238" height="319" alt="" loading="lazy"><img src="midia/insta-turma.webp" width="238" height="379" alt="" loading="lazy"><img src="midia/insta-sol-reel.webp" width="238" height="319" alt="" loading="lazy"></div>
+    <div class="veu"></div>
+    <div class="ev-miolo">
+      <div class="ev-texto">
+        <span class="etiqueta">Eventos da turma</span>
+        <h2 class="so-leitor" id="t-com">Comunidade: mais que academia, uma turma</h2>
+        <span class="ev-nome" aria-live="polite"><span class="atual">Anos 80</span><span class="eco" aria-hidden="true">Anos 80</span></span>
+        <span class="ev-tipo">Festa temática</span>
+        <p class="ev-desc">Música, figurino e muito riso: a academia virou pista de dança.</p>
+        <a class="btn" href="https://wa.me/5564992319285?text=Ol%C3%A1!%20Quero%20participar%20do%20pr%C3%B3ximo%20evento%20da%20Body%20Gym." target="_blank" rel="noopener">Quero participar do próximo
+          <svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M3 9h12M10 4l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
-      <div class="mural">
-        <figure class="polaroide"><img src="midia/insta-turma.webp" width="238" height="379" alt="Turma da Body Gym reunida ao ar livre debaixo de uma árvore" loading="lazy"><figcaption>Encontro da turma</figcaption></figure>
-        <figure class="polaroide"><img src="midia/insta-anos80.webp" width="238" height="379" alt="Alunos dançando na festa anos 80 da academia" loading="lazy"><figcaption>Festa anos 80</figcaption></figure>
-        <figure class="polaroide"><img src="midia/insta-halloween.webp" width="238" height="319" alt="Aluna fantasiada de bruxa no Halloween da academia" loading="lazy"><figcaption>Halloween</figcaption></figure>
-        <figure class="polaroide"><img src="midia/insta-dicas.webp" width="238" height="379" alt="Salão de musculação da Body Gym" loading="lazy"><figcaption>Dicas para perder o medo</figcaption></figure>
-        <figure class="polaroide"><img src="midia/insta-sol-reel.webp" width="238" height="319" alt="Pôr do sol visto das esteiras" loading="lazy"><figcaption>Fim de tarde</figcaption></figure>
-      </div>
-      <div class="rodape-sec"><a class="btn btn-contorno" href="https://www.instagram.com/bodygymacademia" target="_blank" rel="noopener">Ver no Instagram
-        <svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M3 9h12M10 4l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+      <div class="ev-cartao"><img src="midia/insta-anos80.webp" width="238" height="379" alt="Alunos dançando na festa anos 80 da academia" loading="lazy" class="on"><img src="midia/insta-halloween.webp" width="238" height="319" alt="Aluna fantasiada de bruxa no Halloween da academia" loading="lazy"><img src="midia/insta-turma.webp" width="238" height="379" alt="Turma da Body Gym reunida ao ar livre debaixo de uma árvore" loading="lazy"><img src="midia/insta-sol-reel.webp" width="238" height="319" alt="Pôr do sol visto das esteiras da academia" loading="lazy"></div>
     </div>
+    <ul class="ev-tira" aria-label="Eventos"><li class="on"><button type="button" data-ev="0" aria-label="Ver Anos 80"><img src="midia/insta-anos80.webp" width="238" height="379" alt="" loading="lazy"><span>Anos 80</span><span class="barra"><i></i></span></button></li><li><button type="button" data-ev="1" aria-label="Ver Halloween"><img src="midia/insta-halloween.webp" width="238" height="319" alt="" loading="lazy"><span>Halloween</span><span class="barra"><i></i></span></button></li><li><button type="button" data-ev="2" aria-label="Ver A turma"><img src="midia/insta-turma.webp" width="238" height="379" alt="" loading="lazy"><span>A turma</span><span class="barra"><i></i></span></button></li><li><button type="button" data-ev="3" aria-label="Ver Fim de tarde"><img src="midia/insta-sol-reel.webp" width="238" height="319" alt="" loading="lazy"><span>Fim de tarde</span><span class="barra"><i></i></span></button></li></ul>
   </section>
 
   <!-- PERDEU O MEDO + CONTATO -->
@@ -451,10 +464,20 @@ section{position:relative}
 
   var calmo = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var cortina = q('#cortina');
-  if (!window.gsap || calmo){ cortina.style.display='none'; q('.tour').classList.add('calmo'); var r=q('.tour-rotulo'); q('.num',r).textContent='5 ÁREAS'; q('.nome span',r).textContent='Do rack ao pôr do sol'; q('.desc',r).textContent='Peso livre, musculação, halteres e esteiras de frente para os morros.'; return; }
+  function eventosSimples(){
+    var sec=q('.eventos'); if(!sec) return; var D=JSON.parse(sec.dataset.eventos);
+    qa('.ev-tira button',sec).forEach(function(b){ b.addEventListener('click',function(){
+      var i=+b.dataset.ev;
+      qa('.ev-fundo img',sec).forEach(function(x,k){x.classList.toggle('on',k===i)});
+      qa('.ev-cartao img',sec).forEach(function(x,k){x.classList.toggle('on',k===i)});
+      qa('.ev-tira li',sec).forEach(function(x,k){x.classList.toggle('on',k===i)});
+      q('.ev-nome .atual',sec).textContent=D[i].nome; q('.ev-nome .eco',sec).textContent=D[i].nome; q('.ev-tipo',sec).textContent=D[i].tipo; q('.ev-desc',sec).textContent=D[i].desc;
+    })});
+  }
+  if (!window.gsap || calmo){ eventosSimples(); cortina.style.display='none'; q('.tour').classList.add('calmo'); var r=q('.tour-rotulo'); q('.num',r).textContent='5 ÁREAS'; q('.nome span',r).textContent='Do rack ao pôr do sol'; q('.desc',r).textContent='Peso livre, musculação, halteres e esteiras de frente para os morros.'; return; }
   gsap.registerPlugin(ScrollTrigger);
 
-  var lenis = window.Lenis ? new Lenis({duration:1.15}) : null;
+  var lenis = window.Lenis ? new Lenis({duration:1.15}) : null; window.lenis=lenis;
   if (lenis){ lenis.on('scroll',ScrollTrigger.update); gsap.ticker.add(function(t){lenis.raf(t*1000)}); gsap.ticker.lagSmoothing(0);
     qa('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){var alvo=q(a.getAttribute('href')); if(alvo){e.preventDefault(); lenis.scrollTo(alvo,{duration:1.5})}})}); }
 
@@ -525,13 +548,6 @@ section{position:relative}
     gsap.to(o,{v:ate,duration:2.4,ease:'power3.out',delay:1.9,onUpdate:function(){ el.textContent=Math.round(o.v).toLocaleString('pt-BR'); }});
   });
 
-  /* Comunidade no celular: cartas empilhando */
-  if(!desk){
-    qa('.mural .polaroide').forEach(function(f,i,all){
-      f.style.setProperty('--i',i);
-      if(i<all.length-1) gsap.to(f,{scale:.9,opacity:.55,ease:'none',scrollTrigger:{trigger:all[i+1],start:'top 85%',end:'top 30%',scrub:true}});
-    });
-  }
 
   /* Botões magnéticos (mouse) */
   if(window.matchMedia('(pointer:fine)').matches){
@@ -563,8 +579,8 @@ section{position:relative}
     }});
   });
 
-  /* Comunidade: fotos caem na mesa */
-  if(desk) gsap.from('.polaroide',{y:-160,rotation:function(i){return [-18,14,-10,20,-14][i]},opacity:0,duration:1.4,ease:'back.out(1.3)',stagger:.12,scrollTrigger:{trigger:'.mural',start:'top 80%'}});
+  /* Comunidade: eventos estilo cinema (fixa e troca com a rolagem) */
+  iniciaEventos();
 
   /* Contato */
   gsap.from('.passos li',{x:-30,opacity:0,duration:1,ease:'expo.out',stagger:.12,scrollTrigger:{trigger:'.passos',start:'top 88%'}});
@@ -642,6 +658,39 @@ section{position:relative}
       p2.material.opacity=E.mix; p1.visible=E.mix<1;
       cam.updateProjectionMatrix(); R.render(cena,cam);
     });
+  }
+  function iniciaEventos(){
+    var sec=q('.eventos'); if(!sec) return;
+    var D=JSON.parse(sec.dataset.eventos), n=D.length, atual=0;
+    var fundos=qa('.ev-fundo img',sec), cards=qa('.ev-cartao img',sec), itens=qa('.ev-tira li',sec), barras=qa('.ev-tira .barra i',sec);
+    var nome=q('.ev-nome .atual',sec), eco=q('.ev-nome .eco',sec), tipo=q('.ev-tipo',sec), desc=q('.ev-desc',sec);
+    function troca(i,dir){
+      if(i===atual) return; var de=atual; atual=i; dir=dir||(i>de?1:-1);
+      itens.forEach(function(li,k){li.classList.toggle('on',k===i)});
+      gsap.to(fundos[de],{opacity:0,duration:.9,ease:'power2.out'});
+      gsap.fromTo(fundos[i],{opacity:0,scale:1.4},{opacity:1,scale:1.25,duration:1.4,ease:'expo.out'});
+      gsap.to(cards[de],{opacity:0,yPercent:-12*dir,rotation:-6*dir,scale:.9,duration:.6,ease:'power3.in'});
+      gsap.fromTo(cards[i],{opacity:0,yPercent:18*dir,rotation:8*dir,scale:1.08},{opacity:1,yPercent:0,rotation:0,scale:1,duration:1.1,ease:'expo.out',delay:.15});
+      gsap.to([nome,eco,tipo,desc],{opacity:0,y:-20*dir,duration:.3,ease:'power2.in',onComplete:function(){
+        nome.textContent=D[i].nome; eco.textContent=D[i].nome; tipo.textContent=D[i].tipo; desc.textContent=D[i].desc;
+        gsap.fromTo(nome,{opacity:0,y:60*dir,skewY:6*dir},{opacity:1,y:0,skewY:0,duration:1,ease:'expo.out'});
+        gsap.fromTo(eco,{opacity:0,x:-30,y:0},{opacity:1,x:0,duration:1.2,ease:'expo.out',delay:.12});
+        gsap.fromTo([tipo,desc],{opacity:0,y:16},{opacity:1,y:0,duration:.8,ease:'power3.out',stagger:.08,delay:.15});
+      }});
+    }
+    var st=ScrollTrigger.create({trigger:sec,start:'top top',end:'+='+(n*90)+'%',pin:true,scrub:true,
+      snap:{snapTo:1/(n-1),duration:{min:.3,max:.9},delay:.1,ease:'power2.inOut'},
+      onUpdate:function(s){
+        var p=s.progress*(n-1), i=Math.round(p);
+        barras.forEach(function(b,k){ gsap.set(b,{scaleX:gsap.utils.clamp(0,1,p-k+1)}); });
+        troca(Math.min(n-1,Math.max(0,i)));
+      }});
+    qa('.ev-tira button',sec).forEach(function(b){ b.addEventListener('click',function(){
+      var i=+b.dataset.ev, y=st.start+(st.end-st.start)*(i/(n-1));
+      if(window.lenis) window.lenis.scrollTo(y,{duration:1.2}); else window.scrollTo({top:y,behavior:'smooth'});
+    })});
+    gsap.from('.ev-cartao',{yPercent:20,rotation:6,opacity:0,duration:1.4,ease:'expo.out',scrollTrigger:{trigger:sec,start:'top 70%'}});
+    gsap.from('.ev-nome',{y:80,opacity:0,duration:1.2,ease:'expo.out',scrollTrigger:{trigger:sec,start:'top 60%'}});
   }
 })();
 
