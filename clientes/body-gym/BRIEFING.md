@@ -157,3 +157,4 @@
 - Sem WebGL ou se o 3D falhar: volta sozinho para as palavras de metal da v12.
 - Quadros: `referencias/abertura-v13-3d.jpg`. Link: https://claude.ai/artifact/SiZfdtPofuUnTWTvBvRoEq (versão 8).
 - Riscos: desempenho em celular fraco (bloom + 3D); não testei em aparelho real. PENDENTE: nota do senhor.
+- **v13 REPROVADA com força:** "que coisa feia, que animação bosta, eu posso vender isso por 400 reais?". Decisão do JARVIS: parar de iterar no escuro; pedir referência concreta e decidir o caminho com o senhor.
