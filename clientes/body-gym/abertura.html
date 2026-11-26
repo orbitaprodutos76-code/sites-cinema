@@ -7,6 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@500;700&display=swap">
+<link rel="preload" href="midia/anton-3d.json" as="fetch" crossorigin>
+<link rel="preload" href="midia/body-por-do-sol.webp" as="image">
+<link rel="preload" href="midia/logo-emblema.webp" as="image">
 <style>
 /* Abertura v14 (5 s), a partir das referências do senhor:
    metal martelado + estilhaços + risco de luz azul (ref. "Cinematic Title 2") e pedra com veias de lava só no TREINO (ref. "Dark Cinematic Hero Opener").
@@ -17,7 +20,7 @@ html,body{margin:0;height:100%;background:#000;color:#fff;font-family:var(--font
 *{box-sizing:border-box}
 .abertura{position:fixed;inset:0;overflow:hidden;background:#000}
 #cena{position:absolute;inset:0;width:100%;height:100%;display:block}
-.reserva{position:absolute;inset:0;display:none;place-items:center;font:400 22vw/.85 Anton,Impact,sans-serif;text-transform:uppercase;color:#cfd6dc}
+.reserva{position:absolute;inset:0;display:none;place-items:center;font:400 22vw/.85 Anton,Impact,sans-serif;text-transform:uppercase;color:transparent;background:url(midia/body-por-do-sol.webp) 50% 60%/cover;-webkit-background-clip:text;background-clip:text}
 .sem3d .reserva{display:grid}
 .final{position:absolute;inset:0;opacity:0;background:url(midia/body-por-do-sol.webp) 50% 62%/cover;will-change:transform,opacity}
 .sub{position:absolute;left:0;right:0;bottom:16%;text-align:center;opacity:0;font:700 clamp(11px,.95vw,14px)/1 var(--fonte-texto);letter-spacing:.5em;padding-left:.5em;text-transform:uppercase;color:#d9e2e8}
@@ -36,6 +39,7 @@ html,body{margin:0;height:100%;background:#000;color:#fff;font-family:var(--font
 #painel button{font:700 13px/1 var(--fonte-texto);letter-spacing:.06em;color:#fff;background:#18181b;border:1px solid #3a3a40;border-radius:40px;padding:13px 18px;cursor:pointer}
 #painel button.on{background:var(--v);border-color:var(--v)}
 button:focus-visible{outline:3px solid var(--o);outline-offset:3px}
+@media (max-width:760px){.sub{bottom:12%;letter-spacing:.3em;font-size:10px}}
 @media (prefers-reduced-motion:reduce){.grao{animation:none}}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -311,8 +315,11 @@ qa('#painel button').forEach(b => { b.classList.toggle('on', +b.dataset.vel === 
   b.addEventListener('click', () => { VEL = +b.dataset.vel; if (b.dataset.som) Som.liga(true); qa('#painel button').forEach(x => x.classList.toggle('on', x === b)); q('#painel').classList.remove('fim'); acabou = false;
     tempo = 0; Som.pronto().then(() => tl.timeScale(VEL).restart()); }); });
 
-let ult = performance.now();
-gsap.ticker.add(() => { const t = performance.now(), dt = Math.min(.05, (t - ult) / 1000) * (PAUSA !== null ? 0 : VEL); ult = t; if (PAL.marca) render(dt); });
+let ult = performance.now(), amostras = [], ajustado = false;
+gsap.ticker.add(() => { const t = performance.now(), bruto = (t - ult) / 1000, dt = Math.min(.05, bruto) * (PAUSA !== null ? 0 : VEL); ult = t; if (!PAL.marca) return;
+  if (!ajustado && PAUSA === null && tl.isActive()) { amostras.push(bruto); if (amostras.length === 24) { ajustado = true; const med = amostras.sort((a, b) => a - b)[12];
+    if (med > 1 / 40) { r.setPixelRatio(1); dof.enabled = false; bloom.strength = .3; ajusta(); } else if (med > 1 / 52) { r.setPixelRatio(Math.min(devicePixelRatio || 1, 1.4)); ajusta(); } } }
+  render(dt); });
 
 new FontLoader().load('midia/anton-3d.json', fonte => {
   ajusta(); addEventListener('resize', ajusta);
