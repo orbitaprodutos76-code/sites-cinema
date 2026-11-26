@@ -38,7 +38,8 @@ Formato: data · projeto · entrega · nota · reação do senhor · o que fez a
 - 26/11 · BG · abertura v9 (palavras como batidas de trailer, 5,6 s, som sintetizado com botão) · **8 (est.)** · "troque esses sons... busque sons à altura" · som sintetizado soou amador.
 - 26/11 · BG · abertura v10 (sons reais de trailer, Mixkit) · **sem nota** · seguiu direto para pedir realismo no fundo.
 - 26/11 · BG · abertura v11 (atmosfera WebGL: projetor, névoa, poeira com profundidade de campo) · **5 (nota do senhor; eu estimei 8,5)** · "fundo todo preto dando destaque às palavras, sons metálicos, faíscas realistas a cada impacto, leve tremor, vermelho do TREINO fraco; já perdemos tempo demais" · névoa tirou contraste das palavras; palavras chapadas (WordArt); impacto sem consequência física; vermelho de tinta, não de luz. Régua estava otimista em +3,5: recalibrar (efeito de fundo não compensa palavra fraca).
-- 26/11 · BG · abertura v12 (preto absoluto, palavras de aço com reflexo, faíscas realistas, tremor leve, TREINO incandescente, sons metálicos) · **7 (est., já descontando o otimismo) · aguardando nota do senhor**.
+- 26/11 · BG · abertura v12 (preto absoluto, palavras de aço com reflexo, faíscas realistas, tremor leve, TREINO incandescente, sons metálicos) · **7 (est.)** · sem nota; o senhor pediu letras 3D e câmera avançada.
+- 26/11 · BG · abertura v13 (letras 3D de aço escovado, câmera própria por palavra, faíscas 3D, TREINO em metal vermelho) · **7,5 (est.) · aguardando nota do senhor**.
 
 ### Lições da Body Gym
 6. Imagem de IA animada em camadas CSS cai para "montagem barata". Preferir foto real + tipografia + luz.

@@ -43,7 +43,9 @@ html,body{margin:0;height:100%;background:#030304;color:#fff;font-family:var(--f
 .onda{position:absolute;left:50%;top:50%;width:60vmin;height:60vmin;margin:-30vmin 0 0 -30vmin;border-radius:50%;opacity:0;pointer-events:none;
   box-shadow:0 0 0 2px rgba(255,210,200,.7),0 0 40px 8px rgba(215,25,42,.35),inset 0 0 40px 6px rgba(215,25,42,.25)}
 .flash{position:absolute;inset:0;opacity:0;pointer-events:none;mix-blend-mode:screen;background:radial-gradient(circle at 50% 50%,#fff6ea 0%,rgba(255,200,170,.5) 30%,rgba(215,25,42,.25) 55%,rgba(0,0,0,0) 80%)}
-#gl,#faiscas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#gl,#faiscas,#p3d{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#p3d{opacity:0}
+.com3d .palavra,.com3d #treino{visibility:hidden}
 #gl{opacity:0}
 .reserva{position:absolute;inset:0;display:none;place-items:center}
 .reserva span{font-family:var(--fonte-titulo);font-size:22vw;line-height:.85;text-transform:uppercase;background:url(midia/real-esteiras-sol-hd.webp) 50% 42%/cover;-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -95,6 +97,7 @@ button:focus-visible{outline:3px solid var(--o);outline-offset:3px}
 <body>
 <div class="abertura" id="abertura" role="img" aria-label="Abertura: Além de um simples treino. Body Gym.">
   <div class="palco">
+    <canvas id="p3d" aria-hidden="true"></canvas>
     <div class="vaza" id="vaza"></div>
     <div class="flare" id="flare"></div>
     <div class="cena"><div class="T palavra" id="w-alem"><span class="metal"><span class="txt">Além</span><span class="ref"><span>Além</span></span></span></div></div>
@@ -126,6 +129,8 @@ button:focus-visible{outline:3px solid var(--o);outline-offset:3px}
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script type="module" src="palavras3d.js"></script>
 <script>
 (function(){
 var q=function(s,c){return (c||document).querySelector(s)}, qa=function(s,c){return Array.prototype.slice.call((c||document).querySelectorAll(s))};
@@ -278,6 +283,7 @@ function montaTimeline(){
   // batida de palavra: surge inteira, encaixa com tranco, a luz e o chão tremem; corte seco para a próxima
   function bate(sel,t,dur,forca,flare,som){
     somEm(som,t);
+    if(USA3D){ tl.fromTo('#flash',{opacity:0},{opacity:.16*forca,duration:.03,ease:'none',immediateRender:false},t).to('#flash',{opacity:0,duration:.3},t+.03); return; }
     tl.set(sel,{opacity:1},t)
       .fromTo(sel,{scale:1.32,filter:'blur(8px)'},{scale:1,filter:'blur(0px)',duration:.24,ease:'expo.out',immediateRender:false},t)
       .to(sel,{scale:1.06,duration:dur,ease:'none'},t+.24)
@@ -294,6 +300,10 @@ function montaTimeline(){
   tl.to(LUZ,{b:.35,duration:.25},1.68);
   // TREINO: a batida mais forte (vermelho, separação de cores, onda, estrondo)
   var T=1.78;
+  if(USA3D){ tl.fromTo('#vaza',{opacity:0},{opacity:.8,duration:.06,ease:'none',immediateRender:false},T).to('#vaza',{opacity:.35,duration:.6,ease:'power2.out'},T+.06).to('#vaza',{opacity:0,duration:.3},T+.97)
+    .fromTo('#flash',{opacity:0},{opacity:.35,duration:.03,ease:'none',immediateRender:false},T).to('#flash',{opacity:0,duration:.35},T+.03);
+    window.P3D.monta(tl,{alem:.3,deum:.78,simples:1.18,treino:T,fim:T+.97}); }
+  else {
   tl.set('#treino .base',{opacity:1},T)
     .fromTo('#treino .base',{scale:1.5},{scale:1,duration:.22,ease:'expo.out',immediateRender:false},T)
     .to(LUZ,{v:1.1,duration:.08},T)
@@ -308,6 +318,7 @@ function montaTimeline(){
     .to(LUZ,{v:0,b:.55,duration:.35},T+.97)
     .to(POEIRA,{a:.35,duration:.4},T+.97);
   treme(T,desk?16:11,6);
+  }
   // BODY GYM com o pôr do sol dentro (WebGL): vem de trás rápido e bate
   somEm('treino',T);
   var B=T+1.0;
@@ -341,12 +352,15 @@ q('.pular').addEventListener('click',function(){ tl.progress(1); });
 addEventListener('keydown',function(e){ if(e.key==='Escape') tl.progress(1); });
 
 var ult=performance.now();
-gsap.ticker.add(function(){ var t=performance.now(), dt=Math.min(.05,(t-ult)/1000)*(PAUSA!==null?0:VEL); ult=t; Faisca.desenha(dt); renderGL(); });
+gsap.ticker.add(function(){ var t=performance.now(), dt=Math.min(.05,(t-ult)/1000)*(PAUSA!==null?0:VEL); ult=t; Faisca.desenha(dt); if(USA3D) window.P3D.quadro(dt); renderGL(); });
 
-Promise.all([document.fonts.load('400 100px Anton'),document.fonts.load('500 20px Barlow'),img.decode?img.decode().catch(function(){}):Promise.resolve()]).then(function(){
+var USA3D=false;
+var espera3D=new Promise(function(ok){ if(window.P3D){ok();return;} addEventListener('p3d-pronto',ok); addEventListener('p3d-falhou',ok); setTimeout(ok,5000); });
+Promise.all([espera3D,document.fonts.load('400 100px Anton'),document.fonts.load('500 20px Barlow'),img.decode?img.decode().catch(function(){}):Promise.resolve()]).then(function(){
+  USA3D=!!window.P3D; if(USA3D) document.documentElement.classList.add('com3d');
   iniciaGL(); montaTimeline();
   if(calmo){ tl.progress(.73).pause(); LUZ.b=.6; POEIRA.a=.6; U.zoom=1; U.borrão=0; U.alfa=1; gsap.set('.assina .logo,.assina .sub',{opacity:1}); gsap.set('.assina .linha',{scaleX:1}); fim(); return; }
-  if(PAUSA!==null){ tl.seek(PAUSA).pause(); var ev=P.get('faisca'); if(ev){ Faisca.solta(q(ev),160,1.2); for(var k=0;k<+(P.get('f')||8);k++) Faisca.desenha(1/60); } return; }
+  if(PAUSA!==null){ tl.seek(PAUSA).pause(); if(USA3D){ var ev3=P.get('p3'); if(ev3) window.P3D.solta(ev3,300,1.1); for(var k3=0;k3<+(P.get('f')||0);k3++) window.P3D.quadro(1/60); window.P3D.quadro(0); } var ev=P.get('faisca'); if(ev){ Faisca.solta(q(ev),160,1.2); for(var k=0;k<+(P.get('f')||8);k++) Faisca.desenha(1/60); } return; }
   tl.timeScale(VEL).play(0);
 });
 window.abertura={tl:tl,U:U,Som:Som};

@@ -149,3 +149,11 @@
 - Quadros: `referencias/abertura-v12-metal.jpg`. Link: https://claude.ai/artifact/SiZfdtPofuUnTWTvBvRoEq (versão 7).
 - Dúvida aberta: trocar a Anton por fonte mais pesada/larga de cinema? (sem resposta; seguiu com Anton).
 - PENDENTE: nota do senhor.
+
+## Abertura v13: letras em 3D real (26/11/2026)
+- Ideia do senhor: "letras em 3D, assim também podemos trabalhar com efeitos de câmera e animações mais avançadas" + subir para 9.
+- Feito (`palavras3d.js`, Three.js r160 por CDN, fonte Anton convertida em `midia/anton-3d.json` via `midia/anton-3d-converte.js`): ALÉM, DE UM, SIMPLES e TREINO viram **metal 3D** (aço escovado com chanfro; TREINO em metal vermelho com brilho próprio), num **estúdio escuro com faixas de luz** (é o que faz cromo parecer cromo), chão preto que reflete de leve, brilho de lente (bloom) e **faíscas 3D** que quicam no chão. **Câmera própria por palavra:** ALÉM despenca na frente de uma câmera rasante; DE UM chega enquanto a câmera recua rápido; SIMPLES está deitada e se levanta com a câmera girando; TREINO com a câmera avançando com força e luz vermelha vazando. Tremor de câmera em 3D. BODY GYM com o pôr do sol continua como estava.
+- Lições do processo: 1) ambiente branco = "maquete de plástico"; 2) ambiente sem nada atrás da câmera = letras pretas; 3) brilho demais = neon. Ponto certo: faixas fracas + textura escovada.
+- Sem WebGL ou se o 3D falhar: volta sozinho para as palavras de metal da v12.
+- Quadros: `referencias/abertura-v13-3d.jpg`. Link: https://claude.ai/artifact/SiZfdtPofuUnTWTvBvRoEq (versão 8).
+- Riscos: desempenho em celular fraco (bloom + 3D); não testei em aparelho real. PENDENTE: nota do senhor.
