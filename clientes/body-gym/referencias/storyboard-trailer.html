@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Storyboard trailer</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@600;700&display=swap">
+<style>
+/* Só para gerar os quadros de referência (?f=1..7). Não é o site. */
+:root{--v:#D7192A;--o:#f6b445}
+html,body{margin:0;height:100%;background:#050506;color:#fff;overflow:hidden;font-family:Barlow,sans-serif}
+.q{position:fixed;inset:0;display:none;overflow:hidden}
+.q.on{display:block}
+.foto{position:absolute;inset:0;background-size:cover;background-position:center;filter:grayscale(1) contrast(1.35) brightness(.62)}
+.foto.cor{filter:saturate(.55) contrast(1.2) brightness(.7)}
+.tinta{position:absolute;inset:0;background:var(--v);mix-blend-mode:multiply;opacity:.35}
+.veu{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 50%,rgba(0,0,0,0) 40%,rgba(0,0,0,.8) 100%)}
+.grao{position:absolute;inset:0;opacity:.14;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.cine{position:absolute;left:0;right:0;height:9%;background:#000}.cine.c{top:0}.cine.b{bottom:0}
+.T{position:absolute;font-family:Anton,Impact,sans-serif;text-transform:uppercase;line-height:.82;letter-spacing:-.005em;white-space:nowrap}
+.mini{position:absolute;font:700 12px/1 Barlow;letter-spacing:.5em;text-transform:uppercase;color:#d8d8dc}
+.tc{position:absolute;left:28px;bottom:calc(9% + 18px);font:700 11px/1 Barlow;letter-spacing:.3em;color:var(--o)}
+.corte{position:absolute;height:.09em;background:var(--v);left:-4%;right:-4%;top:52%;transform:rotate(-4deg)}
+.paineis{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1.4fr 1fr;grid-template-rows:1fr;gap:6px;background:#000}
+.paineis > div{position:relative;overflow:hidden}
+.paineis > div > .foto{inset:-2%}
+.mascara{position:absolute;inset:0;display:grid;place-items:center}
+.mascara span{white-space:nowrap;font-family:Anton,Impact,sans-serif;font-size:24vw;line-height:.8;text-transform:uppercase;letter-spacing:-.01em;
+  background-size:cover;background-position:center 60%;-webkit-background-clip:text;background-clip:text;color:transparent}
+</style></head><body>
+
+<!-- 1: preto, VOCÊ bate -->
+<section class="q" data-f="1">
+  <div class="T" style="font-size:31vw;left:50%;top:50%;transform:translate(-50%,-52%)">Você</div>
+  <div style="position:absolute;left:50%;top:50%;width:46vw;height:1px;margin-left:-23vw;margin-top:17vw;background:linear-gradient(90deg,transparent,var(--o),transparent)"></div>
+  <div class="cine c"></div><div class="cine b"></div><span class="tc">00:00.4</span>
+</section>
+
+<!-- 2: corte bandeiras + ALÉM -->
+<section class="q" data-f="2">
+  <div class="foto" style="background-image:url(../midia/real-bandeiras-hd.webp);background-position:50% 35%"></div><div class="tinta" style="opacity:.25"></div><div class="veu"></div><div class="grao"></div>
+  <div class="T" style="font-size:34vw;left:-1vw;bottom:6%">Além</div>
+  <div class="cine c"></div><div class="cine b"></div><span class="tc">00:00.9</span>
+</section>
+
+<!-- 3: esteiras no pôr do sol + DE UM SIMPLES (riscado) -->
+<section class="q" data-f="3">
+  <div class="foto cor" style="background-image:url(../midia/real-esteiras-sol-hd.webp);background-position:50% 40%"></div><div class="veu"></div><div class="grao"></div>
+  <div class="mini" style="left:50%;top:30%;transform:translateX(-50%);font-size:16px">de um</div>
+  <div class="T" style="font-size:24vw;left:50%;top:50%;transform:translate(-50%,-45%)">Simples<div class="corte"></div></div>
+  <div class="cine c"></div><div class="cine b"></div><span class="tc">00:01.5</span>
+</section>
+
+<!-- 4: preto, TREINO. vermelho -->
+<section class="q" data-f="4">
+  <div class="T" style="font-size:30vw;left:50%;top:50%;transform:translate(-50%,-52%);color:var(--v)">Treino<span style="color:var(--o)">.</span></div>
+  <div class="cine c"></div><div class="cine b"></div><span class="tc">00:02.1</span>
+</section>
+
+<!-- 5: montagem rápida em painéis -->
+<section class="q" data-f="5">
+  <div class="paineis">
+    <div><div class="foto" style="background-image:url(../midia/insta-turma-hd.webp);background-position:50% 70%"></div><div class="tinta"></div></div>
+    <div><div class="foto" style="background-image:url(../midia/insta-dicas-hd.webp);background-position:50% 75%"></div><div class="tinta" style="opacity:.2"></div></div>
+    <div><div class="foto" style="background-image:url(../midia/real-salao-sol-hd.webp);background-position:50% 50%"></div><div class="tinta"></div></div>
+  </div><div class="grao"></div>
+  <div class="mini" style="left:50%;bottom:calc(9% + 24px);transform:translateX(-50%)">Desde 2019 · Mineiros – GO</div>
+  <div class="cine c"></div><div class="cine b"></div><span class="tc">00:02.6 · cortes de 0,15 s</span>
+</section>
+
+<!-- 6: BODY GYM com a academia dentro das letras -->
+<section class="q" data-f="6">
+  <div class="mascara"><span style="background-image:url(../midia/real-esteiras-sol-hd.webp);background-size:100% auto;background-position:50% 42%;filter:contrast(1.15) brightness(1.15)">Body Gym</span></div>
+  <div class="mini" style="left:50%;top:22%;transform:translateX(-50%)">Você além de um simples treino</div>
+  <div style="position:absolute;left:50%;bottom:24%;width:10px;height:10px;margin-left:-5px;background:var(--v)"></div>
+  <span class="tc">00:03.6 · a câmera vai atravessar o "O"</span>
+</section>
+
+<!-- 7: atravessando o O: a perna do "O" toma a tela e vira o fundo do topo -->
+<section class="q" data-f="7">
+  <div class="foto cor" style="background-image:url(../midia/real-esteiras-sol-hd.webp);background-position:50% 42%;filter:saturate(.8) contrast(1.15) brightness(.85);transform:scale(1.15)"></div>
+  <div style="position:absolute;left:-38vw;top:-30vh;width:60vw;height:160vh;border-radius:50%;background:#050506;box-shadow:0 0 0 0 #000"></div>
+  <div class="veu" style="opacity:.5"></div><div class="grao"></div>
+  <span class="tc">00:04.6 · a foto vira o fundo do topo</span>
+</section>
+
+<script>
+var f=new URLSearchParams(location.search).get('f')||'1';
+document.querySelector('[data-f="'+f+'"]').classList.add('on');
+</script>
+</body></html>
