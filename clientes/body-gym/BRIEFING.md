@@ -102,3 +102,4 @@
 - As imagens da abertura são de IA (Figma) até chegar o vídeo do story da academia: quando chegar, trocar `abertura-queda`/`abertura-impacto` pelo vídeo real (mesma coreografia).
 - Testado: 1440 e 390 px, sem rolagem lateral, sem erros, Pular, não repete na mesma visita, reduzir movimento. Link: https://claude.ai/artifact/YbigACjfUkiwTn5zf8DWVZ (versão 6).
 - PENDENTE: veredito do senhor; vídeo do story; demais pendências acima.
+- **Veredito da v6: REPROVADA** ("a primeira parte ficou bem ruim", topo e abertura). O senhor vai recriar com o ChatGPT: prompt com ajustes em `clientes/body-gym/PROMPT-CHATGPT-TOPO.md`. PENDENTE: trazer o resultado do ChatGPT para o repositório e encaixar no site.
