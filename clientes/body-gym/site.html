@@ -88,6 +88,10 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--ouro);outline-offse
 .abertura{position:fixed;inset:0;z-index:100;width:100%;height:100%;border:0;display:none;background:#000}
 .com-abertura .abertura{display:block}
 .com-abertura body{overflow:hidden}
+/* botão do dono: repetir a abertura (só aparece no modo dono) */
+.rever-abertura{position:fixed;z-index:90;left:max(14px,env(safe-area-inset-left,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 14px);display:none;align-items:center;gap:8px;cursor:pointer;font:700 11px/1 var(--fonte-texto);letter-spacing:.18em;text-transform:uppercase;color:#fff;background:rgba(10,10,11,.78);border:1px solid rgba(246,180,69,.6);border-radius:40px;padding:10px 14px;backdrop-filter:blur(6px)}
+.modo-dono .rever-abertura{display:inline-flex}
+.rever-abertura svg{width:16px;height:16px}
 
 /* ===== Topo ===== */
 .topo{position:relative;height:clamp(640px,100svh,1100px);overflow:hidden;isolation:isolate;background:#000}
@@ -340,6 +344,7 @@ section{position:relative}
 </style>
 
 <!-- ABERTURA: só visual (aria-hidden); o conteúdo real está no topo logo abaixo -->
+<button class="rever-abertura" type="button" title="Só você vê este botão (modo dono)"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Rever abertura</button>
 <iframe class="abertura" id="abertura" title="Abertura animada da Body Gym" aria-hidden="true" tabindex="-1" allow="autoplay"></iframe>
 
 <main>
@@ -689,6 +694,16 @@ section{position:relative}
     A.src='abertura.html?embed=1';
   }
   abertura();
+
+  /* Modo dono: tocar 5 vezes seguidas na logo do topo liga/desliga (fica salvo só neste navegador). Também liga com ?dono=1 */
+  (function(){ var raiz=document.documentElement, k='bg-dono';
+    function le(){ try{ return localStorage.getItem(k)==='1'; }catch(e){ return false; } }
+    function grava(v){ try{ localStorage.setItem(k,v?'1':'0'); }catch(e){} raiz.classList.toggle('modo-dono',v); }
+    if(/[?&]dono=1/.test(location.search)) grava(true); else raiz.classList.toggle('modo-dono',le());
+    var toques=0, t0=0, logo=q('.topo .marca');
+    if(logo) logo.addEventListener('click',function(){ var t=Date.now(); toques=(t-t0<600)?toques+1:1; t0=t; if(toques>=5){ toques=0; grava(!le()); } });
+    q('.rever-abertura').addEventListener('click',function(){ try{ sessionStorage.removeItem('bg-abertura'); }catch(e){} location.reload(); });
+  })();
 
   /* Topo: rolagem separa as camadas */
   gsap.timeline({scrollTrigger:{trigger:'.topo',start:'top top',end:'bottom top',scrub:true}})

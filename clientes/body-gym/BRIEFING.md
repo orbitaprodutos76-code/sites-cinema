@@ -188,3 +188,4 @@
 - Testado (navegador sem placa de vídeo): abertura sai e o topo aparece, PC e celular, sem erros nem rolagem lateral. Quadro: `referencias/site-v7-topo.jpg`. Script: `referencias/teste-site.js`.
 - Link do site: https://claude.ai/artifact/YbigACjfUkiwTn5zf8DWVZ (versão 7; o senhor já deixou "qualquer pessoa com o link").
 - PENDENTE: nota do senhor no celular; logo em alta resolução; demais pendências da academia (aula experimental, evoluções autorizadas, medidor, chave da API) e migrar para o template Astro na entrega.
+- **Botão "Rever abertura" só para o senhor (modo dono):** tocar 5 vezes seguidas na logo do topo liga/desliga (fica salvo só naquele navegador); também liga abrindo o site com `?dono=1`. O botão aparece no canto inferior esquerdo e repete a abertura. Visitante comum nunca vê. Testado. **Remover antes da entrega ao cliente** (ou manter escondido).
