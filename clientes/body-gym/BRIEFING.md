@@ -165,3 +165,4 @@
 - Novo limite do senhor: **abertura com apenas 5 segundos**, animações equilibradas.
 - PENDENTE: aprovação do quadro + decidir se a frase "Além de um simples treino" entra nos 5 s.
 - Resposta do senhor ao quadro lava: "este modelo vermelho com veias deve ser **apenas o TREINO**; vou mandar outro modelo **metálico** para ser o resto; [o modelo dele] está em má qualidade, então busque um jeito de melhorar". Frase: marcou "Só BODY GYM". PENDENTE: o modelo metálico que ele vai mandar + confirmar a sequência de palavras.
+- Sequência confirmada (5 s): **ALÉM DE UM SIMPLES em metal (modelo do senhor) → TREINO em lava vermelha com veias → BODY GYM em metal.** PENDENTE: o modelo metálico do senhor.
