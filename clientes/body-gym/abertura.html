@@ -119,7 +119,7 @@ button:focus-visible{outline:3px solid var(--o);outline-offset:3px}
 var q=function(s,c){return (c||document).querySelector(s)}, qa=function(s,c){return Array.prototype.slice.call((c||document).querySelectorAll(s))};
 var P=new URLSearchParams(location.search), VEL=+P.get('vel')||1, PAUSA=P.has('t')?+P.get('t'):null;
 var desk=matchMedia('(min-width: 761px)').matches, calmo=matchMedia('(prefers-reduced-motion: reduce)').matches;
-qa('#painel button').forEach(function(b){ b.classList.toggle('on',+b.dataset.vel===VEL); b.addEventListener('click',function(){ VEL=+b.dataset.vel; if(b.dataset.som) Som.liga(true); qa('#painel button').forEach(function(x){x.classList.toggle('on',x===b)}); q('#painel').classList.remove('fim'); acabou=false; tl.timeScale(VEL).restart(); }); });
+qa('#painel button').forEach(function(b){ b.classList.toggle('on',+b.dataset.vel===VEL); b.addEventListener('click',function(){ VEL=+b.dataset.vel; if(b.dataset.som){ Som.liga(true); } qa('#painel button').forEach(function(x){x.classList.toggle('on',x===b)}); q('#painel').classList.remove('fim'); acabou=false; Som.pronto().then(function(){ tl.timeScale(VEL).restart(); }); }); });
 
 /* ---------- texto quebrado em letras ---------- */
 function letras(el,txt,cls){ txt.split('').forEach(function(c){ var s=document.createElement('span'); if(c===' '){ s.className='esp'; } else { s.className='l '+(cls||''); s.textContent=c; } el.appendChild(s); }); return qa('.l,span:not(.esp)',el).filter(function(x){return x.textContent}); }
@@ -206,34 +206,30 @@ function renderGL(){
   gl.drawArrays(gl.TRIANGLES,0,3);
 }
 
-/* ---------- Som: sintetizado no navegador (sem arquivos, sem direitos autorais) ---------- */
+/* ---------- Som: efeitos de cinema (Mixkit, licença gratuita) em midia/som/, alinhados pelo pico ---------- */
 var Som=(function(){
-  var ac=null, mestre=null, ligado=false;
+  var ac=null, mestre=null, ligado=false, buf={}, carregando=null;
+  // pico = segundo, dentro do arquivo, em que a batida acontece; vol = mixagem
+  var SONS={alem:{pico:.084,vol:.85},deum:{pico:.07,vol:.7},simples:{pico:.145,vol:.9},treino:{pico:.047,vol:1},treino2:{pico:.155,vol:.75},
+            marca:{pico:.985,vol:1},brilho:{pico:.939,vol:.4},mergulho:{pico:.632,vol:.85}};
   try{ ligado=localStorage.getItem('bg-som')==='1'; }catch(e){}
-  if(P.get('som')==='1') ligado=true;
   function cria(){ if(ac) return; var C=window.AudioContext||window.webkitAudioContext; if(!C) return; ac=new C();
-    mestre=ac.createDynamicsCompressor(); mestre.threshold.value=-10; mestre.ratio.value=6; var g=ac.createGain(); g.gain.value=.9; mestre.connect(g); g.connect(ac.destination); }
-  function ruido(dur){ var n=Math.floor(ac.sampleRate*dur), b=ac.createBuffer(1,n,ac.sampleRate), d=b.getChannelData(0); for(var i=0;i<n;i++) d[i]=Math.random()*2-1; var s=ac.createBufferSource(); s.buffer=b; return s; }
-  function env(g,t,a,pico,dec){ g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(pico,t+a); g.gain.exponentialRampToValueAtTime(0.0001,t+a+dec); }
-  // batida: grave que cai de tom + estalo filtrado
-  function batida(forca){ if(!ligado||!ac) return; var t=ac.currentTime, f=forca||1;
-    var o=ac.createOscillator(), g=ac.createGain(); o.type='sine'; o.frequency.setValueAtTime(120*f+40,t); o.frequency.exponentialRampToValueAtTime(38,t+.35); env(g,t,.005,.95,.9+.5*f); o.connect(g); g.connect(mestre); o.start(t); o.stop(t+1.6+f);
-    var n=ruido(.4), lp=ac.createBiquadFilter(), gn=ac.createGain(); lp.type='lowpass'; lp.frequency.setValueAtTime(3200,t); lp.frequency.exponentialRampToValueAtTime(300,t+.25); env(gn,t,.002,.55*f,.28); n.connect(lp); lp.connect(gn); gn.connect(mestre); n.start(t);
-  }
-  // estrondo do TREINO: batida + acorde grave rasgado (braam)
-  function estrondo(){ if(!ligado||!ac) return; batida(1.6); var t=ac.currentTime, lp=ac.createBiquadFilter(), g=ac.createGain(); lp.type='lowpass'; lp.frequency.setValueAtTime(900,t); lp.frequency.exponentialRampToValueAtTime(180,t+1.8); env(g,t,.02,.32,1.9);
-    [55,55.6,82.4,110.3].forEach(function(fr){ var o=ac.createOscillator(); o.type='sawtooth'; o.frequency.value=fr; o.connect(lp); o.start(t); o.stop(t+2.2); }); lp.connect(g); g.connect(mestre); }
-  // chiado subindo (antes do BODY GYM)
-  function subida(dur){ if(!ligado||!ac) return; var t=ac.currentTime, n=ruido(dur+.1), bp=ac.createBiquadFilter(), g=ac.createGain(); bp.type='bandpass'; bp.Q.value=1.2; bp.frequency.setValueAtTime(300,t); bp.frequency.exponentialRampToValueAtTime(5000,t+dur);
-    g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(.4,t+dur*.92); g.gain.exponentialRampToValueAtTime(0.0001,t+dur+.08); n.connect(bp); bp.connect(g); g.connect(mestre); n.start(t); }
-  // brilho: notas agudas suaves quando a luz passa nas letras
-  function brilho(){ if(!ligado||!ac) return; var t=ac.currentTime; [1318.5,1760,2637].forEach(function(fr,i){ var o=ac.createOscillator(), g=ac.createGain(); o.type='sine'; o.frequency.value=fr; env(g,t+i*.07,.01,.06,1.2); o.connect(g); g.connect(mestre); o.start(t+i*.07); o.stop(t+i*.07+1.4); }); }
+    mestre=ac.createDynamicsCompressor(); mestre.threshold.value=-6; mestre.ratio.value=4; var g=ac.createGain(); g.gain.value=.95; mestre.connect(g); g.connect(ac.destination); carrega(); }
+  function carrega(){ if(carregando) return carregando;
+    carregando=Promise.all(Object.keys(SONS).map(function(n){ return fetch('midia/som/'+n+'.mp3').then(function(r){return r.arrayBuffer()})
+      .then(function(a){ return new Promise(function(ok,erro){ ac.decodeAudioData(a,ok,erro); }); }).then(function(b){ buf[n]=b; }).catch(function(){}); }));
+    return carregando; }
+  // toca agora, começando 'desloc' segundos dentro do arquivo
+  function toca(n,desloc){ if(!ligado||!ac||!buf[n]||VEL!==1) return; var S=SONS[n];
+    var src=ac.createBufferSource(), g=ac.createGain(); src.buffer=buf[n]; g.gain.value=S.vol; src.connect(g); g.connect(mestre); src.start(ac.currentTime, desloc||0); }
   function liga(v){ ligado=v; try{ localStorage.setItem('bg-som',v?'1':'0'); }catch(e){} if(v){ cria(); if(ac&&ac.state==='suspended') ac.resume(); } atualiza(); }
   var bt=q('.som'); function atualiza(){ bt.setAttribute('aria-pressed',String(ligado)); q('span',bt).textContent=ligado?'Som ligado':'Ativar som'; }
-  bt.addEventListener('click',function(){ liga(!ligado); if(ligado) batida(.6); });
-  if(ligado){ cria(); } atualiza();
-  return {batida:batida,estrondo:estrondo,subida:subida,brilho:brilho,liga:liga};
+  bt.addEventListener('click',function(){ liga(!ligado); });
+  atualiza();
+  return {toca:toca,liga:liga,pico:function(n){return SONS[n].pico},pronto:function(){ return carregando||Promise.resolve(); }};
 })();
+/* agenda um som para que a batida caia exatamente no tempo T da timeline */
+function somEm(n,T){ var p=Som.pico(n); tl.add(function(){ Som.toca(n, Math.max(0,p-T)); }, Math.max(0,T-p)); }
 
 /* ---------- coreografia ---------- */
 var palco=q('.palco'), tl=gsap.timeline({paused:true,onComplete:fim});
@@ -245,19 +241,20 @@ function montaTimeline(){
     .to('#feixe',{opacity:1,duration:.5,ease:'power2.out'},.05)
     .to(POEIRA,{a:1,duration:.6,ease:'power2.out'},.05);
   // batida de palavra: surge inteira, encaixa com tranco, a luz e o chão tremem; corte seco para a próxima
-  function bate(sel,t,dur,forca,flare){
+  function bate(sel,t,dur,forca,flare,som){
+    somEm(som,t);
     tl.set(sel,{opacity:1},t)
       .fromTo(sel,{scale:1.32,filter:'blur(8px)'},{scale:1,filter:'blur(0px)',duration:.24,ease:'expo.out',immediateRender:false},t)
       .to(sel,{scale:1.06,duration:dur,ease:'none'},t+.24)
       .fromTo('#flash',{opacity:0},{opacity:.22*forca,duration:.03,ease:'none',immediateRender:false},t).to('#flash',{opacity:0,duration:.3},t+.03)
-      .add(function(){ Som.batida(forca); estoura(W/2,H/2+H*.08,Math.round((desk?40:24)*forca),420*forca,.15); },t)
+      .add(function(){ estoura(W/2,H/2+H*.08,Math.round((desk?40:24)*forca),420*forca,.15); },t)
       .set(sel,{opacity:0},t+dur);
     if(flare) tl.fromTo('#flare',{opacity:.9,scaleX:.2},{opacity:0,scaleX:1.1,duration:.5,ease:'expo.out',immediateRender:false},t);
     treme(t,(desk?16:10)*forca,4);
   }
-  bate('#w-alem',.3,.42,.8,true);
-  bate('#w-deum',.78,.34,.7,false);
-  bate('#w-simples',1.18,.5,1,true);
+  bate('#w-alem',.3,.42,.8,true,'alem');
+  bate('#w-deum',.78,.34,.7,false,'deum');
+  bate('#w-simples',1.18,.5,1,true,'simples');
   tl.to('#feixe',{opacity:0,duration:.2},1.68);
   // TREINO: a batida mais forte (vermelho, separação de cores, onda, estrondo)
   var T=1.78;
@@ -268,24 +265,24 @@ function montaTimeline(){
     .fromTo('#treino .rosa',{opacity:.95,x:34},{opacity:0,x:0,duration:.45,ease:'expo.out',immediateRender:false},T)
     .fromTo('#onda',{opacity:1,scale:.3},{opacity:0,scale:2.8,duration:.8,ease:'expo.out',immediateRender:false},T)
     .fromTo('#flash',{opacity:0},{opacity:.7,duration:.03,ease:'none',immediateRender:false},T).to('#flash',{opacity:0,duration:.45},T+.03)
-    .add(function(){ Som.estrondo(); estoura(W/2,H/2,desk?150:90,desk?800:520,.45); },T)
+    .add(function(){ estoura(W/2,H/2,desk?150:90,desk?800:520,.45); },T)
     .to('#treino .base',{scale:1.07,duration:.75,ease:'none'},T+.22)
-    .add(function(){ Som.subida(.55); },T+.42)
     .set('#treino',{opacity:0},T+.97)
     .to('#feixe-v',{opacity:0,duration:.3},T+.97)
     .to(POEIRA,{a:.35,duration:.4},T+.97);
   treme(T,desk?40:26,9);
   // BODY GYM com o pôr do sol dentro (WebGL): vem de trás rápido e bate
+  somEm('treino',T); somEm('treino2',T);
   var B=T+1.0;
+  somEm('marca',B+.3); somEm('brilho',B+1.05);
   tl.set('#gl',{opacity:1},B)
     .fromTo(U,{alfa:0,zoom:.5,borrão:1.5},{alfa:1,zoom:1,borrão:0,duration:.3,ease:'power4.in'},B)
     .fromTo(U,{aberr:.012},{aberr:0,duration:.4,ease:'expo.out',immediateRender:false},B+.3)
     .fromTo(U,{ondaT:0,ondaA:.35},{ondaT:1.4,ondaA:0,duration:.8,ease:'power2.out',immediateRender:false},B+.3)
     .fromTo('#flash',{opacity:0},{opacity:.5,duration:.03,ease:'none',immediateRender:false},B+.3).to('#flash',{opacity:0,duration:.45},B+.33)
-    .add(function(){ Som.batida(1.3); estoura(W/2,H/2,desk?90:50,desk?600:380,.2); },B+.3)
+    .add(function(){ estoura(W/2,H/2,desk?90:50,desk?600:380,.2); },B+.3)
     .to('.cine.c,.cine.b',{scaleY:0,duration:.8,ease:'expo.inOut'},B+.32)
     .fromTo(U,{brilho:1,luz:-.6},{luz:1.9,duration:1.05,ease:'power2.inOut',immediateRender:false},B+.45)
-    .add(function(){ Som.brilho(); },B+.6)
     .fromTo('.assina .logo',{opacity:0,y:14,scale:.85},{opacity:1,y:0,scale:1,duration:.6,ease:'expo.out'},B+.42)
     .to('.assina .linha',{scaleX:1,duration:.7,ease:'expo.inOut'},B+.5)
     .fromTo('.assina .sub',{opacity:0,y:8},{opacity:1,y:0,duration:.6,ease:'expo.out'},B+.6)
@@ -295,11 +292,10 @@ function montaTimeline(){
   treme(B+.3,desk?24:16,7);
   // mergulho no "O"
   var M=B+1.5;
+  somEm('mergulho',M+.79);
   tl.to('.assina .logo,.assina .linha,.assina .sub',{opacity:0,duration:.2,ease:'power2.in'},M)
-    .add(function(){ Som.subida(.6); },M)
     .to(U,{zoom:70,duration:.75,ease:'expo.in'},M+.04)
     .to(U,{cheio:1,duration:.18,ease:'power2.in'},M+.62)
-    .add(function(){ Som.batida(.9); },M+.79)
     .to(POEIRA,{a:0,duration:.3},M);
 }
 var acabou=false;
@@ -316,7 +312,7 @@ Promise.all([document.fonts.load('400 100px Anton'),document.fonts.load('500 20p
   if(PAUSA!==null){ tl.seek(PAUSA).pause(); estoura(0,0,0,0); return; }
   tl.timeScale(VEL).play(0);
 });
-window.abertura={tl:tl,U:U};
+window.abertura={tl:tl,U:U,Som:Som};
 })();
 </script>
 </body>

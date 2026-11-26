@@ -129,3 +129,9 @@
 - **Som** gerado no navegador (Web Audio, sem arquivo/direitos): grave a cada palavra, estrondo grave rasgado no TREINO, chiado subindo antes do BODY GYM e do mergulho, brilho agudo quando a luz passa. Botão "Ativar som" (canto inferior esquerdo), lembra a escolha; desligado por padrão (navegador bloqueia som automático). No fim: "Rever com som".
 - Não consegui OUVIR o som aqui (sem saída de áudio no container): só conferi que roda sem erro. PENDENTE: o senhor ouvir e dar nota.
 - Link: https://claude.ai/artifact/SiZfdtPofuUnTWTvBvRoEq (versão 4).
+
+## Abertura v10: sons de cinema reais (26/11/2026)
+- Senhor reprovou o som sintetizado ("isso não é um vídeo, é uma abertura cinematográfica de um site, busque sons à altura").
+- Trocado por **efeitos reais do Mixkit** (licença gratuita, uso comercial), em `midia/som/` (348 KB, só baixam quando o som é ligado). Cada som é disparado para o **pico da batida cair exatamente** na palavra: ALÉM (tambor grave de trailer), DE UM (tambor mais leve), SIMPLES (tambor metálico, combina com o cromo), TREINO (braam de trailer + impacto em camadas), BODY GYM (sopro que cresce e estoura), luz nas letras (brilho baixo), mergulho no O (sopro e pouso). Lista e créditos em `midia/som/CREDITOS.md`.
+- Medido no navegador (`referencias/teste-som.js`): os 8 sons disparam no tempo (10–30 ms; 130 ms no último só no navegador de teste lento). **Não ouvi** (container sem áudio).
+- Link: https://claude.ai/artifact/SiZfdtPofuUnTWTvBvRoEq (versão 5). PENDENTE: o senhor ouvir e dar nota.
