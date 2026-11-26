@@ -39,4 +39,9 @@
 - Atenção: A e C mostram só atleta de elite, o que conflita com o público variado (JARVIS recomendou B).
 - O senhor escolheu **misturar**: cena e título da **A** (atleta nas cordas, "ALÉM DO" em cromo atrás + "TREINO" em vermelho na frente) + **barra de dados** (B) + **anilha em primeiro plano** (B) + **miniaturas laterais** Estrutura/Comunidade/Pôr do sol (C) + **dois botões** "Agendar aula experimental" e "Ver planos" (C). Resultado: `referencias/topo-d-mistura.png`. Erro da IA a não levar: marca "ROGUE" na anilha.
 - Resto do site: **as 3 seções de comunidade aprovadas** (Antes e depois/Evoluções, Eventos, "Perdeu o medo?").
-- PENDENTE: veredito da D.
+- **TOPO APROVADO: D** (`topo-d-mistura.png`). Atleta do fundo: **imagem de IA** (decisão do senhor); alunos reais aparecem nas seções de comunidade.
+
+## Seções de baixo: referências (26/11/2026)
+- `referencias/secao-1-estrutura.png` (faixa horizontal de fotos + horários) · `secao-2-por-do-sol.png` (tela cheia de cinema, "O pôr do sol mais bonito de Mineiros") · `secao-3-evolucoes.png` (antes/depois com arraste) · `secao-4-comunidade.png` (colagem de polaroides: anos 80, Halloween, encontro da turma) · `secao-5-perdeu-o-medo.png` (3 dicas + cartão de contato com WhatsApp e mapa).
+- ATENÇÃO: nas Evoluções, pessoas, nomes, idades e depoimentos são INVENTADOS pela IA. No site só entram alunos reais (destaque "Antes e Depois" do Instagram) **com autorização**. "Aula experimental grátis" e "professor acompanha o primeiro treino" também são suposições: confirmar com a academia.
+- PENDENTE: veredito por seção.
