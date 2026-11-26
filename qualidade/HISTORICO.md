@@ -21,3 +21,12 @@ Formato: data · projeto · entrega · nota · reação do senhor · o que fez a
 3. Cores fortes e nítidas; nada pastel.
 4. Toda transição 2D chapada (fade, rachadura de recorte) cai para "PowerPoint".
 5. Aprovar por partes: abertura sozinha primeiro.
+
+## Body Gym Academia
+- 26/11 · BG · topo v6 (título à esquerda, foto puxada ao vermelho, giz) + abertura v6 (fotos de IA trocando) · **3 (est.)** · "ficou bem ruim, falar a verdade" · imagens paradas trocando = slide; IA genérica; marca fraca.
+- 26/11 · BG · abertura v7 (anilha preta recortada caindo, nuvem de giz, BODY GYM letra a letra) · **3 (est.)** · "que trem feio, seu padrão é melhor que esse" · composição de IA com movimento CSS = montagem barata.
+- 26/11 · BG · abertura v8 de filme (ALÉM DE UM SIMPLES TREINO + BODY GYM com o pôr do sol real nas letras, WebGL, mergulho no O) · **7,5 (est.) · aguardando nota do senhor** · ideia e foto real do senhor ("achei bem bonito").
+
+### Lições da Body Gym
+6. Imagem de IA animada em camadas CSS cai para "montagem barata". Preferir foto real + tipografia + luz.
+7. Conferir animação quadro a quadro exato (`?t=`), não por prints soltos no tempo.
