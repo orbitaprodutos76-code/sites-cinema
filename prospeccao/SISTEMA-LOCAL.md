@@ -41,15 +41,17 @@ Logo: o site não pode depender de clique, e o dono precisa ver resultado em nú
 - **Status da semana:** artes/vídeos curtos para o status do WhatsApp e o Instagram (plano Completo).
 - **Dono atualiza sozinho:** preço/cardápio numa planilha no celular, o site muda sozinho.
 
-## Preços (proposta)
+## Preços (revisados 27/11 — realistas para quem está começando; tudo termina em 7)
 | Plano | Implantação | Mensal | Inclui |
 |---|---|---|---|
-| Vitrine | R$ 297 | R$ 97 | página única + QR + Google Maps + relatório |
-| **Vendas** (o que a gente quer vender) | R$ 497 | R$ 197 | + 1 módulo principal + fidelidade + avaliações + ajustes por WhatsApp |
-| Completo | R$ 797 | R$ 397 | + 8 artes/vídeos por mês para status e Instagram |
+| Vitrine | R$ 147 | R$ 47 | página única + QR + Google Maps + relatório |
+| **Vendas** (o que a gente quer vender) | R$ 247 | R$ 97 | + 1 módulo principal + fidelidade + avaliações + ajustes por WhatsApp |
+| Completo | R$ 397 | R$ 197 | + 8 artes/vídeos por mês para status e Instagram |
+Oferta de fundador (5 primeiros): Vendas por **R$ 147 na entrega + R$ 97/mês travado**, 1ª mensalidade só 30 dias depois; em troca, depoimento em vídeo.
+(Tabela antiga 297/497/797 + 97/197/397 fica para quando houver 10 clientes e prova local.)
 
 Como cobrar:
-- **5 primeiros = "clientes fundadores":** sem implantação, mensal travado para sempre, em troca de depoimento em vídeo.
+- **5 primeiros = "clientes fundadores":** implantação de fundador (R$ 147), mensal travado para sempre, em troca de depoimento em vídeo.
 - **Risco zero:** 1ª mensalidade só depois de 30 dias, se chegar pedido pelo site.
 - Cobrança mensal automática (Pix Automático/assinatura) todo dia 5; anual = 12 por 10.
 - Contrato de 1 página, sem fidelidade, aviso de 30 dias para cancelar.
