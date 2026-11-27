@@ -30,3 +30,27 @@ Logo: o site não pode depender de clique, e o dono precisa ver resultado em nú
 - Mostrar o site **dele**, pronto, no celular dele.
 - **30 dias sem pagar**: se não vier nenhum pedido pelo site, ele não deve nada.
 - Sem fidelidade de contrato; prova local (Lord, Body Gym).
+
+## Mais módulos (27/11)
+- **Volta, cliente:** lista semanal para o dono de quem sumiu há 30+ dias, com botão de mensagem pronta (reativação).
+- **Roleta de inauguração/promo:** gira e ganha desconto em troca de avaliar no Google ou seguir no Instagram.
+- **Indique um amigo:** cupom para quem indica e para quem chega.
+- **Antes e depois:** barbearia, estética, lava-jato, dentista.
+- **Sinal no Pix:** encomenda de bolo/serviço com QR de Pix (acaba o calote).
+- **Placa QR física** (acrílico no balcão): o dono vê todo dia que pagou por algo.
+- **Status da semana:** artes/vídeos curtos para o status do WhatsApp e o Instagram (plano Completo).
+- **Dono atualiza sozinho:** preço/cardápio numa planilha no celular, o site muda sozinho.
+
+## Preços (proposta)
+| Plano | Implantação | Mensal | Inclui |
+|---|---|---|---|
+| Vitrine | R$ 297 | R$ 97 | página única + QR + Google Maps + relatório |
+| **Vendas** (o que a gente quer vender) | R$ 497 | R$ 197 | + 1 módulo principal + fidelidade + avaliações + ajustes por WhatsApp |
+| Completo | R$ 797 | R$ 397 | + 8 artes/vídeos por mês para status e Instagram |
+
+Como cobrar:
+- **5 primeiros = "clientes fundadores":** sem implantação, mensal travado para sempre, em troca de depoimento em vídeo.
+- **Risco zero:** 1ª mensalidade só depois de 30 dias, se chegar pedido pelo site.
+- Cobrança mensal automática (Pix Automático/assinatura) todo dia 5; anual = 12 por 10.
+- Contrato de 1 página, sem fidelidade, aviso de 30 dias para cancelar.
+- Domínio .com.br (~R$ 40/ano) e hospedagem incluídos.
