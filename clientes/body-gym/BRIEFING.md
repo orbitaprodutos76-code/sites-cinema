@@ -189,3 +189,11 @@
 - Link do site: https://claude.ai/artifact/YbigACjfUkiwTn5zf8DWVZ (versão 7; o senhor já deixou "qualquer pessoa com o link").
 - PENDENTE: nota do senhor no celular; logo em alta resolução; demais pendências da academia (aula experimental, evoluções autorizadas, medidor, chave da API) e migrar para o template Astro na entrega.
 - **Botão "Rever abertura" só para o senhor (modo dono):** tocar 5 vezes seguidas na logo do topo liga/desliga (fica salvo só naquele navegador); também liga abrindo o site com `?dono=1`. O botão aparece no canto inferior esquerdo e repete a abertura. Visitante comum nunca vê. Testado. **Remover antes da entrega ao cliente** (ou manter escondido).
+
+## Proposta comercial (27/11/2026) — 3 planos
+| Plano | Entrega | Mensal | Inclui |
+|---|---|---|---|
+| Base | R$ 147 | R$ 67 | site 1 página (topo pôr do sol, planos, horários, "Aberto agora", mapa, WhatsApp), domínio, Google Maps, QR na recepção, relatório mensal |
+| **Espartano** (alvo) | R$ 247 | R$ 97 | Base + abertura de cinema 3D com som, tour 360, evoluções, comunidade, assistente "Seu primeiro treino", aula experimental pelo WhatsApp, medição de origem, indique um amigo, QR de avaliação no Google, ajustes ilimitados por WhatsApp |
+| Lenda | R$ 397 | R$ 197 | Espartano + 8 artes/vídeos por mês para status e Instagram, roleta de prêmios, "volta, aluno" (lista semanal de quem sumiu com mensagem pronta), campanhas de matrícula |
+Fundador: Espartano por R$ 147 + R$ 97/mês, 1ª mensalidade 30 dias depois, em troca de depoimento em vídeo. Piso: R$ 97/mês.
