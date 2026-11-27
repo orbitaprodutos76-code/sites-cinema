@@ -122,3 +122,8 @@ Pedidos do senhor sobre a v2: câmera é o que vende ("posso fechar a venda só 
 ## Como trazer o código
 Opção A: compartilhar a pasta `ediçao` com o Claude (app desktop → Configurações → Claude Code → Remote Control) e pedir "traz a Lord pro repositório".
 Opção B: no PC, copiar `amostra-lord` para dentro de `sites-cinema/clientes/lord-lumberjack/` e dar push.
+
+## Primeira apresentação ao dono (26–27/11/2026)
+- Versão mostrada: `index-v6.html` (https://claude.ai/artifact/5n89DQHieagr6b2KLe1PPV).
+- Pacote público pronto em `publicar/` (v6 + Open Graph + dados BarberShop para o Google + robots). Não publicado: faltou o token da Netlify.
+- Resultado nas palavras do senhor: "a primeira abordagem foi um fracasso total". PENDENTE: entender o que o dono disse e o que travou.
