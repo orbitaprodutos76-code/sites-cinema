@@ -1,0 +1,206 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Provador 3D</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600&family=Chakra+Petch:wght@600;700&display=swap">
+<style>
+/* layout: palco 3D em cima, peças embaixo; mesmo preto e ouro da loja */
+:root {
+  color-scheme: dark;
+  --ink: #0b0b0c; --panel: #151517; --line: #2a2a2e; --bone: #f1efea; --mute: #a3a19b; --gold: #f4c430; --gold-ink: #161200;
+  --f-display: Anton, Impact, "Arial Narrow", sans-serif; --f-body: Archivo, system-ui, sans-serif; --f-tech: "Chakra Petch", ui-monospace, monospace;
+}
+html, body { height: 100%; }
+body { background: var(--ink); color: var(--bone); font: 400 15px/1.5 var(--f-body); }
+.wrap { max-width: 980px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 20px 32px; display: grid; gap: 18px; }
+header { display: flex; align-items: end; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+h1 { margin: 0; font: 400 clamp(40px, 9vw, 72px)/.85 var(--f-display); text-transform: uppercase; text-wrap: balance; }
+h1 em { font-style: normal; color: var(--gold); }
+.tag { font: 700 11px/1 var(--f-tech); letter-spacing: .16em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--gold); padding: 7px 10px; }
+.stage { position: relative; height: min(78vh, 720px); min-height: 460px; background: radial-gradient(60% 45% at 50% 6%, rgba(255, 240, 210, .13), transparent 70%), linear-gradient(180deg, #161515 0%, #0d0d0e 62%, #080808 100%); overflow: hidden; touch-action: none; cursor: grab; }
+.stage.is-drag { cursor: grabbing; }
+.stage::before { content: ""; position: absolute; left: 50%; top: -6%; width: 78%; height: 100%; translate: -50% 0; background: linear-gradient(180deg, rgba(255, 236, 200, .12), rgba(255, 236, 200, .03) 70%, transparent); clip-path: polygon(38% 0, 62% 0, 100% 100%, 0 100%); filter: blur(18px); pointer-events: none; }
+.stage::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: radial-gradient(130% 95% at 50% 45%, transparent 55%, rgba(0, 0, 0, .55) 100%), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E"); background-blend-mode: normal, normal; opacity: .55; mix-blend-mode: multiply; }
+.views, .hint, .load { z-index: 3; }
+canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hint { position: absolute; left: 50%; bottom: 14px; translate: -50% 0; font: 600 11px/1 var(--f-tech); letter-spacing: .16em; text-transform: uppercase; color: var(--mute); pointer-events: none; transition: opacity .4s; white-space: nowrap; }
+.load[hidden] { display: none; }
+.load { position: absolute; inset: 0; display: grid; place-items: center; font: 700 12px/1 var(--f-tech); letter-spacing: .18em; text-transform: uppercase; color: var(--mute); }
+.views { position: absolute; right: 12px; top: 12px; display: grid; gap: 6px; }
+.views button { width: 44px; height: 36px; border: 0; background: rgba(11, 11, 12, .72); color: var(--bone); box-shadow: inset 0 0 0 1px var(--line); font: 700 11px/1 var(--f-tech); letter-spacing: .08em; cursor: pointer; }
+.views button:focus-visible, .pieces button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.pieces { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+.pieces button { display: flex; align-items: center; gap: 12px; min-width: 0; padding: 10px 14px 10px 10px; border: 0; background: var(--panel); color: var(--bone); box-shadow: inset 0 0 0 1px var(--line); text-align: left; cursor: pointer; font: inherit; transition: box-shadow .2s; }
+.pieces button[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--gold); }
+.pieces img { width: 56px; height: 56px; object-fit: contain; background: #cfcecb; flex: none; }
+.pieces span { display: grid; min-width: 0; }
+.pieces b { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pieces small { font: 700 11px/1.6 var(--f-tech); letter-spacing: .12em; text-transform: uppercase; color: var(--mute); }
+.pieces button[aria-pressed="true"] small { color: var(--gold); }
+.note { margin: 0; max-width: 65ch; color: var(--mute); font-size: 14px; }
+@media (prefers-reduced-motion: reduce) { .hint { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Provador <em>3D</em></h1>
+    <span class="tag">Protótipo</span>
+  </header>
+  <div class="stage" id="stage" role="img" aria-label="Manequim 3D preto vestindo jaqueta corta-vento e calça de moletom, gire arrastando">
+    <canvas id="cv"></canvas>
+    <div class="load" id="load">Carregando manequim…</div>
+    <div class="views" aria-label="Ângulo">
+      <button type="button" data-yaw="0" aria-label="Ver de frente">FR</button>
+      <button type="button" data-yaw="90" aria-label="Ver de lado">LD</button>
+      <button type="button" data-yaw="180" aria-label="Ver de costas">CT</button>
+    </div>
+    <p class="hint" id="hint">Arraste para girar · pinça para zoom</p>
+  </div>
+  <div class="pieces">
+    <button type="button" id="b-jaqueta" aria-pressed="true"><img src="tex_jaqueta.webp" alt=""><span><b>Jaqueta corta-vento preta e off-white</b><small>Vestindo</small></span></button>
+    <button type="button" id="b-calca" aria-pressed="true"><img src="tex_calca.webp" alt=""><span><b>Calça reta moletom com cordão</b><small>Vestindo</small></span></button>
+  </div>
+  <p class="note">Manequim montado a partir das suas 4 fotos. As peças são simuladas como tecido caindo no corpo. As costas usam uma versão da foto da frente sem as estampas, porque esses produtos não têm foto das costas.</p>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var cv = document.getElementById('cv'), stage = document.getElementById('stage');
+  var gl = cv.getContext('webgl', { antialias: true, alpha: true, premultipliedAlpha: false }) || cv.getContext('experimental-webgl');
+  var load = document.getElementById('load');
+  if (!gl) { load.textContent = 'Seu navegador não abriu o 3D'; return; }
+  var ext = gl.getExtension('OES_element_index_uint');
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function sh(t, s) { var o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); if (!gl.getShaderParameter(o, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o)); return o; }
+  function prog(vs, fs) { var p = gl.createProgram(); gl.attachShader(p, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(p, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(p); if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)); return p; }
+
+  var VS_BODY = 'attribute vec3 aP;attribute vec3 aN;attribute vec3 aC;uniform mat4 uM;uniform vec3 uLo,uHi;varying vec3 vN,vC,vW;void main(){vec3 p=uLo+aP*(uHi-uLo);vW=p;vN=aN;vC=aC;gl_Position=uM*vec4(p,1.);}';
+  var FS_BODY = 'precision mediump float;varying vec3 vN,vC,vW;uniform vec3 uE,uK,uRL,uRR;\nvec3 tone(vec3 x){x*=1.25;return clamp((x*(2.51*x+.03))/(x*(2.43*x+.59)+.14),0.,1.);}\nfloat spot(vec3 p){return (.25+.75*smoothstep(-.15,1.75,p.y))*(1.-.55*smoothstep(.25,.8,length(p.xz)));}\nvec3 studio(vec3 n,vec3 v,vec3 p,vec3 alb,float gloss,float spec,float sheen){\n float sp=spot(p);\n float hemi=n.y*.5+.5;\n vec3 amb=mix(vec3(.03,.029,.028),vec3(.16,.155,.15),hemi);\n float dk=max(dot(n,uK),0.);\n float top=max(dot(n,normalize(vec3(0.,1.,.25))),0.);\n vec3 c=alb*(amb+vec3(1.,.95,.88)*dk*1.05*sp+vec3(1.,.97,.92)*top*.55*sp);\n vec3 h=normalize(uK+v);c+=vec3(1.,.96,.9)*pow(max(dot(n,h),0.),gloss)*spec*sp;\n float fr=pow(1.-max(dot(n,v),0.),2.6);\n c+=vec3(1.,.76,.3)*fr*max(dot(n,uRL),0.)*1.1;\n c+=vec3(.7,.82,1.)*fr*max(dot(n,uRR),0.)*.75;\n c+=alb*fr*sheen;\n return c;}\nvoid main(){vec3 n=normalize(vN);vec3 v=normalize(uE-vW);vec3 alb=vC*1.05;vec3 c=studio(n,v,vW,alb,56.,.55,.0);c+=vec3(1.)*pow(max(dot(n,normalize(normalize(vec3(0.,1.,.3))+v)),0.),90.)*.22*spot(vW);c*=mix(.55,1.,smoothstep(.0,.35,vW.y));gl_FragColor=vec4(tone(c),1.);}';
+  var VS_CLOTH = 'attribute vec3 aP;attribute vec3 aN;attribute vec2 aT;uniform mat4 uM;varying vec3 vN,vW;varying vec2 vT;void main(){vW=aP;vN=aN;vT=aT;gl_Position=uM*vec4(aP,1.);}';
+  var FS_CLOTH = 'precision mediump float;varying vec3 vN,vW;varying vec2 vT;uniform sampler2D uTex;uniform vec3 uE,uK,uRL,uRR;\nvec3 tone(vec3 x){x*=1.25;return clamp((x*(2.51*x+.03))/(x*(2.43*x+.59)+.14),0.,1.);}\nfloat spot(vec3 p){return (.25+.75*smoothstep(-.15,1.75,p.y))*(1.-.55*smoothstep(.25,.8,length(p.xz)));}\nvec3 studio(vec3 n,vec3 v,vec3 p,vec3 alb,float gloss,float spec,float sheen){\n float sp=spot(p);\n float hemi=n.y*.5+.5;\n vec3 amb=mix(vec3(.03,.029,.028),vec3(.16,.155,.15),hemi);\n float dk=max(dot(n,uK),0.);\n float top=max(dot(n,normalize(vec3(0.,1.,.25))),0.);\n vec3 c=alb*(amb+vec3(1.,.95,.88)*dk*1.05*sp+vec3(1.,.97,.92)*top*.55*sp);\n vec3 h=normalize(uK+v);c+=vec3(1.,.96,.9)*pow(max(dot(n,h),0.),gloss)*spec*sp;\n float fr=pow(1.-max(dot(n,v),0.),2.6);\n c+=vec3(1.,.76,.3)*fr*max(dot(n,uRL),0.)*1.1;\n c+=vec3(.7,.82,1.)*fr*max(dot(n,uRR),0.)*.75;\n c+=alb*fr*sheen;\n return c;}\nfloat hs(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}float vn(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hs(i),hs(i+vec2(1,0)),f.x),mix(hs(i+vec2(0,1)),hs(i+vec2(1,1)),f.x),f.y);}void main(){vec3 n=normalize(vN);vec3 v=normalize(uE-vW);float inside=0.;if(!gl_FrontFacing){n=-n;inside=1.;}vec3 w=vW*vec3(34.,13.,34.);float a=sin(w.y+sin(w.x*1.7+w.z)*2.2+vn(vW.xz*18.)*4.)+.5*sin(w.y*2.3+w.x*3.1-w.z*2.);float b=cos(w.x*1.3-w.z*1.1+w.y*.6+vn(vW.xy*22.)*3.);n=normalize(n+vec3(b*.012,a*.018,-b*.012)*(1.-inside));vec3 alb=texture2D(uTex,vT).rgb;alb=pow(alb,vec3(1.08));float weave=vn(vT*vec2(820.,820.))*.5+vn(vT*vec2(1650.,1650.))*.5;alb*=.93+.12*weave;float cav=.9+.1*smoothstep(-1.,1.,a);vec3 c=studio(n,v,vW,alb,10.,.06,.35)*cav;c*=mix(.82,.25,inside);c*=mix(.6,1.,smoothstep(.0,.4,vW.y));gl_FragColor=vec4(tone(c),1.);}';
+  var VS_FLOOR = 'attribute vec2 aP;uniform mat4 uM;varying vec2 vP;void main(){vP=aP*1.6;gl_Position=uM*vec4(aP.x*1.6,0.,aP.y*1.6,1.);}';
+  var FS_FLOOR = 'precision mediump float;varying vec2 vP;void main(){float r=length(vP*vec2(1.,1.2));float pool=1.-smoothstep(.0,1.05,r);float sh=(1.-smoothstep(.0,.36,length(vP*vec2(.9,1.5))))*.75;float ring=(1.-smoothstep(.0,.01,abs(r-.62)))*.9;vec3 c=vec3(.2,.19,.17)*pool*pool*(1.-sh)+vec3(.96,.77,.19)*ring*.8;float a=max(pool*pool*(1.-sh*.2)*.9,ring);if(a<.004)discard;gl_FragColor=vec4(c,a);}';
+  var P = { body: prog(VS_BODY, FS_BODY), cloth: prog(VS_CLOTH, FS_CLOTH), floor: prog(VS_FLOOR, FS_FLOOR) };
+
+  /* ---------- matrizes ---------- */
+  function persp(f, a, n, fr) { var t = 1 / Math.tan(f / 2); return [t / a, 0, 0, 0, 0, t, 0, 0, 0, 0, (fr + n) / (n - fr), -1, 0, 0, 2 * fr * n / (n - fr), 0]; }
+  function look(e, c, u) {
+    var z = norm([e[0] - c[0], e[1] - c[1], e[2] - c[2]]), x = norm(cross(u, z)), y = cross(z, x);
+    return [x[0], y[0], z[0], 0, x[1], y[1], z[1], 0, x[2], y[2], z[2], 0, -dot(x, e), -dot(y, e), -dot(z, e), 1];
+  }
+  function mul(a, b) { var o = new Array(16); for (var i = 0; i < 4; i++) for (var j = 0; j < 4; j++) { var s = 0; for (var k = 0; k < 4; k++) s += a[k * 4 + j] * b[i * 4 + k]; o[i * 4 + j] = s; } return o; }
+  function norm(v) { var l = Math.hypot(v[0], v[1], v[2]) || 1; return [v[0] / l, v[1] / l, v[2] / l]; }
+  function cross(a, b) { return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]; }
+  function dot(a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
+
+  /* ---------- câmera ---------- */
+  var cam = { yaw: 0.35, pitch: 0.06, dist: 3.9, ty: 0.9, vy: 0 }, auto = !reduce, drag = null, pts = {};
+  var hint = document.getElementById('hint');
+  function stopAuto() { auto = false; hint.style.opacity = '0'; }
+  stage.addEventListener('pointerdown', function (e) { if (e.target.closest('button')) return; stage.setPointerCapture(e.pointerId); pts[e.pointerId] = [e.clientX, e.clientY]; drag = { x: e.clientX, y: e.clientY, t: performance.now() }; stage.classList.add('is-drag'); stopAuto(); });
+  stage.addEventListener('pointermove', function (e) {
+    if (!pts[e.pointerId]) return;
+    var ids = Object.keys(pts);
+    if (ids.length === 2) {
+      var o = ids[0] == e.pointerId ? pts[ids[1]] : pts[ids[0]], p = pts[e.pointerId];
+      var d0 = Math.hypot(p[0] - o[0], p[1] - o[1]), d1 = Math.hypot(e.clientX - o[0], e.clientY - o[1]);
+      if (d0 > 0) cam.dist = Math.max(1.4, Math.min(5.5, cam.dist * d0 / d1));
+    } else if (drag) {
+      var dx = e.clientX - drag.x, dy = e.clientY - drag.y, dt = Math.max(1, performance.now() - drag.t);
+      cam.yaw -= dx * 0.009; cam.pitch = Math.max(-0.35, Math.min(0.6, cam.pitch + dy * 0.005));
+      cam.vy = -dx * 0.009 / dt * 16; drag = { x: e.clientX, y: e.clientY, t: performance.now() };
+    }
+    pts[e.pointerId] = [e.clientX, e.clientY]; dirty = true;
+  });
+  function up(e) { delete pts[e.pointerId]; if (!Object.keys(pts).length) { drag = null; stage.classList.remove('is-drag'); } }
+  stage.addEventListener('pointerup', up); stage.addEventListener('pointercancel', up);
+  stage.addEventListener('wheel', function (e) { e.preventDefault(); cam.dist = Math.max(1.4, Math.min(5.5, cam.dist * (1 + e.deltaY * 0.001))); stopAuto(); dirty = true; }, { passive: false });
+  var target = null;
+  Array.prototype.forEach.call(document.querySelectorAll('.views button'), function (b) {
+    b.addEventListener('click', function () { stopAuto(); var y = +b.getAttribute('data-yaw') * Math.PI / 180; var k = Math.round((cam.yaw - y) / (2 * Math.PI)); target = y + k * 2 * Math.PI; cam.vy = 0; dirty = true; });
+  });
+
+  /* ---------- dados ---------- */
+  var meshes = [], show = { jaqueta: true, calca: true }, dirty = true;
+  function buf(type, data) { var b = gl.createBuffer(); gl.bindBuffer(type, b); gl.bufferData(type, data, gl.STATIC_DRAW); return b; }
+  function tex(src) {
+    var t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([120, 120, 120, 255]));
+    var im = new Image(); im.onload = function () {
+      var c = document.createElement('canvas'); c.width = 1024; c.height = 1024; c.getContext('2d').drawImage(im, 0, 0, 1024, 1024);
+      gl.bindTexture(gl.TEXTURE_2D, t); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, c); gl.generateMipmap(gl.TEXTURE_2D);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR); dirty = true;
+    }; im.src = src; return t;
+  }
+  var floorBuf = buf(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]));
+  Promise.all([fetch('provador3d.json').then(function (r) { return r.json(); }), fetch('provador3d.b64.txt').then(function (r) { return r.text(); }).then(function (t) { var s = atob(t.trim()), u = new Uint8Array(s.length); for (var i = 0; i < s.length; i++) u[i] = s.charCodeAt(i); return u.buffer; })]).then(function (res) {
+    var meta = res[0], bin = res[1];
+    meta.meshes.forEach(function (m) {
+      var o = { kind: m.kind, group: m.group, ni: m.ni };
+      if (m.kind === 'body') { o.p = buf(gl.ARRAY_BUFFER, new Uint16Array(bin, m.pos[0], m.pos[1] / 2)); o.lo = m.lo; o.hi = m.hi; o.c = buf(gl.ARRAY_BUFFER, new Uint8Array(bin, m.col[0], m.col[1])); }
+      else { o.p = buf(gl.ARRAY_BUFFER, new Float32Array(bin, m.pos[0], m.pos[1] / 4)); o.t = buf(gl.ARRAY_BUFFER, new Float32Array(bin, m.uv[0], m.uv[1] / 4)); o.tex = tex(m.tex); }
+      o.n = buf(gl.ARRAY_BUFFER, new Int8Array(bin, m.nrm[0], m.nrm[1]));
+      o.i = buf(gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(bin, m.idx[0], m.idx[1] / 4));
+      meshes.push(o);
+    });
+    load.hidden = true; dirty = true;
+  }).catch(function () { load.textContent = 'Não foi possível carregar o 3D'; });
+
+  /* ---------- peças ---------- */
+  ['jaqueta', 'calca'].forEach(function (g) {
+    var b = document.getElementById('b-' + g);
+    b.addEventListener('click', function () { show[g] = !show[g]; b.setAttribute('aria-pressed', String(show[g])); b.querySelector('small').textContent = show[g] ? 'Vestindo' : 'Vestir'; dirty = true; });
+  });
+
+  /* ---------- desenho ---------- */
+  function attr(p, name, b, size, type, normd) { var l = gl.getAttribLocation(p, name); if (l < 0) return; gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.enableVertexAttribArray(l); gl.vertexAttribPointer(l, size, type, normd, 0, 0); }
+  function off(p) { for (var i = 0; i < 4; i++) gl.disableVertexAttribArray(i); }
+  function size() { var r = cv.getBoundingClientRect(), d = Math.min(2, window.devicePixelRatio || 1); cv.width = Math.round(r.width * d); cv.height = Math.round(r.height * d); dirty = true; }
+  addEventListener('resize', size); size();
+  var last = performance.now();
+  function frame(now) {
+    var dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (auto) { cam.yaw += dt * 0.45; dirty = true; }
+    else if (target != null) { cam.yaw += (target - cam.yaw) * Math.min(1, dt * 8); if (Math.abs(target - cam.yaw) < 0.002) { cam.yaw = target; target = null; } dirty = true; }
+    else if (!drag && Math.abs(cam.vy) > 0.0005) { cam.yaw += cam.vy; cam.vy *= 0.92; dirty = true; }
+    if (dirty && meshes.length) { draw(); dirty = false; }
+    requestAnimationFrame(frame);
+  }
+  function draw() {
+    var w = cv.width, h = cv.height; gl.viewport(0, 0, w, h);
+    gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    var a = w / h, fov = a < 0.75 ? 0.62 : 0.5, dist = cam.dist * (a < 0.75 ? 1.12 : 1);
+    var e = [Math.sin(cam.yaw) * Math.cos(cam.pitch) * dist, cam.ty + Math.sin(cam.pitch) * dist, Math.cos(cam.yaw) * Math.cos(cam.pitch) * dist];
+    var M = mul(persp(fov, a, 0.05, 30), look(e, [0, cam.ty, 0], [0, 1, 0]));
+    var cy = Math.cos(cam.yaw), sy = Math.sin(cam.yaw);
+    function rot(v) { var l = Math.hypot(v[0], v[1], v[2]); return [(v[0] * cy + v[2] * sy) / l, v[1] / l, (-v[0] * sy + v[2] * cy) / l]; }
+    var LK = rot([-0.55, 0.62, 0.62]), LRL = rot([-0.95, 0.25, -0.6]), LRR = rot([0.95, 0.2, -0.55]);
+    function lights(p) { gl.uniform3fv(gl.getUniformLocation(p, 'uK'), LK); gl.uniform3fv(gl.getUniformLocation(p, 'uRL'), LRL); gl.uniform3fv(gl.getUniformLocation(p, 'uRR'), LRR); }
+    gl.enable(gl.DEPTH_TEST);
+    // chão
+    gl.useProgram(P.floor); gl.uniformMatrix4fv(gl.getUniformLocation(P.floor, 'uM'), false, M); attr(P.floor, 'aP', floorBuf, 2, gl.FLOAT, false);
+    gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); gl.depthMask(false); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); gl.depthMask(true); gl.disable(gl.BLEND); off();
+    meshes.forEach(function (m) {
+      if (m.kind === 'body') {
+        gl.useProgram(P.body); gl.uniformMatrix4fv(gl.getUniformLocation(P.body, 'uM'), false, M);
+        gl.uniform3fv(gl.getUniformLocation(P.body, 'uLo'), m.lo); gl.uniform3fv(gl.getUniformLocation(P.body, 'uHi'), m.hi); gl.uniform3fv(gl.getUniformLocation(P.body, 'uE'), e); lights(P.body);
+        attr(P.body, 'aP', m.p, 3, gl.UNSIGNED_SHORT, true); attr(P.body, 'aN', m.n, 3, gl.BYTE, true); attr(P.body, 'aC', m.c, 3, gl.UNSIGNED_BYTE, true);
+        gl.disable(gl.POLYGON_OFFSET_FILL); gl.enable(gl.CULL_FACE);
+      } else {
+        if (!show[m.group]) return;
+        gl.useProgram(P.cloth); gl.uniformMatrix4fv(gl.getUniformLocation(P.cloth, 'uM'), false, M); gl.uniform3fv(gl.getUniformLocation(P.cloth, 'uE'), e); lights(P.cloth);
+        gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, m.tex); gl.uniform1i(gl.getUniformLocation(P.cloth, 'uTex'), 0);
+        attr(P.cloth, 'aP', m.p, 3, gl.FLOAT, false); attr(P.cloth, 'aN', m.n, 3, gl.BYTE, true); attr(P.cloth, 'aT', m.t, 2, gl.FLOAT, false);
+        gl.disable(gl.CULL_FACE); gl.enable(gl.POLYGON_OFFSET_FILL); gl.polygonOffset(m.group === 'jaqueta' ? -2 : -1, m.group === 'jaqueta' ? -2 : -1);
+      }
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, m.i); gl.drawElements(gl.TRIANGLES, m.ni, ext ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT, 0); off();
+    });
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+
+</body></html>

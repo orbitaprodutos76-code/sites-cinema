@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quadro lava</title>
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}canvas{display:block;width:100%;height:100%}</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head><body><canvas id="c"></canvas>
+<script type="module">
+// Quadro de referência (parado) no estilo pedido: logo/letras de pedra escura com bordas de lava vermelha,
+// câmera macro com profundidade de campo rasa, fumaça e brasas. ?quadro=1 (macro) | 2 (revelação)
+import * as THREE from 'three';
+import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { BokehPass } from 'three/addons/postprocessing/BokehPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+const Q = +(new URLSearchParams(location.search).get('quadro') || 2), W = innerWidth, H = innerHeight, celular = W < 761;
+const r = new THREE.WebGLRenderer({ canvas: document.getElementById('c'), antialias: true });
+r.setPixelRatio(1); r.setSize(W, H, false); r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1.0; r.outputColorSpace = THREE.SRGBColorSpace;
+const cena = new THREE.Scene(); cena.background = new THREE.Color(0x020101);
+const cam = new THREE.PerspectiveCamera(Q === 1 ? 24 : 30, W / H, .02, 60);
+
+// texturas procedurais: pedra (relevo/rugosidade) e rachaduras de lava (emissão)
+function canvasTex(desenha, n = 1024) { const c = document.createElement('canvas'); c.width = c.height = n; desenha(c.getContext('2d'), n); const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t; }
+function ruido(x, n) { const img = x.createImageData(n, n), d = img.data; let v = 0;
+  for (let i = 0; i < n * n; i++) { v = v * .55 + Math.random() * .45; const g = 40 + v * 160 + (Math.random() < .02 ? 80 : 0); d[i * 4] = d[i * 4 + 1] = d[i * 4 + 2] = g; d[i * 4 + 3] = 255; } x.putImageData(img, 0, 0);
+  x.filter = 'blur(1.2px)'; x.drawImage(x.canvas, 0, 0); x.filter = 'none';
+  for (let i = 0; i < 900; i++) { x.fillStyle = `rgba(${Math.random() < .5 ? 0 : 255},${Math.random() < .5 ? 0 : 255},${Math.random() < .5 ? 0 : 255},.0)`; } }
+const pedra = canvasTex((x, n) => { x.fillStyle = '#555'; x.fillRect(0, 0, n, n);
+  for (let i = 0; i < 9000; i++) { const s = 2 + Math.random() * 26, g = 30 + Math.random() * 190 | 0; x.fillStyle = `rgba(${g},${g},${g},${.05 + Math.random() * .25})`; x.beginPath(); x.ellipse(Math.random() * n, Math.random() * n, s, s * (.4 + Math.random() * .8), Math.random() * 3, 0, 6.3); x.fill(); } });
+const rachas = canvasTex((x, n) => { x.fillStyle = '#000'; x.fillRect(0, 0, n, n); x.lineCap = 'round';
+  for (let k = 0; k < 46; k++) { let px = Math.random() * n, py = Math.random() * n, a = Math.random() * 6.28; const passos = 8 + Math.random() * 26 | 0;
+    for (let i = 0; i < passos; i++) { const nx = px + Math.cos(a) * (6 + Math.random() * 18), ny = py + Math.sin(a) * (6 + Math.random() * 18);
+      x.strokeStyle = `rgba(255,${120 + Math.random() * 80 | 0},40,${.5 + Math.random() * .5})`; x.lineWidth = .6 + Math.random() * 2.4; x.shadowColor = '#ff3010'; x.shadowBlur = 8;
+      x.beginPath(); x.moveTo(px, py); x.lineTo(nx, ny); x.stroke(); px = nx; py = ny; a += (Math.random() - .5) * 1.2; } } });
+pedra.repeat.set(2.2, 2.2); rachas.repeat.set(.7, .7);
+
+const rocha = new THREE.MeshStandardMaterial({ color: 0x5a5450, roughness: .7, metalness: .35, bumpMap: pedra, bumpScale: 1.6, roughnessMap: pedra,
+  emissive: 0xff3a10, emissiveMap: rachas, emissiveIntensity: .55 });
+const lateral = new THREE.MeshStandardMaterial({ color: 0x1e1b1a, roughness: .85, metalness: .2, bumpMap: pedra, bumpScale: 2, emissive: 0xff2a0c, emissiveMap: rachas, emissiveIntensity: 1.4 });
+const costura = new THREE.MeshStandardMaterial({ color: 0x200000, emissive: 0xff3412, emissiveIntensity: 2.4, roughness: .6 });
+
+// luz: quase nenhuma de fora; a luz vem da lava. Um recorte quente fraco e um preenchimento frio fraquíssimo
+const k1 = new THREE.PointLight(0xff4a1a, 2.5, 8, 1.6); k1.position.set(-1.2, .6, 1.4); cena.add(k1);
+const k2 = new THREE.DirectionalLight(0xc8d2dc, 1.6); k2.position.set(-2.5, 4, 3); cena.add(k2);
+const k3 = new THREE.DirectionalLight(0xffb070, 2.2); k3.position.set(1.5, 2.5, -3); cena.add(k3);   // recorte por trás pega o chanfro
+const amb = new THREE.HemisphereLight(0x221a18, 0x000000, .4); cena.add(amb);
+
+// fumaça: planos com textura macia, quente embaixo
+const fumTex = canvasTex((x, n) => { for (let i = 0; i < 60; i++) { const cx = n * (.2 + Math.random() * .6), cy = n * (.2 + Math.random() * .6), rr = n * (.08 + Math.random() * .25);
+  const g = x.createRadialGradient(cx, cy, 0, cx, cy, rr); g.addColorStop(0, 'rgba(255,255,255,.10)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, n, n); } }, 512);
+for (let i = 0; i < 14; i++) { const m = new THREE.Mesh(new THREE.PlaneGeometry(9, 5), new THREE.MeshBasicMaterial({ map: fumTex, color: i % 3 ? 0x2a0e08 : 0x3a160c, transparent: true, opacity: .35, depthWrite: false, blending: THREE.AdditiveBlending }));
+  m.position.set((Math.random() - .5) * 6, -1 + Math.random() * 2, -2.5 - Math.random() * 4); m.rotation.z = Math.random() * 6; cena.add(m); }
+// brasas
+const nB = 500, pb = new Float32Array(nB * 3), cb = new Float32Array(nB * 3);
+for (let i = 0; i < nB; i++) { pb[i * 3] = (Math.random() - .5) * 8; pb[i * 3 + 1] = -1.2 + Math.random() * 3.5; pb[i * 3 + 2] = -4 + Math.random() * 6; const h = Math.random(); cb[i * 3] = 1; cb[i * 3 + 1] = .25 + h * .45; cb[i * 3 + 2] = .05 + h * .1; }
+const gb = new THREE.BufferGeometry(); gb.setAttribute('position', new THREE.BufferAttribute(pb, 3)); gb.setAttribute('color', new THREE.BufferAttribute(cb, 3));
+cena.add(new THREE.Points(gb, new THREE.PointsMaterial({ size: .025, vertexColors: true, transparent: true, opacity: .9, blending: THREE.AdditiveBlending, depthWrite: false })));
+
+new FontLoader().load('../midia/anton-3d.json', fonte => {
+  const grupo = new THREE.Group(); cena.add(grupo);
+  const linhas = celular ? ['BODY', 'GYM'] : ['BODY GYM'];
+  linhas.forEach((txt, i) => {
+    const g = new TextGeometry(txt, { font: fonte, size: 1, height: .42, depth: .42, curveSegments: 10, bevelEnabled: true, bevelThickness: .05, bevelSize: .03, bevelSegments: 4 });
+    g.computeBoundingBox(); const b = g.boundingBox; g.translate(-(b.min.x + b.max.x) / 2, -b.min.y - i * 1.12, -(b.min.z + b.max.z) / 2);
+    // UV planar na frente para a pedra não esticar
+    const p = g.attributes.position, uv = g.attributes.uv; for (let k = 0; k < p.count; k++) uv.setXY(k, p.getX(k) * .35, p.getY(k) * .35 + p.getZ(k) * .35);
+    grupo.add(new THREE.Mesh(g, [rocha, lateral]));
+    // costura de lava: lâmina fina um pouco maior que a letra, no meio da espessura (só a borda aparece, acesa)
+    const c = new TextGeometry(txt, { font: fonte, size: 1, height: .035, depth: .035, curveSegments: 10, bevelEnabled: true, bevelThickness: .004, bevelSize: .036, bevelSegments: 1 });
+    c.computeBoundingBox(); const bc = c.boundingBox; c.translate(-(bc.min.x + bc.max.x) / 2, -b.min.y - i * 1.12 + (b.min.y - bc.min.y) * 0 , -(bc.min.z + bc.max.z) / 2);
+    grupo.add(new THREE.Mesh(c, costura));
+  });
+  const caixa = new THREE.Box3().setFromObject(grupo), centro = caixa.getCenter(new THREE.Vector3()), larg = caixa.max.x - caixa.min.x;
+  grupo.position.sub(centro); grupo.rotation.y = -.18; grupo.rotation.x = .05;
+  let alvo;
+  if (Q === 1) { // macro: rente à borda do B, foco curto
+    cam.position.set(-larg * .36, .3, 1.7); alvo = new THREE.Vector3(-larg * .26, .2, 0); cam.lookAt(alvo); cam.rotateZ(.12);
+  } else {      // revelação: a marca inteira, levemente de lado
+    const d = (larg / 2) / Math.tan(Math.atan(Math.tan(THREE.MathUtils.degToRad(cam.fov) / 2) * cam.aspect)) / (celular ? .8 : .72);
+    cam.position.set(larg * .08, .25, d); alvo = new THREE.Vector3(0, 0, 0); cam.lookAt(alvo);
+  }
+  const comp = new EffectComposer(r); comp.addPass(new RenderPass(cena, cam));
+  comp.addPass(new BokehPass(cena, cam, { focus: cam.position.distanceTo(Q === 1 ? new THREE.Vector3(-larg * .34, .2, .25) : alvo), aperture: Q === 1 ? .008 : .002, maxblur: Q === 1 ? .012 : .005 }));
+  comp.addPass(new UnrealBloomPass(new THREE.Vector2(W / 2, H / 2), .5, .35, .7));
+  comp.addPass(new OutputPass());
+  comp.render(); setTimeout(() => { comp.render(); document.title = 'pronto'; }, 300);
+});
+</script></body></html>

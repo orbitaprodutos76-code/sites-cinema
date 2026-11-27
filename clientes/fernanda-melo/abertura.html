@@ -1,0 +1,841 @@
+<title>Barbearia Fernanda Melo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Barbearia Fernanda Melo: corte, barba e cuidado num salão de mármore roxo, espelhos dourados e neon. Agende seu horário.">
+<meta property="og:title" content="Barbearia Fernanda Melo">
+<meta property="og:description" content="Corte, barba e cuidado num salão de mármore roxo, espelhos dourados e neon.">
+<meta name="theme-color" content="#05070F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+/* Abertura: a noite da fachada é a cena; o vidro racha em ouro e entrega o branco com fumaça roxa.
+   Visual único (não segue tema claro/escuro do visitante): noite → branco. */
+:root{
+  --branco:#FFFFFF; --roxo:#6B21A8; --berinjela:#3B0A57; --ouro:#FBBF24; --ouro-sombra:#B7791F;
+  --noite:#05070F; --tinta:#1E0B30;
+  --fd:'DM Serif Display',Georgia,'Times New Roman',serif;
+  --fb:'Space Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --sai:cubic-bezier(.16,1,.3,1);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{margin:0;background:var(--branco);color:var(--tinta);font-family:var(--fb);-webkit-font-smoothing:antialiased}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* camadas */
+.camada{position:fixed;inset:0;width:100%;height:100%}
+#fumaca{z-index:2;pointer-events:none}
+#veios{z-index:3;pointer-events:none;overflow:visible}
+#cena{z-index:5;background:var(--noite);transform-origin:0 0;overflow:hidden}
+#ceu,#fachada{position:absolute;inset:0;width:100%;height:100%;display:block}
+#cacos{z-index:6;pointer-events:none}
+#racha{z-index:7;pointer-events:none}
+
+/* topo e herói (o que fica depois da abertura) */
+.topo{position:fixed;inset:0 0 auto;z-index:8;display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding-top:calc(14px + env(safe-area-inset-top,0px));padding-bottom:14px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));opacity:0}
+.marca{font:600 .72rem/1 var(--fb);letter-spacing:.18em;text-transform:uppercase;color:var(--berinjela);text-decoration:none}
+.marca em{font:italic 400 1.15rem/1 var(--fd);letter-spacing:0;text-transform:none;color:var(--roxo);margin-left:.35em}
+.pilula{font:600 .72rem/1 var(--fb);letter-spacing:.16em;text-transform:uppercase;color:var(--roxo);text-decoration:none;
+  border:1.5px solid var(--roxo);border-radius:99px;padding:.75em 1.3em;background:rgb(255 255 255/.82);transition:background .3s,color .3s}
+.pilula:hover{background:var(--roxo);color:var(--branco)}
+
+.hero{position:fixed;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  gap:clamp(.9rem,2.2vh,1.5rem);visibility:hidden;
+  padding-block:calc(72px + env(safe-area-inset-top,0px)) calc(72px + env(safe-area-inset-bottom,0px));
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.hero.on{visibility:visible}
+.sobre{margin:0;font:600 .78rem/1 var(--fb);letter-spacing:.32em;text-transform:uppercase;color:var(--roxo);opacity:0}
+#titulo{width:min(88vw,62rem);height:auto;overflow:visible;display:block}
+.frase{margin:0;max-width:34rem;font:400 clamp(1rem,1.6vw,1.15rem)/1.6 var(--fb);color:var(--tinta);text-wrap:balance;opacity:0}
+.cta{display:inline-flex;align-items:center;gap:.8em;background:var(--roxo);color:var(--branco);text-decoration:none;
+  font:600 .82rem/1 var(--fb);letter-spacing:.16em;text-transform:uppercase;padding:1.15em 2.1em;border-radius:99px;opacity:0;
+  box-shadow:0 0 0 0 var(--ouro),0 14px 34px -14px rgb(107 33 168/.7);transition:box-shadow .45s var(--sai),transform .45s var(--sai)}
+.cta span{display:inline-block;transition:transform .45s var(--sai)}
+.cta:hover{box-shadow:0 0 0 3px var(--ouro),0 18px 40px -14px rgb(107 33 168/.8);transform:translateY(-2px)}
+.cta:hover span{transform:translateX(4px)}
+.servicos{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:.35rem .6rem;opacity:0;
+  font:500 .72rem/1.4 var(--fb);letter-spacing:.2em;text-transform:uppercase;color:var(--berinjela)}
+.servicos li{display:flex;align-items:center;gap:.6rem}
+.servicos li+li::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--ouro);box-shadow:0 0 0 1px var(--ouro-sombra)}
+
+/* controles */
+.ctrl{position:fixed;z-index:9;display:flex;gap:.5rem;flex-wrap:wrap;justify-content:flex-end;
+  right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+.ctrl button{font:500 .68rem/1 var(--fb);letter-spacing:.16em;text-transform:uppercase;cursor:pointer;border-radius:99px;padding:.85em 1.25em;
+  transition:background .3s,color .3s,border-color .3s}
+body.noite .ctrl button{color:#F1ECFA;background:rgb(255 255 255/.06);border:1px solid rgb(255 255 255/.22);backdrop-filter:blur(6px)}
+body.noite .ctrl button:hover{background:rgb(255 255 255/.16)}
+body.dia .ctrl button{color:var(--berinjela);background:rgb(255 255 255/.7);border:1px solid rgb(59 10 87/.25);backdrop-filter:blur(6px)}
+body.dia .ctrl button:hover{border-color:var(--roxo);color:var(--roxo)}
+.ctrl button[aria-pressed="true"]{border-color:var(--ouro)!important}
+:focus-visible{outline:3px solid var(--ouro);outline-offset:3px}
+
+@media (max-width:640px){
+  #titulo{width:min(84vw,24rem)}
+  .marca{font-size:.62rem;letter-spacing:.14em}
+  .marca em{font-size:1rem}
+  .servicos{font-size:.64rem;letter-spacing:.14em;gap:.3rem .45rem;max-width:19rem}
+  .servicos li{gap:.45rem}
+}
+</style>
+
+<div class="camada" id="cena" aria-hidden="true">
+  <canvas id="ceu"></canvas>
+  <svg id="fachada" viewBox="120 0 1500 937" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="gParede" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2e0ec"/><stop offset="1" stop-color="#b9b6cb"/></linearGradient>
+      <linearGradient id="gParede2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d3d1df"/><stop offset="1" stop-color="#a6a3b9"/></linearGradient>
+      <linearGradient id="gChao" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8d8b9c"/><stop offset=".25" stop-color="#4c4a5a"/><stop offset="1" stop-color="#0d0c14"/></linearGradient>
+      <linearGradient id="gInterior" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a1676"/><stop offset=".55" stop-color="#7d33bd"/><stop offset="1" stop-color="#5a1e8c"/></linearGradient>
+      <radialGradient id="gLuzTeto"><stop offset="0" stop-color="#fff3d0" stop-opacity=".9"/><stop offset="1" stop-color="#fff3d0" stop-opacity="0"/></radialGradient>
+      <radialGradient id="gPorta" cx=".5" cy="0" r="1"><stop offset="0" stop-color="#ffe8b8" stop-opacity=".55"/><stop offset="1" stop-color="#ffe8b8" stop-opacity="0"/></radialGradient>
+      <radialGradient id="gBanho" cx="990" cy="670" r="620" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#a24bff" stop-opacity=".55"/><stop offset=".55" stop-color="#7b2cdc" stop-opacity=".22"/><stop offset="1" stop-color="#7b2cdc" stop-opacity="0"/></radialGradient>
+      <radialGradient id="gPlaca" cx="900" cy="450" r="380" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#b9a3ff" stop-opacity=".35"/><stop offset="1" stop-color="#b9a3ff" stop-opacity="0"/></radialGradient>
+      <radialGradient id="gChaoNeon" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#b44dff" stop-opacity=".55"/><stop offset="1" stop-color="#b44dff" stop-opacity="0"/></radialGradient>
+      <linearGradient id="gReflexo" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".32"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+      <pattern id="pPoste" width="22" height="22" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+        <rect width="22" height="22" fill="#f6f4fb"/><rect width="7" height="22" fill="#d4213d"/><rect x="11" width="7" height="22" fill="#2448c9"/>
+      </pattern>
+      <clipPath id="cVidro"><rect x="562" y="522" width="856" height="296"/></clipPath>
+      <g id="logo" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 34 L78 27"/>
+        <path d="M23 31 L21 6 Q45 -1 67 3 L68 28"/>
+        <path d="M22 24 L67 20"/>
+        <ellipse cx="45" cy="52" rx="16" ry="18"/>
+        <path d="M45 61 C40 55 29 55 25 62 C23 67 28 70 31 66 C34 62 40 62 45 64 C50 62 56 62 59 66 C62 70 67 67 65 62 C61 55 50 55 45 61 Z" fill="#c26bff"/>
+        <path d="M37 76 L45 80 L53 76 L53 84 L45 80 L37 84 Z" fill="#c26bff"/>
+        <path d="M45 82 L29 120 M45 82 L61 120"/>
+      </g>
+    </defs>
+
+    <!-- fios no céu -->
+    <path d="M-900 120 Q700 250 2600 520" stroke="#0a0f22" stroke-width="1.6" fill="none"/>
+    <path d="M-900 470 Q900 520 2600 430" stroke="#0a0f22" stroke-width="1.3" fill="none"/>
+
+    <!-- chão -->
+    <rect x="-2500" y="900" width="7000" height="2600" fill="url(#gChao)"/>
+    <rect x="-2500" y="1010" width="7000" height="2" fill="#2b2a36" opacity=".6"/>
+
+    <!-- prédio -->
+    <rect x="190" y="420" width="335" height="482" fill="url(#gParede2)"/>
+    <rect x="205" y="446" width="312" height="456" fill="#9f9cb2"/>
+    <rect x="180" y="408" width="356" height="36" fill="#ebe9f3"/>
+    <rect x="520" y="372" width="952" height="530" fill="url(#gParede)"/>
+    <rect x="520" y="372" width="952" height="4" fill="#f7f6fb"/>
+    <rect x="1468" y="372" width="4" height="530" fill="#8e8ba2"/>
+    <!-- porta -->
+    <rect x="255" y="520" width="150" height="382" fill="#25222b"/>
+    <g stroke="#34303d" stroke-width="2">
+      <path d="M267 520V902M279 520V902M291 520V902M303 520V902M315 520V902M327 520V902M339 520V902M351 520V902M363 520V902M375 520V902M387 520V902M399 520V902"/>
+    </g>
+    <path d="M392 650V770" stroke="#7d7a88" stroke-width="3"/>
+    <path d="M232 902 L428 902 L440 930 L220 930 Z" fill="#c9c6d6" opacity=".55"/>
+    <!-- vidro apagado -->
+    <rect x="562" y="522" width="856" height="296" fill="#140820"/>
+    <!-- vasos -->
+    <g fill="#0b0a10">
+      <path d="M982 868h40l-5 36h-30z"/><path d="M1092 868h40l-5 36h-30z"/><path d="M1202 868h40l-5 36h-30z"/><path d="M1312 868h40l-5 36h-30z"/><path d="M1422 868h40l-5 36h-30z"/>
+    </g>
+    <g fill="#1d3a25">
+      <path d="M1002 868l-10-46 7 45zm0 0l-1-58 4 58zm0 0l12-44-8 45z"/><path d="M1112 868l-10-46 7 45zm0 0l-1-58 4 58zm0 0l12-44-8 45z"/>
+      <path d="M1222 868l-10-46 7 45zm0 0l-1-58 4 58zm0 0l12-44-8 45z"/><path d="M1332 868l-10-46 7 45zm0 0l-1-58 4 58zm0 0l12-44-8 45z"/>
+      <path d="M1442 868l-10-46 7 45zm0 0l-1-58 4 58zm0 0l12-44-8 45z"/>
+    </g>
+    <!-- letreiro apagado -->
+    <g opacity=".5">
+      <use href="#logo" x="640" y="382" stroke="#8b88a0" stroke-width="2.4"/>
+      <text x="762" y="434" font-family="'Space Grotesk',Arial,sans-serif" font-weight="600" font-size="30" letter-spacing="5" fill="#8b88a0">BARBEARIA</text>
+      <text x="752" y="500" font-family="'Space Grotesk',Arial,sans-serif" font-weight="700" font-size="58" letter-spacing="1" fill="#7e7a96">FERNANDA MELO</text>
+    </g>
+    <!-- luz da porta (acesa desde o início) -->
+    <g>
+      <ellipse cx="270" cy="452" rx="5" ry="2.2" fill="#fff6dc"/><ellipse cx="335" cy="452" rx="5" ry="2.2" fill="#fff6dc"/><ellipse cx="400" cy="452" rx="5" ry="2.2" fill="#fff6dc"/><ellipse cx="465" cy="452" rx="5" ry="2.2" fill="#fff6dc"/>
+      <rect x="205" y="452" width="312" height="300" fill="url(#gPorta)"/>
+    </g>
+
+    <!-- breu da noite (passivo) -->
+    <rect id="breu" x="-2500" y="360" width="7000" height="3200" fill="#03050c" opacity=".82"/>
+
+    <!-- interior aceso -->
+    <g id="interior" opacity="0" clip-path="url(#cVidro)">
+      <rect x="562" y="522" width="856" height="296" fill="url(#gInterior)"/>
+      <rect x="562" y="522" width="856" height="20" fill="#2c1145"/>
+      <rect x="562" y="782" width="856" height="36" fill="#2a1b3a"/>
+      <g fill="url(#gLuzTeto)"><circle cx="615" cy="538" r="16"/><circle cx="710" cy="538" r="16"/><circle cx="805" cy="538" r="16"/><circle cx="900" cy="538" r="16"/><circle cx="995" cy="538" r="16"/><circle cx="1090" cy="538" r="16"/><circle cx="1185" cy="538" r="16"/><circle cx="1280" cy="538" r="16"/><circle cx="1375" cy="538" r="16"/></g>
+      <g fill="#fff6dc"><circle cx="615" cy="536" r="3"/><circle cx="710" cy="536" r="3"/><circle cx="805" cy="536" r="3"/><circle cx="900" cy="536" r="3"/><circle cx="995" cy="536" r="3"/><circle cx="1090" cy="536" r="3"/><circle cx="1185" cy="536" r="3"/><circle cx="1280" cy="536" r="3"/><circle cx="1375" cy="536" r="3"/></g>
+      <!-- mármore roxo com veios de ouro -->
+      <rect x="588" y="556" width="134" height="232" fill="#3B0A57"/>
+      <path d="M600 556 C630 600 610 640 650 680 S640 740 700 788" stroke="#FBBF24" stroke-width="1.8" fill="none"/>
+      <path d="M650 680 C670 670 690 690 722 676" stroke="#FBBF24" stroke-width="1.2" fill="none"/>
+      <path d="M588 700 C610 712 620 740 646 750" stroke="#F59E0B" stroke-width="1" fill="none"/>
+      <path d="M690 556 C680 590 700 610 688 640" stroke="#FBBF24" stroke-width="1" fill="none"/>
+      <!-- neon interno -->
+      <path d="M576 548 H930" stroke="#b44dff" stroke-width="10" opacity=".3"/>
+      <path d="M576 548 H930" stroke="#e6c4ff" stroke-width="2.4"/>
+      <path d="M740 560 V790" stroke="#b44dff" stroke-width="12" opacity=".28"/>
+      <path d="M740 560 V790" stroke="#e6c4ff" stroke-width="2.4"/>
+      <!-- moto (silhueta) -->
+      <rect x="752" y="590" width="58" height="214" rx="28" fill="#0d0a12"/>
+      <path d="M760 620 L802 650 M760 660 L802 690 M760 700 L802 730" stroke="#4a2a6a" stroke-width="2"/>
+      <!-- bancada e cadeiras -->
+      <rect x="828" y="736" width="224" height="9" fill="#0f0b15"/>
+      <g fill="#0b0910">
+        <rect x="858" y="748" width="44" height="44" rx="7"/><rect x="852" y="788" width="56" height="12" rx="4"/><rect x="876" y="800" width="8" height="12"/><ellipse cx="880" cy="815" rx="22" ry="4"/>
+        <rect x="968" y="748" width="44" height="44" rx="7"/><rect x="962" y="788" width="56" height="12" rx="4"/><rect x="986" y="800" width="8" height="12"/><ellipse cx="990" cy="815" rx="22" ry="4"/>
+      </g>
+      <!-- mesinhas -->
+      <g stroke="#0b0910" stroke-width="3" fill="#0b0910">
+        <ellipse cx="1105" cy="742" rx="22" ry="3"/><path d="M1105 742V812"/><ellipse cx="1105" cy="814" rx="14" ry="3"/>
+        <ellipse cx="1175" cy="742" rx="22" ry="3"/><path d="M1175 742V812"/><ellipse cx="1175" cy="814" rx="14" ry="3"/>
+      </g>
+      <!-- armário com plantas -->
+      <rect x="1232" y="728" width="120" height="90" fill="#120c19"/>
+      <g fill="#28452f"><circle cx="1262" cy="716" r="9"/><circle cx="1275" cy="706" r="7"/><circle cx="1289" cy="716" r="9"/></g>
+      <!-- caixilhos -->
+      <path d="M785 522V818M1010 522V818M1210 522V818" stroke="#fff" stroke-opacity=".12" stroke-width="2"/>
+    </g>
+
+    <!-- espelhos redondos com aro dourado -->
+    <g id="espelhos" opacity="0">
+      <g fill="#24112f"><circle cx="880" cy="682" r="38"/><circle cx="990" cy="682" r="38"/></g>
+      <g fill="none">
+        <circle cx="880" cy="682" r="40" stroke="#F59E0B" stroke-width="20" stroke-opacity=".16"/><circle cx="990" cy="682" r="40" stroke="#F59E0B" stroke-width="20" stroke-opacity=".16"/>
+        <circle cx="880" cy="682" r="40" stroke="#F59E0B" stroke-width="10" stroke-opacity=".35"/><circle cx="990" cy="682" r="40" stroke="#F59E0B" stroke-width="10" stroke-opacity=".35"/>
+        <circle cx="880" cy="682" r="40" stroke="#FBBF24" stroke-width="4.5"/><circle cx="990" cy="682" r="40" stroke="#FBBF24" stroke-width="4.5"/>
+        <circle cx="880" cy="682" r="40" stroke="#FFF1C2" stroke-width="1.2"/><circle cx="990" cy="682" r="40" stroke="#FFF1C2" stroke-width="1.2"/>
+        <path d="M858 660 A30 30 0 0 1 896 654" stroke="#fff" stroke-opacity=".18" stroke-width="3"/><path d="M968 660 A30 30 0 0 1 1006 654" stroke="#fff" stroke-opacity=".18" stroke-width="3"/>
+      </g>
+    </g>
+
+    <!-- poste de barbeiro -->
+    <g id="poste" opacity=".25">
+      <rect x="1376" y="604" width="26" height="78" rx="13" fill="#fff" opacity=".18"/>
+      <rect id="posteListras" x="1381" y="612" width="16" height="62" rx="8" fill="url(#pPoste)"/>
+      <rect x="1378" y="604" width="22" height="9" rx="4" fill="#cfcbd9"/><rect x="1378" y="673" width="22" height="9" rx="4" fill="#cfcbd9"/>
+    </g>
+
+    <!-- reflexo correndo no vidro -->
+    <g clip-path="url(#cVidro)"><rect id="reflexo" x="-500" y="480" width="170" height="380" fill="url(#gReflexo)" transform="skewX(-22)"/></g>
+
+    <!-- banho de luz do neon (parede, calçada) -->
+    <g id="brilhoNeon" opacity="0">
+      <rect x="380" y="372" width="1220" height="540" fill="url(#gBanho)"/>
+      <ellipse cx="990" cy="928" rx="560" ry="46" fill="url(#gChaoNeon)"/>
+      <rect x="560" y="380" width="900" height="140" fill="url(#gPlaca)"/>
+    </g>
+
+    <!-- neon da vitrine -->
+    <g id="neon" fill="none" stroke-linejoin="round" stroke-linecap="round">
+      <path class="tubo" d="M562 818 V522 H1418 V818 Z" stroke="#8B2CFF" stroke-width="30" stroke-opacity=".08"/>
+      <path class="tubo" d="M562 818 V522 H1418 V818 Z" stroke="#9b3dff" stroke-width="15" stroke-opacity=".2"/>
+      <path class="tubo" d="M562 818 V522 H1418 V818 Z" stroke="#b25cff" stroke-width="7" stroke-opacity=".55"/>
+      <path class="tubo" id="tubo" d="M562 818 V522 H1418 V818 Z" stroke="#f6e6ff" stroke-width="2.6"/>
+      <g id="faisca" opacity="0"><circle r="16" fill="#c98bff" fill-opacity=".35"/><circle r="5" fill="#fff"/></g>
+    </g>
+
+    <!-- letreiro aceso -->
+    <g id="letreiro" opacity="0">
+      <rect x="560" y="378" width="900" height="140" fill="url(#gPlaca)"/>
+      <use href="#logo" x="640" y="382" stroke="#a855f7" stroke-width="12" stroke-opacity=".22"/>
+      <use href="#logo" x="640" y="382" stroke="#d8b4fe" stroke-width="5" stroke-opacity=".5"/>
+      <use href="#logo" x="640" y="382" stroke="#fbf7ff" stroke-width="2.4"/>
+      <text x="762" y="434" font-family="'Space Grotesk',Arial,sans-serif" font-weight="600" font-size="30" letter-spacing="5" fill="#fbf8ff" stroke="#e9ddff" stroke-width="6" stroke-opacity=".18" paint-order="stroke">BARBEARIA</text>
+      <text x="752" y="500" font-family="'Space Grotesk',Arial,sans-serif" font-weight="700" font-size="58" letter-spacing="1" fill="none" stroke="#5b3bff" stroke-width="18" stroke-opacity=".16">FERNANDA MELO</text>
+      <text x="752" y="500" font-family="'Space Grotesk',Arial,sans-serif" font-weight="700" font-size="58" letter-spacing="1" fill="none" stroke="#7c5cff" stroke-width="8" stroke-opacity=".38">FERNANDA MELO</text>
+      <text x="752" y="500" font-family="'Space Grotesk',Arial,sans-serif" font-weight="700" font-size="58" letter-spacing="1" fill="#a996ff" stroke="#efeaff" stroke-width="1.4">FERNANDA MELO</text>
+    </g>
+  </svg>
+</div>
+
+<canvas class="camada" id="fumaca" aria-hidden="true"></canvas>
+<svg class="camada" id="veios" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"></svg>
+<canvas class="camada" id="cacos" aria-hidden="true"></canvas>
+<canvas class="camada" id="racha" aria-hidden="true"></canvas>
+
+<header class="topo">
+  <a class="marca" href="#">Barbearia<em>Fernanda Melo</em></a>
+  <a class="pilula" href="https://barber-pro-1f2a60f6.base44.app/agendamentocliente" target="_blank" rel="noopener">Agendar</a>
+</header>
+
+<main class="hero" id="hero">
+  <p class="sobre">Barbearia</p>
+  <h1 class="sr">Barbearia Fernanda Melo</h1>
+  <svg id="titulo" aria-hidden="true" viewBox="0 0 1300 240" xmlns="http://www.w3.org/2000/svg">
+    <text id="tituloTexto" x="0" y="0" text-anchor="middle" font-family="'DM Serif Display',Georgia,serif" font-style="italic" font-size="200"
+      fill="#6B21A8" fill-opacity="0" stroke="#FBBF24" stroke-width="2.6" stroke-linejoin="round">Fernanda Melo</text>
+  </svg>
+  <p class="frase">Corte, barba e cuidado num salão de mármore roxo, espelhos dourados e neon.</p>
+  <a class="cta" href="https://barber-pro-1f2a60f6.base44.app/agendamentocliente" target="_blank" rel="noopener">Agendar horário <span aria-hidden="true">→</span></a>
+  <ul class="servicos" aria-label="Serviços">
+    <li>Corte</li><li>Barba</li><li>Sobrancelha</li><li>Pigmentação</li><li>Massagem</li>
+  </ul>
+</main>
+
+<div class="ctrl">
+  <button id="som" type="button" aria-pressed="false">Som desligado</button>
+  <button id="pular" type="button">Pular abertura</button>
+  <button id="denovo" type="button" hidden>Ver de novo</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+(() => {
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const NS = 'http://www.w3.org/2000/svg', TAU = Math.PI * 2;
+const reduz = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const leve = matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+const DPR = Math.min(window.devicePixelRatio || 1, 2);
+const rnd = (a, b) => a + Math.random() * (b - a);
+const sstep = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+
+const cena = $('#cena'), fach = $('#fachada'), ceu = $('#ceu'), cRacha = $('#racha'), cCacos = $('#cacos'), cFum = $('#fumaca');
+const veiosSvg = $('#veios'), titulo = $('#titulo'), tituloTexto = $('#tituloTexto'), hero = $('#hero');
+const bPular = $('#pular'), bSom = $('#som'), bDenovo = $('#denovo');
+
+let W, H, F, A, T0, C, S;
+const cam = { e: 0 };
+const st = { fase: 'parado', neon: false, quebrou: false, t0: 0, quebraT: 0, fumT: 0, final: false };
+let tl = null, ft = null, foto = null, vidro = null, faiscas = [], fum = [], posteOff = 0;
+
+/* ---------- medidas e câmera ---------- */
+function medir() {
+  W = innerWidth; H = innerHeight;
+  const asp = W / H; let fw, fh, fx, fy;
+  if (asp >= 1.05) { fw = 1500; fh = fw / asp; if (fh < 640) { fh = 640; fw = fh * asp; } fx = 870 - fw / 2; fy = 905 - 0.8 * fh; }
+  else { fw = 880; fh = fw / asp; fx = 990 - fw / 2; fy = 905 - 0.68 * fh; }
+  F = { x: fx, y: fy, w: fw, h: fh }; A = W / fw;
+  fach.setAttribute('viewBox', `${fx} ${fy} ${fw} ${fh}`);
+  const alvo = { x: 935, y: 672 };
+  T0 = { x: (alvo.x - fx) * A, y: (alvo.y - fy) * A }; C = { x: W / 2, y: H / 2 };
+  S = Math.min(14, Math.max(fw / 700, fh / 250));
+  for (const c of [ceu, cRacha, cCacos]) { c.width = Math.round(W * DPR); c.height = Math.round(H * DPR); }
+  cFum.width = Math.round(W * 0.5); cFum.height = Math.round(H * 0.5);
+  veiosSvg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  preparaCeu();
+}
+function camT(e) {
+  const s = Math.pow(S, e), px = T0.x + (C.x - T0.x) * e, py = T0.y + (C.y - T0.y) * e;
+  return { s, dx: px - s * T0.x, dy: py - s * T0.y };
+}
+function aplicaCam(sx = 0, sy = 0) {
+  const t = camT(cam.e);
+  cena.style.transform = `translate3d(${t.dx + sx}px,${t.dy + sy}px,0) scale(${t.s})`;
+}
+
+/* ---------- céu: gradiente, estrelas, nuvens ---------- */
+let nuvens = [], estrelas = [];
+function nuvemSprite(w, h) {
+  const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d');
+  for (let i = 0; i < 46; i++) {
+    const r = h * rnd(.14, .34), x = rnd(r, w - r), y = h * rnd(.38, .7);
+    const gr = g.createRadialGradient(x, y, 0, x, y, r);
+    gr.addColorStop(0, 'rgba(7,11,28,.6)'); gr.addColorStop(1, 'rgba(7,11,28,0)');
+    g.fillStyle = gr; g.fillRect(x - r, y - r, r * 2, r * 2);
+  }
+  for (let i = 0; i < 16; i++) {
+    const r = h * rnd(.1, .22), x = rnd(r, w - r), y = h * rnd(.6, .78);
+    const gr = g.createRadialGradient(x, y, 0, x, y, r);
+    gr.addColorStop(0, 'rgba(58,84,150,.16)'); gr.addColorStop(1, 'rgba(58,84,150,0)');
+    g.fillStyle = gr; g.fillRect(x - r, y - r, r * 2, r * 2);
+  }
+  return c;
+}
+function preparaCeu() {
+  if (!nuvens.length) {
+    for (let i = 0; i < 7; i++) nuvens.push({ spr: nuvemSprite(640, 230), fx: rnd(-.2, 1), fy: rnd(.02, .5), k: rnd(.8, 1.6), v: rnd(5, 13) });
+    for (let i = 0; i < 70; i++) estrelas.push({ x: Math.random(), y: Math.random() * .55, r: rnd(.4, 1.2), a: rnd(.2, .8) });
+  }
+}
+function desenhaCeu(dt) {
+  const g = ceu.getContext('2d'); g.setTransform(DPR, 0, 0, DPR, 0, 0);
+  const chao = (905 - F.y) * A;
+  const gr = g.createLinearGradient(0, 0, 0, chao);
+  gr.addColorStop(0, '#02030a'); gr.addColorStop(.55, '#071233'); gr.addColorStop(1, '#1b2b5a');
+  g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  g.fillStyle = '#cfd8ff';
+  for (const s of estrelas) { g.globalAlpha = s.a; g.fillRect(s.x * W, s.y * chao, s.r, s.r); }
+  g.globalAlpha = 1;
+  for (const n of nuvens) {
+    n.fx -= (n.v * dt) / W; const w = 640 * n.k * Math.max(1, W / 1400), h = 230 * n.k * Math.max(1, W / 1400);
+    if (n.fx * W + w < 0) n.fx = 1 + Math.random() * .2;
+    g.drawImage(n.spr, n.fx * W, n.fy * chao - h / 2, w, h);
+  }
+}
+
+/* ---------- foto congelada da vitrine (vira os cacos) ---------- */
+function preparaFoto() {
+  foto = document.createElement('canvas'); foto.width = cRacha.width; foto.height = cRacha.height;
+  const g = foto.getContext('2d');
+  const bg = g.createLinearGradient(0, 0, 0, foto.height); bg.addColorStop(0, '#4a1676'); bg.addColorStop(1, '#7d33bd');
+  g.fillStyle = bg; g.fillRect(0, 0, foto.width, foto.height);
+  try {
+    const t = camT(1);
+    const vx = F.x + (-t.dx / t.s) / A, vy = F.y + (-t.dy / t.s) / A, vw = W / t.s / A, vh = H / t.s / A;
+    const cl = fach.cloneNode(true);
+    cl.setAttribute('viewBox', `${vx} ${vy} ${vw} ${vh}`); cl.setAttribute('preserveAspectRatio', 'none');
+    cl.setAttribute('width', foto.width); cl.setAttribute('height', foto.height);
+    cl.querySelector('#reflexo')?.remove();
+    const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(cl)], { type: 'image/svg+xml' }));
+    const img = new Image();
+    img.onload = () => { g.drawImage(img, 0, 0, foto.width, foto.height); URL.revokeObjectURL(url); };
+    img.src = url;
+  } catch (e) { /* fica o gradiente */ }
+}
+
+/* ---------- geometria do vidro rachado ---------- */
+function geraVidro() {
+  const P = { x: W / 2, y: H / 2 }, Rs = Math.hypot(W / 2, H / 2);
+  const N = leve ? 13 : 17, fr = [0, .06, .16, .31, .52, .8, 1.3], K = fr.length - 1, chance = [0, .9, .62, .5, .4, .3];
+  const ang = []; for (let i = 0; i < N; i++) ang.push((i + rnd(-.32, .32)) / N * TAU);
+  const pt = [], md = [];
+  for (let i = 0; i < N; i++) {
+    pt[i] = [P];
+    for (let k = 1; k <= K; k++) {
+      const r = fr[k] * Rs * (k === K ? 1 : rnd(.8, 1.2)), a = ang[i] + rnd(-.13, .13);
+      pt[i][k] = { x: P.x + Math.cos(a) * r, y: P.y + Math.sin(a) * r, d: r / Rs };
+    }
+  }
+  for (let i = 0; i < N; i++) {
+    const j = (i + 1) % N; md[i] = [];
+    for (let k = 1; k <= K; k++) {
+      const a = pt[i][k], b = pt[j][k], mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+      const nx = mx - P.x, ny = my - P.y, nl = Math.hypot(nx, ny) || 1, len = Math.hypot(b.x - a.x, b.y - a.y);
+      const off = len * rnd(-.24, .24);
+      md[i][k] = { x: mx + nx / nl * off, y: my + ny / nl * off, d: Math.hypot(mx - P.x, my - P.y) / Rs };
+    }
+  }
+  const raios = [], aneis = [], cacos = [];
+  for (let i = 0; i < N; i++) {
+    const j = (i + 1) % N;
+    for (let k = 0; k < K; k++) raios.push({ a: pt[i][k], b: pt[i][k + 1], d0: k ? pt[i][k].d : 0, d1: pt[i][k + 1].d });
+    const marcos = [0];
+    for (let k = 1; k < K; k++) if (Math.random() < chance[k]) { marcos.push(k); aneis.push({ a: pt[i][k], m: md[i][k], b: pt[j][k], d: md[i][k].d }); }
+    marcos.push(K);
+    for (let q = 0; q < marcos.length - 1; q++) {
+      const ka = marcos[q], kb = marcos[q + 1], poly = [];
+      if (ka === 0) poly.push(P); else poly.push(pt[i][ka]);
+      for (let k = Math.max(1, ka + 1); k <= kb; k++) poly.push(pt[i][k]);
+      poly.push(md[i][kb]);
+      for (let k = kb; k >= Math.max(1, ka); k--) poly.push(pt[j][k]);
+      if (ka > 0) poly.push(md[i][ka]);
+      let cx = 0, cy = 0; for (const p of poly) { cx += p.x; cy += p.y; } cx /= poly.length; cy /= poly.length;
+      const xs = poly.map(p => p.x), ys = poly.map(p => p.y);
+      const bx = Math.min(...xs), by = Math.min(...ys), bw = Math.max(...xs) - bx, bh = Math.max(...ys) - by;
+      if (bx > W || by > H || bx + bw < 0 || by + bh < 0) continue;
+      const d = Math.hypot(cx - P.x, cy - P.y) / Rs, dl = Math.hypot(cx - P.x, cy - P.y) || 1, prox = 1 - Math.min(d, 1);
+      cacos.push({
+        poly: poly.map(p => ({ x: p.x - cx, y: p.y - cy })), cx, cy, bx, by, bw, bh, d,
+        dx: (cx - P.x) / dl, dy: (cy - P.y) / dl,
+        vel: 90 + prox * rnd(420, 1000), vz: .25 + prox * prox * rnd(1.6, 3.4), vr: rnd(-3.2, 3.2) * (.4 + prox),
+        vf: rnd(2, 7), atraso: d * .12, dur: rnd(.7, 1.15) + d * .25, g: 900 * (.25 + d)
+      });
+    }
+  }
+  vidro = { P, Rs, raios, aneis, cacos };
+}
+
+/* ---------- racha dourada ---------- */
+const racha = { c: 0, ativa: false };
+function desenhaRacha() {
+  const g = cRacha.getContext('2d'); g.setTransform(DPR, 0, 0, DPR, 0, 0); g.clearRect(0, 0, W, H);
+  if (!racha.ativa || !vidro) return;
+  const r = racha.c * 1.08, path = new Path2D();
+  for (const s of vidro.raios) {
+    if (s.d0 >= r) continue;
+    const t = s.d1 <= r ? 1 : (r - s.d0) / (s.d1 - s.d0);
+    path.moveTo(s.a.x, s.a.y); path.lineTo(s.a.x + (s.b.x - s.a.x) * t, s.a.y + (s.b.y - s.a.y) * t);
+  }
+  for (const s of vidro.aneis) {
+    if (r < s.d + .04) continue;
+    path.moveTo(s.a.x, s.a.y); path.quadraticCurveTo(s.m.x, s.m.y, s.b.x, s.b.y);
+  }
+  g.lineCap = 'round'; g.lineJoin = 'round';
+  g.strokeStyle = 'rgba(245,158,11,.22)'; g.lineWidth = 9; g.stroke(path);
+  g.strokeStyle = '#FBBF24'; g.lineWidth = 2.6; g.stroke(path);
+  g.strokeStyle = '#FFF4CC'; g.lineWidth = .9; g.stroke(path);
+  const fl = Math.max(0, 1 - racha.c * 1.6), P = vidro.P;
+  if (fl > 0) {
+    const rr = 40 + racha.c * 260, gr = g.createRadialGradient(P.x, P.y, 0, P.x, P.y, rr);
+    gr.addColorStop(0, `rgba(255,255,255,${.95 * fl})`); gr.addColorStop(.3, `rgba(255,226,150,${.5 * fl})`); gr.addColorStop(1, 'rgba(251,191,36,0)');
+    g.fillStyle = gr; g.fillRect(P.x - rr, P.y - rr, rr * 2, rr * 2);
+  }
+}
+
+/* ---------- cacos voando ---------- */
+function desenhaCacos(t) {
+  const g = cCacos.getContext('2d'); g.setTransform(DPR, 0, 0, DPR, 0, 0); g.clearRect(0, 0, W, H);
+  let vivos = 0;
+  for (const k of vidro.cacos) {
+    const tt = Math.max(0, t - k.atraso), u = Math.min(1, tt / k.dur), al = 1 - u * u;
+    if (al <= .01) continue; vivos++;
+    const x = k.cx + k.dx * k.vel * tt, y = k.cy + k.dy * k.vel * tt + .5 * k.g * tt * tt;
+    const s = 1 + k.vz * tt * (1 + tt * 1.5), rot = k.vr * tt, fl = Math.cos(k.vf * tt), sx = Math.max(.08, Math.abs(fl));
+    g.save(); g.globalAlpha = al; g.translate(x, y); g.rotate(rot); g.scale(s * sx, s);
+    g.beginPath(); k.poly.forEach((p, i) => i ? g.lineTo(p.x, p.y) : g.moveTo(p.x, p.y)); g.closePath();
+    g.save(); g.clip();
+    const sx0 = Math.max(0, k.bx), sy0 = Math.max(0, k.by), sx1 = Math.min(W, k.bx + k.bw), sy1 = Math.min(H, k.by + k.bh);
+    if (foto && sx1 > sx0 && sy1 > sy0) g.drawImage(foto, sx0 * DPR, sy0 * DPR, (sx1 - sx0) * DPR, (sy1 - sy0) * DPR, sx0 - k.cx, sy0 - k.cy, sx1 - sx0, sy1 - sy0);
+    const brilho = (1 - sx) * .55 + (fl < 0 ? .12 : 0);
+    if (brilho > .02) { g.fillStyle = `rgba(255,244,214,${brilho})`; g.fill(); }
+    g.restore();
+    g.strokeStyle = '#FBBF24'; g.lineWidth = 2 / s; g.stroke();
+    g.restore();
+  }
+  for (const f of faiscas) {
+    const tt = t - f.atraso; if (tt < 0 || tt > f.vida) continue; vivos++;
+    const a = 1 - tt / f.vida;
+    g.globalAlpha = a; g.fillStyle = f.cor;
+    g.fillRect(f.x + f.vx * tt, f.y + f.vy * tt + .5 * 900 * tt * tt, f.r, f.r);
+  }
+  g.globalAlpha = 1;
+  return vivos;
+}
+function geraFaiscas() {
+  faiscas = [];
+  const n = leve ? 50 : 90, P = vidro.P;
+  for (let i = 0; i < n; i++) {
+    const a = rnd(0, TAU), v = rnd(150, 950);
+    faiscas.push({ x: P.x, y: P.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 120, r: rnd(1, 2.8), vida: rnd(.5, 1.3), atraso: rnd(0, .12), cor: Math.random() < .7 ? '#FBBF24' : '#FFF1C2' });
+  }
+}
+
+/* ---------- fumaça roxa ---------- */
+function fumSprite(r, g, b) {
+  const c = document.createElement('canvas'); c.width = c.height = 256; const x = c.getContext('2d');
+  for (let i = 0; i < 16; i++) {
+    const rr = rnd(36, 92), cx = 128 + rnd(-1, 1) * (122 - rr) * .7, cy = 128 + rnd(-1, 1) * (122 - rr) * .7;
+    const gr = x.createRadialGradient(cx, cy, 0, cx, cy, rr);
+    gr.addColorStop(0, `rgba(${r},${g},${b},.2)`); gr.addColorStop(.6, `rgba(${r},${g},${b},.08)`); gr.addColorStop(1, `rgba(${r},${g},${b},0)`);
+    x.fillStyle = gr; x.fillRect(cx - rr, cy - rr, rr * 2, rr * 2);
+  }
+  return c;
+}
+let sprites = null;
+function geraFumaca() {
+  if (!sprites) sprites = [fumSprite(107, 33, 168), fumSprite(76, 20, 119), fumSprite(59, 10, 87), fumSprite(139, 44, 255)];
+  fum = [];
+  const n = leve ? 56 : 96, base = Math.max(W, H);
+  for (let i = 0; i < n; i++) {
+    const a = rnd(0, TAU), v = rnd(180, 1100) * (base / 1400);
+    const q = Math.random();
+    fum.push({
+      x: W / 2, y: H / 2, vx: Math.cos(a) * v, vy: Math.sin(a) * v * .8,
+      s: rnd(.06, .14) * base, sf: rnd(.32, .7) * base, rot: rnd(0, TAU), vr: rnd(-.5, .5),
+      spr: sprites[q < .5 ? 0 : q < .78 ? 1 : q < .92 ? 2 : 3], amax: rnd(.6, .9), nasc: rnd(0, .35), sem: rnd(0, 100)
+    });
+  }
+}
+function passoFumaca(t, dt) {
+  for (const p of fum) {
+    const tt = t - p.nasc; if (tt < 0) continue;
+    const dr = Math.exp(-2.1 * dt); p.vx *= dr; p.vy *= dr;
+    const ox = p.x - W / 2, oy = p.y - H / 2, ol = Math.hypot(ox, oy) || 1, emp = 70 * sstep(.5, 2.2, tt) * Math.max(W, H) / 1400;
+    p.x += (p.vx + ox / ol * emp + Math.sin(t * .23 + p.sem) * 9) * dt;
+    p.y += (p.vy + oy / ol * emp + Math.cos(t * .19 + p.sem) * 6 - 4) * dt;
+    p.s += (p.sf - p.s) * (1 - Math.exp(-1.1 * dt));
+    p.rot += p.vr * dt * (tt < 2 ? 1 : .25);
+  }
+}
+function alfaFumaca(p, t) {
+  const tt = t - p.nasc; if (tt < 0) return 0;
+  const nx = (p.x - W / 2) / (W * .5), ny = (p.y - H / 2) / (H * .5), r = Math.hypot(nx, ny);
+  const repouso = .72 * sstep(.62, 1.3, r);
+  const entra = Math.min(1, tt / .2), assenta = sstep(.35, 1.8, tt);
+  return p.amax * entra * (1 * (1 - assenta) + repouso * assenta);
+}
+function desenhaFumaca(t) {
+  const g = cFum.getContext('2d'); g.setTransform(.5, 0, 0, .5, 0, 0); g.clearRect(0, 0, W, H);
+  for (const p of fum) {
+    const a = alfaFumaca(p, t); if (a <= .005) continue;
+    g.globalAlpha = a; g.save(); g.translate(p.x, p.y); g.rotate(p.rot); g.drawImage(p.spr, -p.s / 2, -p.s / 2, p.s, p.s); g.restore();
+  }
+  g.globalAlpha = 1;
+}
+function fumacaEmRepouso() {
+  geraFumaca();
+  for (let t = 0; t < 4; t += 1 / 30) passoFumaca(t, 1 / 30);
+  st.fumT = performance.now() / 1000 - 4;
+  desenhaFumaca(4);
+}
+
+/* ---------- título e veios de ouro ---------- */
+function montaTitulo() {
+  tituloTexto.textContent = '';
+  const linhas = W < 640 ? ['Fernanda', 'Melo'] : ['Fernanda Melo'];
+  linhas.forEach((l, i) => {
+    const ts = document.createElementNS(NS, 'tspan');
+    ts.setAttribute('x', 0); ts.setAttribute('dy', i ? '0.92em' : '0'); ts.textContent = l; tituloTexto.appendChild(ts);
+  });
+  const b = tituloTexto.getBBox();
+  titulo.setAttribute('viewBox', `${b.x - 14} ${b.y - 10} ${b.width + 28} ${b.height + 20}`);
+}
+function caminho(pts) {
+  let d = `M${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+    d += ` C${(p1.x + (p2.x - p0.x) / 6).toFixed(1)} ${(p1.y + (p2.y - p0.y) / 6).toFixed(1)} ${(p2.x - (p3.x - p1.x) / 6).toFixed(1)} ${(p2.y - (p3.y - p1.y) / 6).toFixed(1)} ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`;
+  }
+  return d;
+}
+function veio(pts, w) {
+  const d = caminho(pts), g = document.createElementNS(NS, 'g');
+  const a = document.createElementNS(NS, 'path'), b = document.createElementNS(NS, 'path');
+  a.setAttribute('d', d); a.setAttribute('fill', 'none'); a.setAttribute('stroke', '#B7791F'); a.setAttribute('stroke-width', w + 1);
+  a.setAttribute('stroke-opacity', '.55'); a.setAttribute('transform', 'translate(.7 .9)'); a.setAttribute('stroke-linecap', 'round');
+  b.setAttribute('d', d); b.setAttribute('fill', 'none'); b.setAttribute('stroke', '#FBBF24'); b.setAttribute('stroke-width', w); b.setAttribute('stroke-linecap', 'round');
+  g.append(a, b); veiosSvg.appendChild(g);
+  const L = b.getTotalLength();
+  for (const p of [a, b]) { p.style.strokeDasharray = L; p.style.strokeDashoffset = L; }
+  return [a, b];
+}
+let veioTracos = [], sublinhado = [];
+function geraVeios() {
+  veiosSvg.innerHTML = ''; veioTracos = []; sublinhado = [];
+  const r = titulo.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+  const n = leve ? 5 : 8;
+  for (let i = 0; i < n; i++) {
+    // só de cima e dos lados (não atravessa o texto de baixo)
+    const a = Math.PI * (1.0 + (i + rnd(.15, .85)) / n * 1.0) + rnd(-.1, .1) - Math.PI * .08;
+    const ca = Math.cos(a), sa = Math.sin(a);
+    const kx = ca > 0 ? (W + 30 - cx) / ca : (-30 - cx) / ca, ky = sa < 0 ? (-30 - cy) / sa : 1e9;
+    const k = Math.min(Math.abs(kx), Math.abs(ky));
+    const ini = { x: cx + ca * k, y: cy + sa * k };
+    const fim = { x: Math.min(r.right + 6, Math.max(r.left - 6, cx + ca * r.width * .56)), y: Math.min(r.bottom, Math.max(r.top - 8, cy + sa * r.height * .62)) };
+    const pts = [ini]; const L = Math.hypot(fim.x - ini.x, fim.y - ini.y), nx = -(fim.y - ini.y) / L, ny = (fim.x - ini.x) / L;
+    for (let j = 1; j < 4; j++) { const t = j / 4, o = rnd(-.09, .09) * L; pts.push({ x: ini.x + (fim.x - ini.x) * t + nx * o, y: ini.y + (fim.y - ini.y) * t + ny * o }); }
+    pts.push(fim);
+    veioTracos.push(veio(pts, rnd(1.1, 2.1)));
+    if (Math.random() < .75) {
+      const m = pts[2], ab = a + rnd(.5, 1.1) * (Math.random() < .5 ? -1 : 1), lb = rnd(50, 150);
+      veioTracos.push(veio([m, { x: m.x + Math.cos(ab) * lb * .5 + rnd(-10, 10), y: m.y + Math.sin(ab) * lb * .5 }, { x: m.x + Math.cos(ab) * lb, y: m.y + Math.sin(ab) * lb }], .8));
+    }
+  }
+  const y = r.bottom + 2, x0 = r.left + r.width * .02, x1 = r.right - r.width * .02, pts = [];
+  for (let j = 0; j <= 6; j++) pts.push({ x: x0 + (x1 - x0) * j / 6, y: y + Math.sin(j * 1.3) * 2.5 + (j === 6 ? -3 : 0) });
+  sublinhado = veio(pts, 2.2);
+}
+function mostraFinal(instant) {
+  hero.classList.add('on'); document.body.classList.remove('noite'); document.body.classList.add('dia');
+  montaTitulo(); geraVeios();
+  const L = 2200;
+  tituloTexto.style.strokeDasharray = L;
+  const textos = ['.sobre', '.frase', '.cta', '.servicos'];
+  if (instant || reduz) {
+    for (const p of veioTracos.flat().concat(sublinhado)) p.style.strokeDashoffset = 0;
+    tituloTexto.style.strokeDashoffset = 0; tituloTexto.setAttribute('fill-opacity', 1); tituloTexto.setAttribute('stroke-opacity', 0);
+    gsap.set(textos, { opacity: 1, y: 0 }); gsap.set('.topo', { opacity: 1 });
+    terminou(); return;
+  }
+  tituloTexto.style.strokeDashoffset = L;
+  ft = gsap.timeline({ onComplete: terminou });
+  ft.to(veioTracos.flat(), { strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut', stagger: .035 }, 0)
+    .to(tituloTexto, { strokeDashoffset: 0, duration: 1.4, ease: 'power2.inOut' }, .35)
+    .to(tituloTexto, { attr: { 'fill-opacity': 1 }, duration: .8, ease: 'power2.out' }, 1.3)
+    .to(tituloTexto, { attr: { 'stroke-opacity': 0 }, duration: .7 }, 1.75)
+    .to(sublinhado, { strokeDashoffset: 0, duration: .9, ease: 'expo.out' }, 1.55)
+    .fromTo('.sobre', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: .9, ease: 'expo.out' }, 1.45)
+    .fromTo(['.frase', '.cta', '.servicos'], { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 1, ease: 'expo.out', stagger: .1 }, 1.75)
+    .fromTo('.topo', { opacity: 0 }, { opacity: 1, duration: .8 }, 2.0);
+}
+function terminou() {
+  st.final = true; bPular.hidden = true; bDenovo.hidden = false;
+  try { localStorage.setItem('fm-abertura-v1', '1'); } catch (e) {}
+}
+
+/* ---------- som (gerado, sem arquivo) ---------- */
+const Som = {
+  ctx: null, on: false, hum: null,
+  ruido() {
+    const b = this.ctx.createBuffer(1, this.ctx.sampleRate * 1.5, this.ctx.sampleRate), d = b.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; return b;
+  },
+  liga() {
+    if (!this.ctx) {
+      try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return false; }
+      this.mestre = this.ctx.createGain(); this.mestre.gain.value = .9; this.mestre.connect(this.ctx.destination); this.buf = this.ruido();
+    }
+    this.ctx.resume(); this.on = true;
+    if (st.neon && !st.quebrou) this.humOn();
+    return true;
+  },
+  desliga() { this.on = false; this.humOff(); },
+  humOn() {
+    if (!this.on || this.hum) return;
+    const c = this.ctx, g = c.createGain(), lp = c.createBiquadFilter(), o1 = c.createOscillator(), o2 = c.createOscillator(), lfo = c.createOscillator(), lg = c.createGain();
+    o1.type = 'sawtooth'; o1.frequency.value = 120; o2.type = 'sine'; o2.frequency.value = 60;
+    lp.type = 'lowpass'; lp.frequency.value = 650; lfo.frequency.value = 9; lg.gain.value = .006;
+    lfo.connect(lg); lg.connect(g.gain); o1.connect(lp); o2.connect(lp); lp.connect(g); g.connect(this.mestre);
+    g.gain.setValueAtTime(0, c.currentTime); g.gain.linearRampToValueAtTime(.03, c.currentTime + .3);
+    [o1, o2, lfo].forEach(o => o.start()); this.hum = { g, os: [o1, o2, lfo] };
+  },
+  humOff() {
+    if (!this.hum) return; const c = this.ctx, h = this.hum; this.hum = null;
+    h.g.gain.cancelScheduledValues(c.currentTime); h.g.gain.setTargetAtTime(0, c.currentTime, .04);
+    h.os.forEach(o => o.stop(c.currentTime + .3));
+  },
+  ruidoCurto(dur, tipo, freq, ganho, q = 1, quando = 0) {
+    const c = this.ctx, s = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain(), t = c.currentTime + quando;
+    s.buffer = this.buf; f.type = tipo; f.frequency.value = freq; f.Q.value = q;
+    g.gain.setValueAtTime(ganho, t); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    s.connect(f); f.connect(g); g.connect(this.mestre); s.start(t, rnd(0, .8)); s.stop(t + dur + .05);
+  },
+  clique() { if (this.on) this.ruidoCurto(.03, 'bandpass', 2600, .22, 1.2); },
+  whoosh(d) {
+    if (!this.on) return; const c = this.ctx, s = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain(), t = c.currentTime;
+    s.buffer = this.buf; s.loop = true; f.type = 'bandpass'; f.Q.value = .8;
+    f.frequency.setValueAtTime(220, t); f.frequency.exponentialRampToValueAtTime(2600, t + d);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.16, t + d * .95); g.gain.exponentialRampToValueAtTime(.0001, t + d + .05);
+    s.connect(f); f.connect(g); g.connect(this.mestre); s.start(t); s.stop(t + d + .1);
+  },
+  vidro() {
+    if (!this.on) return; const c = this.ctx, t = c.currentTime;
+    const o = c.createOscillator(), g = c.createGain(); o.frequency.setValueAtTime(95, t); o.frequency.exponentialRampToValueAtTime(38, t + .3);
+    g.gain.setValueAtTime(.55, t); g.gain.exponentialRampToValueAtTime(.0001, t + .35); o.connect(g); g.connect(this.mestre); o.start(t); o.stop(t + .4);
+    this.ruidoCurto(.45, 'highpass', 1400, .75, .7);
+    this.ruidoCurto(.9, 'bandpass', 5200, .18, 2, .05);
+    for (let i = 0; i < 22; i++) {
+      const q = c.createOscillator(), qg = c.createGain(), w = t + .03 + Math.pow(Math.random(), 1.6) * 1.1, dur = rnd(.06, .26);
+      q.type = 'triangle'; q.frequency.value = rnd(2800, 8200);
+      qg.gain.setValueAtTime(rnd(.03, .1), w); qg.gain.exponentialRampToValueAtTime(.0001, w + dur);
+      q.connect(qg); qg.connect(this.mestre); q.start(w); q.stop(w + dur + .02);
+    }
+  }
+};
+bSom.addEventListener('click', () => {
+  if (Som.on) { Som.desliga(); bSom.textContent = 'Som desligado'; bSom.setAttribute('aria-pressed', 'false'); }
+  else if (Som.liga()) { bSom.textContent = 'Som ligado'; bSom.setAttribute('aria-pressed', 'true'); }
+});
+
+/* ---------- cena inicial ---------- */
+const tubos = $$('#neon .tubo'), tubo = $('#tubo');
+let LN = 2304;
+function preparaCena() {
+  tl && tl.kill(); ft && ft.kill(); ft = null;
+  LN = tubo.getTotalLength();
+  gsap.set('#breu', { opacity: .82 }); gsap.set(['#interior', '#espelhos', '#letreiro', '#brilhoNeon', '#faisca'], { opacity: 0 });
+  gsap.set('#poste', { opacity: .25 }); gsap.set('#reflexo', { attr: { x: -500 } });
+  tubos.forEach(p => { p.style.strokeDasharray = LN; p.style.strokeDashoffset = LN; });
+  cam.e = 0; aplicaCam(); cena.style.visibility = 'visible';
+  racha.ativa = false; racha.c = 0; vidro = null; foto = null; fum = []; faiscas = [];
+  for (const c of [cRacha, cCacos]) c.getContext('2d').clearRect(0, 0, c.width, c.height);
+  cFum.getContext('2d').clearRect(0, 0, cFum.width, cFum.height);
+  hero.classList.remove('on'); veiosSvg.innerHTML = '';
+  gsap.set(['.sobre', '.frase', '.cta', '.servicos', '.topo'], { opacity: 0 });
+  tituloTexto.setAttribute('fill-opacity', 0); tituloTexto.setAttribute('stroke-opacity', 1);
+  document.body.classList.add('noite'); document.body.classList.remove('dia');
+  Object.assign(st, { neon: false, quebrou: false, final: false, fase: 'cena' });
+  bPular.hidden = false; bDenovo.hidden = true;
+}
+function acendeNeonPonto() {
+  const off = parseFloat(tubo.style.strokeDashoffset) || 0, p = tubo.getPointAtLength(Math.max(0, Math.min(LN, LN - off)));
+  $('#faisca').setAttribute('transform', `translate(${p.x} ${p.y})`);
+}
+function quebra() {
+  st.quebrou = true; Som.humOff(); Som.vidro();
+  geraVidro(); racha.ativa = true; racha.c = 0;
+  st.quebraT = performance.now() / 1000;
+}
+function estilhaca() {
+  if (!vidro) geraVidro();
+  if (!foto) preparaFoto();
+  racha.ativa = false; desenhaRacha();
+  cena.style.visibility = 'hidden';
+  document.body.classList.remove('noite'); document.body.classList.add('dia');
+  geraFaiscas(); geraFumaca();
+  st.fase = 'cacos'; st.cacoT = st.fumT = performance.now() / 1000;
+}
+function montaTimeline(curta) {
+  const neon = { o: LN };
+  tl = gsap.timeline({ paused: true });
+  tl.to('#breu', { opacity: .16, duration: 1.6, ease: 'power2.inOut' }, .45)
+    .call(() => { st.neon = true; Som.humOn(); }, null, 1.0)
+    .to('#faisca', { opacity: 1, duration: .08 }, 1.0)
+    .to(tubos, { strokeDashoffset: 0, duration: 1.3, ease: 'power2.inOut', onUpdate: acendeNeonPonto }, 1.0)
+    .to('#faisca', { opacity: 0, duration: .25 }, 2.25)
+    .to('#brilhoNeon', { opacity: 1, duration: .9, ease: 'power2.out' }, 1.5)
+    .to('#interior', { keyframes: [{ opacity: .4, duration: .05 }, { opacity: .06, duration: .09 }, { opacity: .75, duration: .07 }, { opacity: .3, duration: .06 }, { opacity: 1, duration: .35 }] }, 1.65)
+    .to('#espelhos', { opacity: 1, duration: .6, ease: 'expo.out' }, 2.0)
+    .to('#poste', { opacity: 1, duration: .3 }, 2.1)
+    .to('#letreiro', { keyframes: [{ opacity: 1, duration: .04 }, { opacity: .12, duration: .07 }, { opacity: 1, duration: .05 }, { opacity: .35, duration: .1 }, { opacity: 1, duration: .25 }] }, 2.4)
+    .call(() => Som.clique(), null, 2.4).call(() => Som.clique(), null, 2.51).call(() => Som.clique(), null, 2.6)
+    .call(() => Som.whoosh(1.0), null, 3.2)
+    .to(cam, { e: 1, duration: 1.0, ease: 'power2.in', onUpdate: () => aplicaCam() }, 3.2)
+    .fromTo('#reflexo', { attr: { x: -500 } }, { attr: { x: 1700 }, duration: .85, ease: 'power1.inOut' }, 3.22)
+    .call(preparaFoto, null, 3.3)
+    .call(quebra, null, 4.2)
+    .to(racha, { c: 1, duration: .42, ease: 'power2.out' }, 4.2)
+    .call(estilhaca, null, 4.66)
+    .call(() => mostraFinal(false), null, 5.2);
+  if (curta) {
+    tl.seek(2.95, true); st.neon = true; Som.humOn(); tl.timeScale(1.25);
+  }
+  tl.play();
+}
+
+/* ---------- laço de desenho ---------- */
+let ult = performance.now() / 1000, acumulado = 0;
+function tick() {
+  const agora = performance.now() / 1000, dt = Math.min(.05, agora - ult); ult = agora;
+  if (cena.style.visibility !== 'hidden') {
+    desenhaCeu(dt);
+    posteOff = (posteOff + dt * 26) % 22; $('#pPoste').setAttribute('patternTransform', `rotate(35) translate(0 ${posteOff.toFixed(2)})`);
+    if (racha.ativa) {
+      const k = Math.max(0, .25 - (agora - st.quebraT)) * 26;
+      aplicaCam(rnd(-k, k), rnd(-k, k));
+      desenhaRacha();
+    }
+  }
+  if (st.fase === 'cacos') {
+    const t = agora - st.cacoT;
+    if (vidro && !desenhaCacos(t) && t > .5) { st.fase = 'fumaca'; cCacos.getContext('2d').clearRect(0, 0, cCacos.width, cCacos.height); }
+  }
+  if (fum.length && !reduz) {
+    const t = agora - st.fumT;
+    if (t < 6 || !leve) {
+      acumulado += dt;
+      if (t < 6 || acumulado > 1 / 30) { passoFumaca(t, t < 6 ? dt : acumulado); desenhaFumaca(t); acumulado = 0; }
+    }
+  }
+  requestAnimationFrame(tick);
+}
+
+/* ---------- pular, repetir, redimensionar ---------- */
+function pular() {
+  if (st.final && !ft) return;
+  tl && tl.kill(); ft && ft.kill(); ft = null;
+  Som.humOff();
+  racha.ativa = false; desenhaRacha();
+  cCacos.getContext('2d').clearRect(0, 0, cCacos.width, cCacos.height);
+  cena.style.visibility = 'hidden'; st.fase = 'fim';
+  fumacaEmRepouso();
+  mostraFinal(true);
+}
+bPular.addEventListener('click', pular);
+bDenovo.addEventListener('click', () => { medir(); preparaCena(); montaTimeline(false); });
+addEventListener('keydown', e => { if (e.key === 'Escape' && !st.final) pular(); });
+
+let largura = innerWidth, timer;
+addEventListener('resize', () => {
+  clearTimeout(timer);
+  timer = setTimeout(() => {
+    if (Math.abs(innerWidth - largura) < 40 && st.fase !== 'fim' && !st.final) return;
+    largura = innerWidth;
+    if (!st.final) { medir(); pular(); return; }
+    medir(); fumacaEmRepouso(); mostraFinal(true);
+  }, 150);
+});
+
+/* ---------- início ---------- */
+let visto = false; try { visto = localStorage.getItem('fm-abertura-v1') === '1'; } catch (e) {}
+const fontes = document.fonts ? Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 2500))]) : Promise.resolve();
+medir(); preparaCena(); desenhaCeu(0);
+fontes.then(() => {
+  if (reduz) { cena.style.visibility = 'hidden'; st.fase = 'fim'; fumacaEmRepouso(); mostraFinal(true); return; }
+  requestAnimationFrame(tick);
+  montaTimeline(visto);
+});
+})();
+</script>

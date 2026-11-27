@@ -1,0 +1,169 @@
+<title>Nuvem Fernanda Melo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&display=swap">
+<style>
+/* A nuvem sozinha: cúmulo roxo de volume macio, simplificado, ocupando cerca de 25% da tela, sobre branco com textura de pedra sutil. Visual único (claro). */
+:root{--branco:#FFFFFF;--berinjela:#3B0A57;--fb:'Space Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif;color-scheme:light}
+*{box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{margin:0;background-color:var(--branco);color:var(--berinjela);font-family:var(--fb);
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='f'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .55  0 0 0 0 .54  0 0 0 0 .58  0 0 0 .045 0'/></filter><rect width='100%' height='100%' filter='url(%23f)'/></svg>"),
+  url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='900' height='900'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.006' numOctaves='4' seed='7'/><feColorMatrix values='0 0 0 0 .6  0 0 0 0 .58  0 0 0 0 .64  0 0 0 .05 0'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>");
+  background-size:300px 300px,900px 900px}
+.palco{position:fixed;inset:0;display:grid;place-items:center}
+/* o quadro é maior que a nuvem; a nuvem em si ocupa por volta de 1/4 da tela */
+.quadro{position:relative;width:min(80vw,1200px);aspect-ratio:16/10;max-width:100%;max-height:86vh}
+#nuvem{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+#nuvem:active{cursor:grabbing}
+.dica{position:fixed;left:0;right:0;bottom:calc(20px + env(safe-area-inset-bottom,0px));margin:0;text-align:center;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  font:600 .64rem/1 var(--fb);letter-spacing:.24em;text-transform:uppercase;opacity:.6}
+@media (max-width:640px){.quadro{width:100vw;aspect-ratio:1/1}}
+</style>
+
+<main class="palco">
+  <div class="quadro"><canvas id="nuvem" aria-label="Nuvem roxa. Toque ou passe o mouse para mexer nela."></canvas></div>
+</main>
+<p class="dica">Passe o mouse ou toque na nuvem</p>
+
+<script>
+(() => {
+const reduz = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const leve = matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+const cn = document.getElementById('nuvem');
+const gl = cn.getContext('webgl', { antialias: false, alpha: true, premultipliedAlpha: true });
+if (!gl) return;
+
+const FS = `precision highp float;
+uniform vec2 uRes; uniform float uT, uResp, uAfunda, uAmassa, uDist; uniform vec2 uPonto, uGiro;
+float h31(vec3 p){ p = fract(p * .3183099 + .1); p *= 17.; return fract(p.x * p.y * p.z * (p.x + p.y + p.z)); }
+float vn(vec3 x){ vec3 i = floor(x), f = fract(x); f = f*f*(3.-2.*f);
+  return mix(mix(mix(h31(i), h31(i+vec3(1,0,0)), f.x), mix(h31(i+vec3(0,1,0)), h31(i+vec3(1,1,0)), f.x), f.y),
+             mix(mix(h31(i+vec3(0,0,1)), h31(i+vec3(1,0,1)), f.x), mix(h31(i+vec3(0,1,1)), h31(i+vec3(1,1,1)), f.x), f.y), f.z); }
+float smin(float a, float b, float k){ float h = clamp(.5 + .5*(b-a)/k, 0., 1.); return mix(b, a, h) - k*h*(1.-h); }
+mat2 rot(float a){ float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
+float bola(vec3 p, vec3 c, float r, float i){ return length(p - c) - r * (1. + uResp * .04 * sin(uT * 1.1 + i * 1.9)); }
+// silhueta de cúmulo: poucos rolos grandes, base achatada
+float forma(vec3 p){
+  // largo e baixo, com três cabeças grandes de alturas diferentes
+  float d = bola(p, vec3(0., -.28, 0.), .6, 0.);
+  d = smin(d, bola(p, vec3(-.72, -.34, .05), .46, 1.), .2);
+  d = smin(d, bola(p, vec3(.74, -.36, 0.), .44, 2.), .2);
+  d = smin(d, bola(p, vec3(-.42, .18, .02), .52, 3.), .18);
+  d = smin(d, bola(p, vec3(.28, .3, -.04), .58, 4.), .18);
+  d = smin(d, bola(p, vec3(.9, .02, .05), .36, 5.), .16);
+  d = smin(d, bola(p, vec3(-1.02, -.1, .0), .34, 6.), .16);
+  d = smin(d, bola(p, vec3(-1.38, -.42, 0.), .24, 7.), .14);
+  d = smin(d, bola(p, vec3(1.36, -.44, .02), .23, 8.), .14);
+  d = smin(d, bola(p, vec3(0., -.15, .5), .42, 9.), .18);
+  d = smin(d, bola(p, vec3(0., .12, -.5), .52, 10.), .18);
+  d = -smin(-d, (p.y + .66), .16);
+  return d;
+}
+vec3 local(vec3 p){
+  p.y -= sin(uT * .8) * .03 * uResp;
+  p.y /= (1. - uAmassa * .16); p.xz /= (1. + uAmassa * .08);
+  p.xz = rot(uGiro.x) * p.xz; p.yz = rot(uGiro.y) * p.yz;
+  return p;
+}
+// densidade: forma + erosão suave nas bordas (pouco detalhe, só o suficiente para parecer nuvem)
+float dens(vec3 pw, out float sd){
+  vec3 p = local(pw);
+  sd = forma(p);
+  vec2 dp = pw.xy - uPonto;
+  sd += uAfunda * .22 * exp(-dot(dp, dp) * 6.);
+  if (sd > .25) return 0.;
+  vec3 q = p * 3.4 + vec3(0., -uT * .05, uT * .02);
+  float n = (1. - abs(vn(q) * 2. - 1.)) * .65 + (1. - abs(vn(q * 2.3 + 3.) * 2. - 1.)) * .35;
+  float e = sd - n * .13 + .05 + (vn(q * 6. + 9.) - .5) * .025;
+  return smoothstep(.015, -.05, e);
+}
+float densRapida(vec3 pw){
+  vec3 p = local(pw);
+  float sd = forma(p);
+  vec2 dp = pw.xy - uPonto;
+  sd += uAfunda * .22 * exp(-dot(dp, dp) * 6.);
+  return smoothstep(.03, -.1, sd - (1. - abs(vn(p * 3.4) * 2. - 1.)) * .1 + .05);
+}
+vec3 hex(float r, float g, float b){ return vec3(r, g, b) / 255.; }
+float ign(vec2 c){ return fract(52.9829189 * fract(dot(c, vec2(.06711056, .00583715)))); }
+void main(){
+  vec2 uv = (gl_FragCoord.xy - .5 * uRes) / uRes.y;
+  vec3 ro = vec3(0., .15, uDist), rd = normalize(vec3(uv, -1.75));
+  vec3 oc = ro - vec3(0., .15, 0.); float b = dot(oc, rd), c = dot(oc, oc) - 2.9;
+  float h = b * b - c;
+  if (h < 0.) { gl_FragColor = vec4(0.); return; }
+  float t = max(0., -b - sqrt(h)), tf = -b + sqrt(h);
+  vec3 L = normalize(vec3(-.35, .9, .35));
+  vec3 claro = hex(160., 104., 236.), meio = hex(96., 28., 156.), escuro = hex(32., 4., 54.);
+  vec3 col = vec3(0.); float T = 1.;
+  t += .02 * ign(gl_FragCoord.xy);
+  for (int i = 0; i < 96; i++) {
+    if (t > tf || T < .02) break;
+    vec3 p = ro + rd * t; float sd;
+    float d = dens(p, sd);
+    if (d > .002) {
+      float sh = densRapida(p + L * .12) + densRapida(p + L * .3) + densRapida(p + L * .55) * .8;
+      float luz = exp(-sh * 1.6);
+      float alto = clamp(p.y * .5 + .55, 0., 1.);
+      vec3 c = mix(escuro, meio, smoothstep(.0, .5, luz) * (.45 + .55 * alto));
+      c = mix(c, claro, smoothstep(.55, 1., luz) * alto);
+      float a = 1. - exp(-d * 22. * .03);
+      col += T * a * c; T *= 1. - a;
+      t += .03;
+    } else {
+      t += max(.03, sd * .6);
+    }
+  }
+  float al = 1. - T;
+  gl_FragColor = vec4(col, al);
+}`;
+const sh = (t, s) => { const o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); if (!gl.getShaderParameter(o, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o)); return o; };
+const pr = gl.createProgram();
+gl.attachShader(pr, sh(gl.VERTEX_SHADER, 'attribute vec2 p; void main(){ gl_Position = vec4(p, 0., 1.); }')); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(pr); gl.useProgram(pr);
+gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+const l = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(l); gl.vertexAttribPointer(l, 2, gl.FLOAT, false, 0, 0);
+const u = n => gl.getUniformLocation(pr, n);
+
+let dist = 4.6;
+const N = { resp: reduz ? 0 : 1, afunda: 0, afv: 0, alvoAfunda: 0, amassa: 0, amv: 0, px: 0, py: 0, tx: 0, ty: 0, gx: 0, gy: -.05, alvoGx: 0, alvoGy: -.05, giro: 0 };
+function tam() {
+  const r = cn.getBoundingClientRect(), esc = leve ? .7 : Math.min(devicePixelRatio || 1, 1.5) * .8;
+  cn.width = Math.max(2, Math.round(r.width * esc)); cn.height = Math.max(2, Math.round(r.height * esc));
+  gl.viewport(0, 0, cn.width, cn.height);
+  dist = Math.max(4.6, 4.6 * 1.3 / (cn.width / cn.height));
+}
+function aCena(e) {
+  const r = cn.getBoundingClientRect();
+  const x = (e.clientX - r.left - r.width / 2) / r.height, y = -(e.clientY - r.top - r.height / 2) / r.height;
+  return [x * dist / 1.75, y * dist / 1.75 + .15];
+}
+cn.addEventListener('pointermove', e => {
+  const [x, y] = aCena(e); N.tx = x; N.ty = y;
+  N.alvoAfunda = (Math.abs(x) < 1.5 && y > -.8 && y < 1.4) ? .6 : 0;
+  const r = cn.getBoundingClientRect();
+  N.alvoGx = ((e.clientX - r.left) / r.width - .5) * .5; N.alvoGy = -.05 + ((e.clientY - r.top) / r.height - .5) * .22;
+});
+cn.addEventListener('pointerleave', () => { N.alvoAfunda = 0; N.alvoGx = 0; N.alvoGy = -.05; });
+cn.addEventListener('pointerdown', e => { const [x, y] = aCena(e); N.tx = N.px = x; N.ty = N.py = y; N.afv += 6; N.amv += 5.5; });
+
+let ult = performance.now(), tempo = 0;
+function quadro(agora) {
+  const dt = Math.min(.05, (agora - ult) / 1000); ult = agora;
+  if (!reduz) tempo += dt;
+  N.afv += ((N.alvoAfunda - N.afunda) * 60 - N.afv * 9) * dt; N.afunda += N.afv * dt;
+  N.amv += ((0 - N.amassa) * 90 - N.amv * 7) * dt; N.amassa += N.amv * dt;
+  N.px += (N.tx - N.px) * (1 - Math.exp(-dt * 10)); N.py += (N.ty - N.py) * (1 - Math.exp(-dt * 10));
+  N.gx += (N.alvoGx - N.gx) * (1 - Math.exp(-dt * 3)); N.gy += (N.alvoGy - N.gy) * (1 - Math.exp(-dt * 3));
+  if (!reduz) N.giro = Math.sin(tempo * .22) * .4;
+  gl.uniform2f(u('uRes'), cn.width, cn.height); gl.uniform1f(u('uT'), tempo); gl.uniform1f(u('uDist'), dist);
+  gl.uniform1f(u('uResp'), N.resp); gl.uniform1f(u('uAfunda'), Math.max(-.2, N.afunda)); gl.uniform1f(u('uAmassa'), N.amassa);
+  gl.uniform2f(u('uPonto'), N.px, N.py); gl.uniform2f(u('uGiro'), N.giro + N.gx, N.gy);
+  gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.drawArrays(gl.TRIANGLES, 0, 3);
+  requestAnimationFrame(quadro);
+}
+addEventListener('resize', tam); tam(); requestAnimationFrame(quadro);
+})();
+</script>

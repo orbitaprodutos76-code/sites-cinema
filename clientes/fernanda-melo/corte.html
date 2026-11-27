@@ -1,0 +1,329 @@
+<title>O Corte Fernanda Melo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+/* Teste do clímax: nuvem roxa no escuro → raio-navalha → a nuvem se parte → branco com o nome. Visual único (noite → branco). */
+:root{
+  --branco:#FFFFFF; --roxo:#6B21A8; --berinjela:#3B0A57; --ouro:#FBBF24; --tinta:#1E0B30; --noite:#05030C;
+  --fd:'DM Serif Display',Georgia,serif; --fb:'Space Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --sai:cubic-bezier(.16,1,.3,1);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{margin:0;background:var(--noite);color:var(--tinta);font-family:var(--fb);-webkit-font-smoothing:antialiased;transition:background .3s}
+body.dia{background:var(--branco)}
+canvas,#fio{position:fixed;inset:0;width:100%;height:100%;display:block}
+#ceu{z-index:1}
+#fio{z-index:3;pointer-events:none;overflow:visible}
+video{position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;left:-10px;top:-10px}
+.faixa{position:fixed;left:0;right:0;z-index:4;background:#000;height:clamp(7vh,calc((100vh - 100vw / 2.39) / 2),14vh);pointer-events:none}
+.faixa.cima{top:0;transform-origin:top}
+.faixa.baixo{bottom:0;transform-origin:bottom}
+
+.final{position:fixed;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:clamp(.8rem,2vh,1.3rem);
+  padding-block:calc(64px + env(safe-area-inset-top,0px)) calc(80px + env(safe-area-inset-bottom,0px));
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));visibility:hidden}
+.final.on{visibility:visible}
+.sobre{margin:0;font:600 .78rem/1 var(--fb);letter-spacing:.32em;text-transform:uppercase;color:var(--roxo)}
+.final h1{margin:0;font:italic 400 clamp(3.2rem,11vw,9.5rem)/.95 var(--fd);color:var(--roxo);letter-spacing:-.01em;text-wrap:balance}
+.frase{margin:.6rem 0 0;max-width:32rem;font:400 clamp(1rem,1.5vw,1.1rem)/1.6 var(--fb);color:var(--tinta);text-wrap:balance}
+.cta{display:inline-flex;align-items:center;gap:.8em;background:var(--roxo);color:var(--branco);text-decoration:none;
+  font:600 .82rem/1 var(--fb);letter-spacing:.16em;text-transform:uppercase;padding:1.15em 2.1em;border-radius:99px;
+  box-shadow:0 0 0 0 var(--ouro),0 14px 34px -14px rgb(107 33 168/.7);transition:box-shadow .45s var(--sai),transform .45s var(--sai)}
+.cta:hover{box-shadow:0 0 0 3px var(--ouro),0 18px 40px -14px rgb(107 33 168/.8);transform:translateY(-2px)}
+.final>*{opacity:0}
+@media (max-width:640px){.final h1{font-size:clamp(4rem,20vw,6.5rem)}.final h1 span{display:block}}
+
+.ctrl{position:fixed;z-index:6;display:flex;gap:.45rem;flex-wrap:wrap;justify-content:flex-end;
+  right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+.ctrl button{font:500 .68rem/1 var(--fb);letter-spacing:.16em;text-transform:uppercase;cursor:pointer;border-radius:99px;padding:.85em 1.2em;
+  color:#F1ECFA;background:rgb(255 255 255/.08);border:1px solid rgb(255 255 255/.25);backdrop-filter:blur(6px);transition:background .3s,color .3s,border-color .3s}
+body.dia .ctrl button{color:var(--berinjela);background:rgb(255 255 255/.8);border-color:rgb(59 10 87/.25)}
+.ctrl button[aria-pressed="true"]{border-color:var(--ouro)!important}
+.ctrl button:hover{border-color:var(--ouro)}
+:focus-visible{outline:3px solid var(--ouro);outline-offset:3px}
+.aviso{position:fixed;inset:0;display:none;place-items:center;text-align:center;padding:2rem;z-index:7;color:#F1ECFA}
+</style>
+
+<video id="v" muted playsinline loop preload="auto" poster="midia/nuvem-poster.jpg"><source src="midia/nuvem.webm" type="video/webm"><source src="midia/nuvem.mp4" type="video/mp4"></video>
+<canvas id="ceu" aria-hidden="true"></canvas>
+<svg id="fio" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <g id="fioG" stroke-linecap="round">
+    <line id="f1" stroke="#F59E0B" stroke-opacity=".22" stroke-width="16"/>
+    <line id="f2" stroke="#FBBF24" stroke-opacity=".7" stroke-width="5"/>
+    <line id="f3" stroke="#FFF4CC" stroke-width="1.6"/>
+  </g>
+  <circle id="faisca" r="0" fill="#FFF4CC"/>
+</svg>
+<div class="faixa cima"></div><div class="faixa baixo"></div>
+
+<main class="final" id="final">
+  <p class="sobre">Barbearia</p>
+  <h1 id="nome">Fernanda <span>Melo</span></h1>
+  <p class="frase">Corte, barba e cuidado num salão de mármore roxo, espelhos dourados e neon.</p>
+  <a class="cta" href="https://barber-pro-1f2a60f6.base44.app/agendamentocliente" target="_blank" rel="noopener">Agendar horário <span aria-hidden="true">→</span></a>
+</main>
+
+<div class="ctrl">
+  <button id="bSom" type="button" aria-pressed="false">Som desligado</button>
+  <button id="bLenta" type="button" aria-pressed="false">Câmera lenta</button>
+  <button id="bDenovo" type="button">Ver de novo</button>
+</div>
+<p class="aviso" id="aviso">Este navegador não conseguiu iniciar o WebGL. Abra no Chrome, Safari ou Edge atualizados.</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const reduz = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const leve = matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+const cv = $('#ceu'), v = $('#v'), fio = $('#fio'), linhas = ['#f1', '#f2', '#f3'].map($), faisca = $('#faisca');
+const gl = cv.getContext('webgl', { antialias: false, alpha: false });
+if (!gl) { $('#aviso').style.display = 'grid'; return; }
+
+/* ---------- shader: nuvem roxa + o corte ---------- */
+const VS = `attribute vec2 p; void main(){ gl_Position = vec4(p, 0., 1.); }`;
+const FS = `precision highp float;
+uniform sampler2D uV; uniform vec2 uRes, uVid; uniform float uT, uZoom;
+uniform float uExpo, uRaio, uSep, uQueima, uVaza, uBranco;
+uniform vec2 uRaioP, uC, uN;
+float h21(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
+float n1(float x){ float i = floor(x), f = fract(x); f = f*f*(3.-2.*f); return mix(h21(vec2(i, 7.)), h21(vec2(i + 1., 7.)), f); }
+vec3 hex(float r, float g, float b){ return vec3(r, g, b) / 255.; }
+vec3 rampa(float t){
+  vec3 c0 = hex(8.,2.,16.), c1 = hex(36.,6.,58.), c2 = hex(59.,10.,87.), c3 = hex(107.,33.,168.), c4 = hex(139.,44.,255.);
+  if (t < .25) return mix(c0, c1, t / .25);
+  if (t < .5) return mix(c1, c2, (t - .25) / .25);
+  if (t < .75) return mix(c2, c3, (t - .5) / .25);
+  return mix(c3, c4, (t - .75) / .25);
+}
+const vec3 OURO = vec3(251., 191., 36.) / 255.;
+const vec3 OUROQ = vec3(255., 236., 180.) / 255.;
+vec3 cena(vec2 uv0, out float ceuOut){
+  float ra = uRes.x / uRes.y, rv = uVid.x / uVid.y;
+  vec2 s = ra > rv ? vec2(1., rv / ra) : vec2(ra / rv, 1.);
+  vec2 meio = .5 * s / uZoom + .002;
+  vec2 foco = clamp(vec2(.62, .5), meio, 1. - meio);
+  vec2 uv = clamp((uv0 - .5) * s / uZoom + foco, vec2(.001), vec2(.999));
+  uv.y = 1. - uv.y;
+  vec3 c = texture2D(uV, uv).rgb;
+  float ceu = smoothstep(.2, .36, c.b - c.r);
+  float L = dot(c, vec3(.299, .587, .114));
+  float t = pow(clamp((L - .3) / .7, 0., 1.), 1.15);
+  vec3 nuv = rampa(t) * 1.05;
+  float topo = smoothstep(.86, .99, L);
+  nuv = mix(nuv, OURO * (.85 + .3 * topo), pow(topo, .7) * .4);
+  // relâmpago por dentro
+  vec2 dR = (uv0 - uRaioP) * vec2(ra, 1.);
+  float rr = exp(-dot(dR, dR) * 3.) * uRaio;
+  float lum = uExpo + rr * 1.9;
+  nuv *= lum;
+  nuv = mix(nuv, OURO * (.7 + .5 * L), clamp(rr * smoothstep(.82, .98, L) * .7, 0., .7));
+  // céu de noite
+  vec2 fc = uv0 * uRes;
+  vec2 q = (fc - .5 * uRes) / uRes.y;
+  vec3 noite = mix(hex(18.,5.,36.), hex(3.,2.,9.), clamp(uv0.y * 1.1, 0., 1.)) * (.5 + .5 * min(1., uExpo * 2.5));
+  vec2 g = fc / 2.2, cel = floor(g), f = fract(g) - .5; float r = h21(cel);
+  if (r > .985) noite += vec3(.95, .92, 1.) * (.6 + .4 * sin(uT * (1. + r * 3.) + r * 40.)) * smoothstep(.45, .0, length(f)) * (r - .985) * 60.;
+  vec2 lua = vec2(-.22 * ra, .36); float dl = length(q - lua);
+  noite += vec3(1., .96, .86) * max(0., smoothstep(.026, .022, dl) - smoothstep(.024, .02, length(q - lua - vec2(.009, .004)))) * 1.3;
+  noite += hex(107.,33.,168.) * rr * .15;
+  ceuOut = ceu;
+  return mix(nuv, noite, ceu);
+}
+void main(){
+  vec2 uv0 = gl_FragCoord.xy / uRes;
+  float ra = uRes.x / uRes.y;
+  vec2 tg = vec2(-uN.y, uN.x);
+  vec2 P = (uv0 - uC) * vec2(ra, 1.);
+  float a = dot(P, tg);
+  float aberto = smoothstep(0., .015, uSep);
+  float rasgo = ((n1(a * 7.) - .5) * .07 + (n1(a * 31. + 3.) - .5) * .025 + (n1(a * 90. + 9.) - .5) * .008) * aberto;
+  float d = dot(P, uN) + rasgo;
+  float lado = d >= 0. ? 1. : -1.;
+  float gap = abs(d) - uSep;
+  vec2 desl = lado * (uN * uSep + tg * uSep * .3);
+  vec2 Ps = (P - desl) / (1. + uSep * .9);
+  vec2 uvS = uC + Ps / vec2(ra, 1.);
+  float ceu;
+  vec3 col = cena(uvS, ceu);
+  if (gap < 0.) {
+    col = mix(OUROQ, vec3(1.), smoothstep(0., .02 + uSep * .1, -gap));
+  } else {
+    float borda = exp(-gap * 70.) * uQueima;
+    float brasa = exp(-gap * 220.) * uQueima;
+    col = mix(col, OURO * 1.15, clamp(borda * (1. - ceu * .6), 0., 1.));
+    col = mix(col, OUROQ, clamp(brasa, 0., 1.));
+    float aura = exp(-gap * 9.) * uVaza;
+    col = col * (1. + aura * 2.2) + OURO * aura * .18 + vec3(1., .97, .9) * exp(-gap * 30.) * uVaza * .35;
+  }
+  col = mix(col, vec3(1.), uBranco);
+  gl_FragColor = vec4(col, 1.);
+}`;
+function sh(tipo, src) {
+  const s = gl.createShader(tipo); gl.shaderSource(s, src); gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+  return s;
+}
+const prog = gl.createProgram();
+gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(prog); gl.useProgram(prog);
+gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+const loc = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+const U = {}; for (const n of ['uV', 'uRes', 'uVid', 'uT', 'uZoom', 'uExpo', 'uRaio', 'uSep', 'uQueima', 'uVaza', 'uBranco', 'uRaioP', 'uC', 'uN']) U[n] = gl.getUniformLocation(prog, n);
+const tx = gl.createTexture(); gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tx);
+for (const [k, val] of [[gl.TEXTURE_MIN_FILTER, gl.LINEAR], [gl.TEXTURE_MAG_FILTER, gl.LINEAR], [gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE], [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE]]) gl.texParameteri(gl.TEXTURE_2D, k, val);
+gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, 1, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, new Uint8Array([60, 120, 200]));
+gl.uniform1i(U.uV, 0);
+
+/* ---------- estado ---------- */
+const E = { expo: 0, raio: 0, sep: 0, queima: 0, vaza: 0, branco: 0, zoom: 1.04, rx: .62, ry: .66 };
+let W, H, ANG, tgx, tgy, L;
+function medir() {
+  W = innerWidth; H = innerHeight;
+  const dpr = Math.min(devicePixelRatio || 1, leve ? 1.5 : 2);
+  cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); gl.viewport(0, 0, cv.width, cv.height);
+  fio.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  ANG = (W > H ? -58 : -66) * Math.PI / 180;
+  tgx = Math.cos(ANG); tgy = Math.sin(ANG);
+  L = Math.hypot(W, H) * .62;
+}
+function fioPontos() { return { x1: W / 2 - tgx * L, y1: H / 2 - tgy * L, x2: W / 2 + tgx * L, y2: H / 2 + tgy * L }; }
+function poeFio(p) { for (const l of linhas) for (const k in p) l.setAttribute(k, p[k]); }
+
+/* ---------- som gerado ---------- */
+const Som = {
+  ctx: null, on: false,
+  liga() {
+    if (!this.ctx) {
+      try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return false; }
+      this.m = this.ctx.createGain(); this.m.gain.value = .9; this.m.connect(this.ctx.destination);
+      const b = this.ctx.createBuffer(1, this.ctx.sampleRate * 3, this.ctx.sampleRate), d = b.getChannelData(0);
+      let last = 0; for (let i = 0; i < d.length; i++) { const w = Math.random() * 2 - 1; last = (last + .02 * w) / 1.02; d[i] = i % 2 ? w : last * 3.5; }
+      this.buf = b;
+    }
+    this.ctx.resume(); this.on = true; return true;
+  },
+  ruido(dur, tipo, f0, f1, ganho, ataque = .01, quando = 0) {
+    if (!this.on) return;
+    const c = this.ctx, t = c.currentTime + quando, s = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
+    s.buffer = this.buf; f.type = tipo; f.frequency.setValueAtTime(f0, t); f.frequency.exponentialRampToValueAtTime(f1, t + dur);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(ganho, t + ataque); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    s.connect(f); f.connect(g); g.connect(this.m); s.start(t, Math.random()); s.stop(t + dur + .05);
+  },
+  trovao(forte) { this.ruido(forte ? 2.6 : 1.8, 'lowpass', forte ? 420 : 260, 60, forte ? .9 : .45, .05); this.ruido(.25, 'bandpass', 900, 300, forte ? .25 : .1, .005); },
+  navalha() {
+    if (!this.on) return;
+    this.ruido(.22, 'highpass', 2500, 9000, .35, .004);
+    const c = this.ctx, t = c.currentTime;
+    for (const [fr, gn] of [[2637, .12], [3951, .07], [5274, .04]]) {
+      const o = c.createOscillator(), g = c.createGain(); o.type = 'sine'; o.frequency.value = fr;
+      g.gain.setValueAtTime(.0001, t + .05); g.gain.exponentialRampToValueAtTime(gn, t + .07); g.gain.exponentialRampToValueAtTime(.0001, t + 1.4);
+      o.connect(g); g.connect(this.m); o.start(t + .05); o.stop(t + 1.5);
+    }
+  },
+  rasgo() { this.ruido(1.1, 'bandpass', 300, 2400, .35, .08); this.trovao(true); }
+};
+$('#bSom').addEventListener('click', () => {
+  const b = $('#bSom');
+  if (Som.on) { Som.on = false; b.textContent = 'Som desligado'; b.setAttribute('aria-pressed', 'false'); }
+  else if (Som.liga()) { b.textContent = 'Som ligado'; b.setAttribute('aria-pressed', 'true'); }
+});
+
+/* ---------- linha do tempo do corte ---------- */
+let tl = null;
+function montaFinal() {
+  const r = $('#nome').getBoundingClientRect();
+  const y = r.bottom + 6, mx = r.width * .04;
+  return { x1: r.left + mx, y1: y, x2: r.right - mx, y2: y };
+}
+function roda() {
+  tl && tl.kill(); gsap.killTweensOf(linhas); gsap.killTweensOf('#fioG');
+  Object.assign(E, { expo: 0, raio: 0, sep: 0, queima: 0, vaza: 0, branco: 0, zoom: 1.04 });
+  document.body.classList.remove('dia'); $('#final').classList.add('on');
+  gsap.set('.final > *', { opacity: 0, y: 18, filter: 'blur(6px)' });
+  gsap.set('.faixa', { scaleY: 1 });
+  const p = fioPontos(); poeFio(p);
+  const comp = Math.hypot(p.x2 - p.x1, p.y2 - p.y1);
+  for (const l of linhas) { l.style.strokeDasharray = comp; l.style.strokeDashoffset = comp; }
+  gsap.set('#fioG', { opacity: 1 }); faisca.setAttribute('r', 0);
+  try { v.currentTime = 3.2; } catch (e) {}
+  const pv = v.play(); if (pv) pv.catch(() => {});
+
+  tl = gsap.timeline();
+  tl.to(E, { zoom: 1.2, duration: 2.9, ease: 'power1.in' }, 0)
+    .to(E, { expo: .22, duration: .5, ease: 'power2.out' }, 0)
+    // relâmpago que revela a nuvem
+    .call(() => { E.rx = .62; E.ry = .7; Som.trovao(false); }, null, .15)
+    .to(E, { keyframes: [{ raio: 1, duration: .04 }, { raio: .15, duration: .07 }, { raio: .95, duration: .05 }, { raio: .3, duration: .07 }, { raio: .85, duration: .04 }, { raio: 0, duration: .55, ease: 'power2.in' }] }, .15)
+    // pausa: tudo escurece
+    .to(E, { expo: .1, duration: .45, ease: 'power2.inOut' }, .8)
+    // o raio-navalha
+    .call(() => Som.navalha(), null, 1.28)
+    .to(linhas, { strokeDashoffset: 0, duration: .17, ease: 'expo.in',
+      onUpdate() { const k = 1 - (parseFloat(linhas[2].style.strokeDashoffset) || 0) / comp; faisca.setAttribute('cx', p.x1 + (p.x2 - p.x1) * k); faisca.setAttribute('cy', p.y1 + (p.y2 - p.y1) * k); faisca.setAttribute('r', k < 1 ? 5 : 0); } }, 1.3)
+    .fromTo('#f1', { attr: { 'stroke-width': 16 } }, { attr: { 'stroke-width': 34 }, duration: .12, yoyo: true, repeat: 1, ease: 'power2.out' }, 1.47)
+    .to(E, { raio: .5, duration: .05 }, 1.47).to(E, { raio: 0, duration: .3 }, 1.52)
+    // a nuvem se parte
+    .call(() => Som.rasgo(), null, 1.62)
+    .to(E, { sep: .055, duration: .75, ease: 'power3.out' }, 1.62)
+    .to(E, { queima: 1, vaza: 1, duration: .35, ease: 'power2.out' }, 1.62)
+    .to(E, { expo: .55, duration: .6, ease: 'power2.out' }, 1.62)
+    .to('#fioG', { opacity: .0, duration: .5 }, 1.75)
+    .to(E, { sep: 1.8, duration: .85, ease: 'power3.in' }, 2.25)
+    .to('.faixa.cima', { scaleY: 0, duration: .7, ease: 'power3.inOut' }, 2.25)
+    .to('.faixa.baixo', { scaleY: 0, duration: .7, ease: 'power3.inOut' }, 2.25)
+    .call(() => document.body.classList.add('dia'), null, 2.95)
+    .to(E, { branco: 1, duration: .25 }, 2.9)
+    // o fio vira o sublinhado do nome
+    .call(() => {
+      const f = montaFinal();
+      gsap.set('#fioG', { opacity: 1 });
+      for (const l of linhas) { l.style.strokeDasharray = 'none'; }
+      gsap.fromTo(linhas, { attr: fioPontos() }, { attr: f, duration: 1.0, ease: 'expo.inOut' });
+      gsap.fromTo('#f1', { attr: { 'stroke-width': 16, 'stroke-opacity': .22 } }, { attr: { 'stroke-width': 7, 'stroke-opacity': .25 }, duration: 1 });
+      gsap.fromTo('#f2', { attr: { 'stroke-width': 5 } }, { attr: { 'stroke-width': 3 }, duration: 1 });
+      gsap.fromTo('#f3', { attr: { stroke: '#FFF4CC' } }, { attr: { stroke: '#F59E0B', 'stroke-width': 1 }, duration: 1 });
+    }, null, 2.9)
+    .to('.final > *', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1, ease: 'expo.out', stagger: .09 }, 3.25);
+  tl.timeScale($('#bLenta').getAttribute('aria-pressed') === 'true' ? .3 : 1);
+}
+function estatico() {
+  Object.assign(E, { expo: 0, raio: 0, sep: 0, queima: 0, vaza: 0, branco: 1 });
+  document.body.classList.add('dia'); $('#final').classList.add('on');
+  gsap.set('.final > *', { opacity: 1, y: 0, filter: 'none' }); gsap.set('.faixa', { scaleY: 0 });
+  requestAnimationFrame(() => { const f = montaFinal(); for (const l of linhas) { l.style.strokeDasharray = 'none'; } poeFio(f); gsap.set('#fioG', { opacity: 1 }); });
+}
+$('#bDenovo').addEventListener('click', () => { if (reduz) return estatico(); roda(); });
+$('#bLenta').addEventListener('click', () => {
+  const b = $('#bLenta'), on = b.getAttribute('aria-pressed') !== 'true';
+  b.setAttribute('aria-pressed', String(on)); b.textContent = on ? 'Câmera lenta ligada' : 'Câmera lenta';
+  if (tl) tl.timeScale(on ? .3 : 1);
+});
+addEventListener('resize', () => { medir(); if (!tl || !tl.isActive()) estatico(); });
+
+/* ---------- laço ---------- */
+let tempo = 0, ult = performance.now() / 1000;
+function quadro() {
+  const agora = performance.now() / 1000, dt = Math.min(.05, agora - ult); ult = agora; tempo += dt;
+  if (v.readyState >= 2) { gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, v); }
+  gl.uniform2f(U.uRes, cv.width, cv.height); gl.uniform2f(U.uVid, v.videoWidth || 1280, v.videoHeight || 648);
+  gl.uniform1f(U.uT, tempo); gl.uniform1f(U.uZoom, E.zoom);
+  gl.uniform1f(U.uExpo, E.expo); gl.uniform1f(U.uRaio, E.raio); gl.uniform2f(U.uRaioP, E.rx, E.ry);
+  gl.uniform1f(U.uSep, E.sep); gl.uniform1f(U.uQueima, E.queima); gl.uniform1f(U.uVaza, E.vaza); gl.uniform1f(U.uBranco, E.branco);
+  gl.uniform2f(U.uC, .5, .5);
+  gl.uniform2f(U.uN, -(-tgy), tgx);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  requestAnimationFrame(quadro);
+}
+medir();
+v.playbackRate = .6;
+const fontes = document.fonts ? Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 2500))]) : Promise.resolve();
+const pronto = new Promise(r => { if (v.readyState >= 3) r(); else { v.addEventListener('canplay', r, { once: true }); setTimeout(r, 4000); } });
+requestAnimationFrame(quadro);
+Promise.all([fontes, pronto]).then(() => { if (reduz) estatico(); else roda(); });
+})();
+</script>

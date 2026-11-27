@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Abertura Body Gym</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@500;700&display=swap">
+<link rel="preload" href="midia/anton-3d.json" as="fetch" crossorigin>
+<link rel="preload" href="midia/body-por-do-sol.webp" as="image">
+<link rel="preload" href="midia/logo-emblema.webp" as="image">
+<style>
+/* Abertura v14 (5 s), a partir das referências do senhor:
+   metal martelado + estilhaços + risco de luz azul (ref. "Cinematic Title 2") e pedra com veias de lava só no TREINO (ref. "Dark Cinematic Hero Opener").
+   Piscadas de luz entre os cortes (queda de energia / fluorescente falhando); câmera própria por palavra.
+   Revisão: ?t=2.3 pausa nesse segundo. */
+:root{--v:#D7192A;--o:#f6b445;--fonte-texto:"Barlow",system-ui,sans-serif}
+html,body{margin:0;height:100%;background:#000;color:#fff;font-family:var(--fonte-texto);overflow:hidden}
+*{box-sizing:border-box}
+.abertura{position:fixed;inset:0;overflow:hidden;background:#000}
+#cena{position:absolute;inset:0;width:100%;height:100%;display:block}
+.reserva{position:absolute;inset:0;display:none;place-items:center;font:400 22vw/.85 Anton,Impact,sans-serif;text-transform:uppercase;color:transparent;background:url(midia/body-por-do-sol.webp) 50% 60%/cover;-webkit-background-clip:text;background-clip:text}
+.sem3d .reserva{display:grid}
+.final{position:absolute;inset:0;opacity:0;background:url(midia/body-por-do-sol.webp) 50% 62%/cover;will-change:transform,opacity}
+.sub{position:absolute;left:0;right:0;bottom:16%;text-align:center;opacity:0;font:700 clamp(11px,.95vw,14px)/1 var(--fonte-texto);letter-spacing:.5em;padding-left:.5em;text-transform:uppercase;color:#d9e2e8}
+.sub b{color:var(--o)}
+.cine{position:absolute;left:0;right:0;height:10%;background:#000;z-index:5}.cine.c{top:0;transform-origin:50% 0}.cine.b{bottom:0;transform-origin:50% 100%}
+.grao{position:absolute;inset:-10%;z-index:4;opacity:.09;mix-blend-mode:overlay;pointer-events:none;animation:grao .8s steps(3) infinite;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+@keyframes grao{0%{transform:translate(0,0)}33%{transform:translate(-3%,2%)}66%{transform:translate(2%,-3%)}100%{transform:translate(0,0)}}
+.progresso{position:absolute;left:0;right:0;bottom:0;height:2px;z-index:6;transform:scaleX(0);transform-origin:0 50%;background:linear-gradient(90deg,var(--v),var(--o))}
+.pular,.som{position:absolute;z-index:7;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);cursor:pointer;font:700 11px/1 var(--fonte-texto);letter-spacing:.3em;text-transform:uppercase;color:#d6d6da;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.22);border-radius:40px;padding:12px 18px}
+.pular{right:max(20px,env(safe-area-inset-right,0px))}
+.som{left:max(20px,env(safe-area-inset-left,0px));display:flex;align-items:center;gap:8px;padding:9px 16px 9px 12px;letter-spacing:.24em}
+.som svg{width:20px;height:20px}.som .ondas{display:none}.som[aria-pressed="true"] .ondas{display:block}.som[aria-pressed="true"] .mudo{display:none}.som[aria-pressed="true"]{border-color:rgba(246,180,69,.7);color:#fff}
+#painel{position:fixed;z-index:20;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 64px);transform:translateX(-50%);display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:max-content;max-width:94vw;opacity:0;pointer-events:none;transition:opacity .4s}
+#painel.fim{opacity:1;pointer-events:auto}
+#painel button{font:700 13px/1 var(--fonte-texto);letter-spacing:.06em;color:#fff;background:#18181b;border:1px solid #3a3a40;border-radius:40px;padding:13px 18px;cursor:pointer}
+#painel button.on{background:var(--v);border-color:var(--v)}
+button:focus-visible{outline:3px solid var(--o);outline-offset:3px}
+@media (max-width:760px){.sub{bottom:12%;letter-spacing:.3em;font-size:10px}}
+@media (prefers-reduced-motion:reduce){.grao{animation:none}}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body>
+<div class="abertura" id="abertura" role="img" aria-label="Abertura: Além de um simples treino. Body Gym.">
+  <canvas id="cena" aria-hidden="true"></canvas>
+  <div class="reserva">Body Gym</div>
+  <div class="final" aria-hidden="true"></div>
+  <span class="sub">Mineiros · GO <b>—</b> desde 2019</span>
+  <div class="grao"></div>
+  <div class="cine c"></div><div class="cine b"></div>
+  <div class="progresso"></div>
+  <button class="pular" type="button">Pular</button>
+  <button class="som" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path class="ondas" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path class="mudo" d="M16 9l5 6M21 9l-5 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>Ativar som</span></button>
+</div>
+<div id="painel" role="group" aria-label="Controles da abertura">
+  <button type="button" data-vel="1" data-som="1">Rever com som</button>
+  <button type="button" data-vel="1">Rever 1x</button>
+  <button type="button" data-vel="0.5">Câmera lenta 0,5x</button>
+  <button type="button" data-vel="0.25">Quadro a quadro 0,25x</button>
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { BokehPass } from 'three/addons/postprocessing/BokehPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+const gsap = window.gsap, q = s => document.querySelector(s), qa = s => [...document.querySelectorAll(s)];
+const P = new URLSearchParams(location.search), PAUSA = P.has('t') ? +P.get('t') : null;
+let VEL = +P.get('vel') || 1;
+const desk = matchMedia('(min-width: 761px)').matches, calmo = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- Som: efeitos de metal (Mixkit) alinhados pelo pico ---------- */
+const Som = (() => {
+  let ac = null, mestre = null, ligado = false, carregando = null; const buf = {};
+  const SONS = { alem: { pico: .265, vol: .9 }, deum: { pico: .169, vol: .8 }, simples: { pico: .324, vol: .95 }, treino: { pico: .93, vol: 1 }, marca: { pico: .985, vol: 1 }, brilho: { pico: .939, vol: .35 } };
+  try { ligado = localStorage.getItem('bg-som') === '1'; } catch (e) {}
+  function cria() { if (ac) return; const C = window.AudioContext || window.webkitAudioContext; if (!C) return; ac = new C();
+    mestre = ac.createDynamicsCompressor(); mestre.threshold.value = -6; mestre.ratio.value = 4; const g = ac.createGain(); g.gain.value = .95; mestre.connect(g); g.connect(ac.destination); carrega(); }
+  function carrega() { if (carregando) return carregando;
+    carregando = Promise.all(Object.keys(SONS).map(n => fetch('midia/som/' + n + '.mp3').then(r => r.arrayBuffer()).then(a => new Promise((ok, erro) => ac.decodeAudioData(a, ok, erro))).then(b => { buf[n] = b; }).catch(() => {})));
+    return carregando; }
+  function toca(n, desloc) { if (!ligado || !ac || !buf[n] || VEL !== 1) return; const src = ac.createBufferSource(), g = ac.createGain(); src.buffer = buf[n]; g.gain.value = SONS[n].vol; src.connect(g); g.connect(mestre); src.start(ac.currentTime, desloc || 0); }
+  // estalo de energia (piscada): ruído curtíssimo filtrado, sintetizado
+  function estalo(f) { if (!ligado || !ac || VEL !== 1) return; const t = ac.currentTime, n = Math.floor(ac.sampleRate * .05), b = ac.createBuffer(1, n, ac.sampleRate), d = b.getChannelData(0);
+    for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 3); const s = ac.createBufferSource(), bp = ac.createBiquadFilter(), g = ac.createGain();
+    s.buffer = b; bp.type = 'bandpass'; bp.frequency.value = 2400; bp.Q.value = .8; g.gain.value = .35 * (f || 1); s.connect(bp); bp.connect(g); g.connect(mestre); s.start(t); }
+  function liga(v) { ligado = v; try { localStorage.setItem('bg-som', v ? '1' : '0'); } catch (e) {} if (v) { cria(); if (ac && ac.state === 'suspended') ac.resume(); } atualiza(); }
+  const bt = q('.som'); function atualiza() { bt.setAttribute('aria-pressed', String(ligado)); q('.som span').textContent = ligado ? 'Som ligado' : 'Ativar som'; }
+  bt.addEventListener('click', () => liga(!ligado)); atualiza();
+  return { toca, estalo, liga, pico: n => SONS[n].pico, pronto: () => carregando || Promise.resolve() };
+})();
+
+/* ---------- Cena 3D ---------- */
+const cv = q('#cena'); let r;
+try { r = new THREE.WebGLRenderer({ canvas: cv, antialias: true, powerPreference: 'high-performance' }); }
+catch (e) { document.documentElement.classList.add('sem3d'); throw e; }
+r.setPixelRatio(Math.min(devicePixelRatio || 1, 2)); r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1; r.outputColorSpace = THREE.SRGBColorSpace;
+const cena = new THREE.Scene(); cena.background = new THREE.Color(0x000000);
+const cam = new THREE.PerspectiveCamera(28, 1, .02, 60);
+function canvasTex(desenha, n = 1024) { const c = document.createElement('canvas'); c.width = c.height = n; desenha(c.getContext('2d'), n); const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t; }
+
+// estúdio escuro com faixas (o que o metal reflete)
+const pm = new THREE.PMREMGenerator(r), est = new THREE.Scene(); est.background = new THREE.Color(0x010203);
+const painel = (w, h, x, y, z, c) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: c, side: THREE.DoubleSide })); m.position.set(x, y, z); m.lookAt(0, 0, 0); est.add(m); };
+painel(10, .6, 0, 5, 0, new THREE.Color(3, 3.3, 3.6)); painel(.6, 6, -6, 1, 2, new THREE.Color(1.6, 2.0, 2.4)); painel(.5, 6, 6, 1.5, -1, new THREE.Color(1.2, 1.5, 1.8));
+painel(14, 1.4, 0, 3, 7, new THREE.Color(1.1, 1.25, 1.4)); painel(14, .8, 0, .6, 7, new THREE.Color(.02, .03, .04)); painel(14, .6, 0, -.4, 7, new THREE.Color(1.4, 1.0, .7)); painel(14, 1.5, 0, -1.8, 7, new THREE.Color(.25, .3, .35));
+cena.environment = pm.fromScene(est, 0).texture;
+
+// texturas: metal martelado, pedra, rachaduras de lava, fumaça, clarão
+const martelo = canvasTex((x, n) => { x.fillStyle = '#7a7a7a'; x.fillRect(0, 0, n, n);
+  for (let i = 0; i < 1400; i++) { const cx = Math.random() * n, cy = Math.random() * n, rr = 18 + Math.random() * 46, g = x.createRadialGradient(cx, cy, 0, cx, cy, rr), v = Math.random() < .5 ? 255 : 0;
+    g.addColorStop(0, `rgba(${v},${v},${v},.10)`); g.addColorStop(1, `rgba(${v},${v},${v},0)`); x.fillStyle = g; x.beginPath(); x.arc(cx, cy, rr, 0, 6.3); x.fill(); }
+  x.filter = 'blur(3px)'; x.drawImage(x.canvas, 0, 0); x.filter = 'none'; }); martelo.repeat.set(1.3, 1.3);
+const pedra = canvasTex((x, n) => { x.fillStyle = '#555'; x.fillRect(0, 0, n, n);
+  for (let i = 0; i < 9000; i++) { const s = 2 + Math.random() * 26, g = 30 + Math.random() * 190 | 0; x.fillStyle = `rgba(${g},${g},${g},${.05 + Math.random() * .25})`; x.beginPath(); x.ellipse(Math.random() * n, Math.random() * n, s, s * (.4 + Math.random() * .8), Math.random() * 3, 0, 6.3); x.fill(); } }); pedra.repeat.set(2.2, 2.2);
+const rachas = canvasTex((x, n) => { x.fillStyle = '#000'; x.fillRect(0, 0, n, n); x.lineCap = 'round';
+  for (let k = 0; k < 46; k++) { let px = Math.random() * n, py = Math.random() * n, a = Math.random() * 6.28; const passos = 8 + Math.random() * 26 | 0;
+    for (let i = 0; i < passos; i++) { const nx = px + Math.cos(a) * (6 + Math.random() * 18), ny = py + Math.sin(a) * (6 + Math.random() * 18);
+      x.strokeStyle = `rgba(255,${120 + Math.random() * 80 | 0},40,${.5 + Math.random() * .5})`; x.lineWidth = .6 + Math.random() * 2.4; x.shadowColor = '#ff3010'; x.shadowBlur = 8;
+      x.beginPath(); x.moveTo(px, py); x.lineTo(nx, ny); x.stroke(); px = nx; py = ny; a += (Math.random() - .5) * 1.2; } } }); rachas.repeat.set(.7, .7);
+const fumTex = canvasTex((x, n) => { for (let i = 0; i < 60; i++) { const cx = n * (.2 + Math.random() * .6), cy = n * (.2 + Math.random() * .6), rr = n * (.08 + Math.random() * .25);
+  const g = x.createRadialGradient(cx, cy, 0, cx, cy, rr); g.addColorStop(0, 'rgba(255,255,255,.10)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, n, n); } }, 512);
+const flTex = canvasTex((x, n) => { const g = x.createLinearGradient(0, 0, n, 0); g.addColorStop(0, 'rgba(120,180,255,0)'); g.addColorStop(.5, 'rgba(220,240,255,1)'); g.addColorStop(1, 'rgba(120,180,255,0)');
+  x.fillStyle = g; x.fillRect(0, n / 2 - 1, n, 2); x.globalAlpha = .35; x.fillRect(0, n / 2 - 4, n, 8); x.globalAlpha = 1;
+  const g2 = x.createRadialGradient(n / 2, n / 2, 0, n / 2, n / 2, 14); g2.addColorStop(0, 'rgba(255,255,255,.9)'); g2.addColorStop(1, 'rgba(160,200,255,0)'); x.fillStyle = g2; x.fillRect(0, 0, n, n); }, 1024);
+
+// pôr do sol real (frente do BODY GYM) e emblema
+const carrega = u => new THREE.TextureLoader().load(u);
+const solTex = carrega('midia/body-por-do-sol.webp'); solTex.colorSpace = THREE.SRGBColorSpace; solTex.anisotropy = 8;
+const logoTex = carrega('midia/logo-emblema.webp'); logoTex.colorSpace = THREE.SRGBColorSpace; logoTex.anisotropy = 8;
+const logoRel = carrega('midia/logo-relevo.webp');
+// materiais
+const metalFace = new THREE.MeshPhysicalMaterial({ color: 0xdfe6eb, metalness: 1, roughness: .22, roughnessMap: martelo, bumpMap: martelo, bumpScale: .65, clearcoat: .55, clearcoatRoughness: .15 });
+const metalLado = new THREE.MeshPhysicalMaterial({ color: 0x8b98a2, metalness: 1, roughness: .34, roughnessMap: martelo, bumpMap: martelo, bumpScale: .9 });
+const pedraFace = new THREE.MeshStandardMaterial({ color: 0x5a5450, roughness: .7, metalness: .35, bumpMap: pedra, bumpScale: 1.6, roughnessMap: pedra, emissive: 0xff3a10, emissiveMap: rachas, emissiveIntensity: 0, envMapIntensity: .3 });
+const pedraLado = new THREE.MeshStandardMaterial({ color: 0x1e1b1a, roughness: .85, metalness: .2, bumpMap: pedra, bumpScale: 2, emissive: 0xff2a0c, emissiveMap: rachas, emissiveIntensity: 0, envMapIntensity: .3 });
+const costura = new THREE.MeshStandardMaterial({ color: 0x200000, emissive: 0xff3412, emissiveIntensity: 0, roughness: .6 });
+const solFace = new THREE.MeshBasicMaterial({ map: solTex, toneMapped: false, color: 0x000000 });   // foto com as cores reais (sem o tratamento de cor da cena)
+const emblemaFace = new THREE.MeshStandardMaterial({ map: logoTex, bumpMap: logoRel, bumpScale: 3, metalness: .75, roughness: .28, transparent: true, alphaTest: .4 });
+const comLuz = [metalFace, metalLado, pedraFace, pedraLado, emblemaFace];
+const ENV0 = new Map(comLuz.map(m => [m, m.envMapIntensity]));
+
+// luzes (todas passam pelo "disjuntor" LUZ.n)
+const key = new THREE.DirectionalLight(0xd7e6f2, 1.2); key.position.set(-2.5, 4, 3); cena.add(key);
+const rim = new THREE.DirectionalLight(0xffb070, 3.0); rim.position.set(1.5, 2.5, -3); cena.add(rim);
+const lavaLuz = new THREE.PointLight(0xff3a14, 0, 7, 1.6); lavaLuz.position.set(0, .4, 1.4); cena.add(lavaLuz);
+const LUZ = { n: 0, lava: 0, fumF: 0, fumQ: 0, sol: 0 };
+
+// névoa fria e quente
+const fumos = [];
+for (let i = 0; i < 14; i++) { const quente = i % 2 === 0, m = new THREE.Mesh(new THREE.PlaneGeometry(9, 5), new THREE.MeshBasicMaterial({ map: fumTex, color: quente ? 0x3a160c : 0x0a2024, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending }));
+  m.position.set((Math.random() - .5) * 6, -1 + Math.random() * 2, -2.5 - Math.random() * 4); m.rotation.z = Math.random() * 6; m.userData.quente = quente; m.userData.giro = (Math.random() - .5) * .05; cena.add(m); fumos.push(m); }
+
+// estilhaços de metal (flutuam; na revelação do BODY GYM são soprados para fora)
+const estil = []; const estMat = new THREE.MeshPhysicalMaterial({ color: 0xb8c4cc, metalness: 1, roughness: .3, bumpMap: martelo, bumpScale: 2 }); comLuz.push(estMat); ENV0.set(estMat, 1);
+for (let i = 0; i < (desk ? 24 : 14); i++) { const s = .03 + Math.random() * .16, g = new THREE.TetrahedronGeometry(s, 0); g.scale(1, .25 + Math.random() * .5, 1 + Math.random());
+  const m = new THREE.Mesh(g, estMat); const p0 = new THREE.Vector3((Math.random() - .5) * 7, -1.2 + Math.random() * 3.2, -3 + Math.random() * 5.5);
+  m.position.copy(p0); m.rotation.set(Math.random() * 6, Math.random() * 6, Math.random() * 6); m.userData = { p0, v: new THREE.Vector3((Math.random() - .5) * .12, (Math.random() - .5) * .08, (Math.random() - .5) * .1), w: new THREE.Vector3(Math.random(), Math.random(), Math.random()).multiplyScalar(1.2) };
+  cena.add(m); estil.push(m); }
+const SOPRO = { k: 0 };   // 0..1: quanto os estilhaços foram soprados para fora (determinístico, vai bem no ?t=)
+
+// brasas (estouram no TREINO)
+const NB = desk ? 420 : 240, pb = new Float32Array(NB * 3), cb = new Float32Array(NB * 3), brasas = [];
+for (let i = 0; i < NB; i++) { const h = Math.random(); cb[i * 3] = 1; cb[i * 3 + 1] = .3 + h * .45; cb[i * 3 + 2] = .05 + h * .1; brasas.push({ p: new THREE.Vector3(0, -50, 0), v: new THREE.Vector3(), vida: 0 }); }
+const gb = new THREE.BufferGeometry(); gb.setAttribute('position', new THREE.BufferAttribute(pb, 3).setUsage(THREE.DynamicDrawUsage)); gb.setAttribute('color', new THREE.BufferAttribute(cb, 3));
+const matB = new THREE.PointsMaterial({ size: .03, vertexColors: true, transparent: true, opacity: 1, blending: THREE.AdditiveBlending, depthWrite: false });
+const ptsB = new THREE.Points(gb, matB); ptsB.frustumCulled = false; cena.add(ptsB);
+function estouraBrasas(larg, alt) { brasas.forEach(b => { b.p.set((Math.random() - .5) * larg, (Math.random() - .5) * alt, (Math.random() - .5) * .5); const a = Math.random() * 6.28, v = .6 + Math.random() * 3.2;
+  b.v.set(Math.cos(a) * v, Math.abs(Math.sin(a)) * v * 1.2 + .4, (Math.random() - .3) * v); b.vida = .6 + Math.random() * 1.6; }); }
+function passoBrasas(dt) { brasas.forEach((b, i) => { if (b.vida > 0) { b.vida -= dt; b.v.multiplyScalar(Math.pow(.45, dt)); b.v.y += .25 * dt; b.p.addScaledVector(b.v, dt); } else b.p.y = -50;
+  pb[i * 3] = b.p.x; pb[i * 3 + 1] = b.p.y; pb[i * 3 + 2] = b.p.z; }); gb.attributes.position.needsUpdate = true; }
+
+// clarão horizontal azul (risco que revela)
+const flare = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: flTex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0 }));
+cena.add(flare); const FL = { x: -1, a: 0 };
+
+// pós
+const comp = new EffectComposer(r); comp.addPass(new RenderPass(cena, cam));
+const dof = new BokehPass(cena, cam, { focus: 3, aperture: .002, maxblur: .008 }); comp.addPass(dof);
+const bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), .4, .35, .8); comp.addPass(bloom);
+comp.addPass(new OutputPass());
+
+let W = innerWidth, H = innerHeight;
+function ajusta() { W = innerWidth; H = innerHeight; r.setSize(W, H, false); comp.setSize(W, H); cam.aspect = W / H; cam.updateProjectionMatrix(); bloom.resolution.set(W / 2, H / 2); }
+
+/* ---------- palavras ---------- */
+const PAL = {}; let EMB = null;
+function palavra(fonte, txt, lava, sol) {
+  const grupo = new THREE.Group(), linhas = (!desk && txt === 'BODY GYM') ? txt.split(' ') : [txt];
+  linhas.forEach((t, i) => {
+    const g = new TextGeometry(t, { font: fonte, size: 1, height: .42, depth: .42, curveSegments: 14, bevelEnabled: true, bevelThickness: .05, bevelSize: .03, bevelSegments: 5 });
+    g.computeBoundingBox(); const b = g.boundingBox; g.translate(-(b.min.x + b.max.x) / 2, -b.min.y - i * 1.12, -(b.min.z + b.max.z) / 2);
+    const p = g.attributes.position, uv = g.attributes.uv; for (let k = 0; k < p.count; k++) uv.setXY(k, p.getX(k) * .35, p.getY(k) * .35 + p.getZ(k) * .35);
+    grupo.add(new THREE.Mesh(g, lava ? [pedraFace, pedraLado] : sol ? [solFace, metalLado] : [metalFace, metalLado]));
+    if (lava) { const c = new TextGeometry(t, { font: fonte, size: 1, height: .035, depth: .035, curveSegments: 8, bevelEnabled: true, bevelThickness: .004, bevelSize: .036, bevelSegments: 1 });
+      c.computeBoundingBox(); const bc = c.boundingBox; c.translate(-(bc.min.x + bc.max.x) / 2, -b.min.y - i * 1.12, -(bc.min.z + bc.max.z) / 2); grupo.add(new THREE.Mesh(c, costura)); }
+  });
+  const cx = new THREE.Box3().setFromObject(grupo), ct = cx.getCenter(new THREE.Vector3());
+  grupo.children.forEach(m => m.position.sub(ct)); grupo.userData.larg = cx.max.x - cx.min.x; grupo.userData.alt = cx.max.y - cx.min.y;
+  if (sol) { // UV da frente = posição na palavra inteira, recortando o céu com o sol (foto em pé)
+    const L = cx.max.x - cx.min.x, A = cx.max.y - cx.min.y, ia = 1260 / 780, faixa = Math.min(1, ia / (L / A));
+    grupo.children.forEach(m => { const p = m.geometry.attributes.position, uv = m.geometry.attributes.uv;
+      for (let k = 0; k < p.count; k++) { const u = (p.getX(k) + m.position.x - cx.min.x) / L, v = (p.getY(k) + m.position.y - cx.min.y) / A; uv.setXY(k, u, Math.max(0, .42 - faixa / 2) + v * faixa); } uv.needsUpdate = true; });
+  }
+  grupo.visible = false; cena.add(grupo); return grupo;
+}
+// emblema espartano: disco de metal com o símbolo em relevo
+function emblema(raio) { const g = new THREE.Group();
+  const aro = new THREE.Mesh(new THREE.CylinderGeometry(raio * 1.04, raio * 1.04, raio * .16, 128, 1, true), metalLado); aro.rotation.x = Math.PI / 2; g.add(aro);
+  const fundo = new THREE.Mesh(new THREE.CircleGeometry(raio * 1.04, 128), metalLado); fundo.position.z = -raio * .08; g.add(fundo);
+  const frente = new THREE.Mesh(new THREE.PlaneGeometry(raio * 2, raio * 2), emblemaFace); frente.position.z = raio * .081; g.add(frente);
+  g.visible = false; cena.add(g); return g; }
+// ponto na perna esquerda do "O" do BODY (onde a câmera mergulha)
+let FONTE = null;
+function FOCO_O(g) { const m = g.children[0], b = new THREE.Box3().setFromObject(m), gl = FONTE.data.glyphs, k = 1 / FONTE.data.resolution;
+  const ini = b.min.x + .03, oB = gl['B'].ha * k, O = gl['O'], xo = (O.x_min + (O.x_max - O.x_min) * .11) * k;
+  return { x: ini + oB + xo, y: (b.min.y + b.max.y) / 2, z: b.max.z }; }
+function dist(g, ocupa) { const vf = THREE.MathUtils.degToRad(cam.fov) / 2, hf = Math.atan(Math.tan(vf) * cam.aspect); return Math.max((g.userData.larg / 2) / Math.tan(hf), (g.userData.alt / 2) / Math.tan(vf)) / ocupa; }
+
+/* ---------- câmera (proxy animável) ---------- */
+const C = { x: 0, y: 0, z: 4, lx: 0, ly: 0, lz: 0, rol: 0, trem: 0, foco: 0, abert: .002 };
+let tempo = 0;
+const alvoV = new THREE.Vector3();
+function render(dt) {
+  tempo += dt; passoBrasas(dt);
+  // disjuntor de luz
+  key.intensity = 1.2 * LUZ.n; rim.intensity = 3.0 * LUZ.n; comLuz.forEach(m => m.envMapIntensity = ENV0.get(m) * LUZ.n);
+  pedraFace.emissiveIntensity = .55 * LUZ.lava; pedraLado.emissiveIntensity = 1.4 * LUZ.lava; costura.emissiveIntensity = 2.4 * LUZ.lava; lavaLuz.intensity = 3 * LUZ.lava; solFace.color.setScalar(Math.min(1.15, LUZ.sol * Math.max(.12, LUZ.n)));
+  fumos.forEach(f => { f.material.opacity = (f.userData.quente ? LUZ.fumQ * .25 : LUZ.fumF * .22); f.rotation.z += f.userData.giro * dt; });
+  // estilhaços: flutuam e, na revelação, são soprados para fora a partir do centro
+  estil.forEach(m => { const u = m.userData; m.position.copy(u.p0).addScaledVector(u.v, tempo); const dir = u.p0.clone().setZ(u.p0.z * .3).normalize(); m.position.addScaledVector(dir, SOPRO.k * 3.5);
+    m.rotation.x += u.w.x * dt; m.rotation.y += u.w.y * dt; });
+  // câmera com tremor
+  const s = C.trem, tx = s ? (Math.sin(tempo * 61) * .5 + Math.sin(tempo * 37) * .5) * s : 0, ty = s ? Math.cos(tempo * 53) * s : 0;
+  cam.position.set(C.x + tx, C.y + ty, C.z); cam.lookAt(C.lx, C.ly, C.lz); cam.rotateZ(C.rol);
+  // clarão
+  flare.material.opacity = FL.a; flare.position.set(C.lx + FL.x * 3, C.ly, C.lz + .7); flare.scale.set(14, 14, 1); flare.quaternion.copy(cam.quaternion);
+  alvoV.set(C.lx, C.ly, C.lz); dof.uniforms.focus.value = C.foco || cam.position.distanceTo(alvoV); dof.uniforms.aperture.value = C.abert;
+  comp.render();
+}
+
+/* ---------- coreografia (5 s) ---------- */
+const tl = gsap.timeline({ paused: true, onComplete: fim });
+function somEm(n, T) { const p = Som.pico(n); tl.add(() => Som.toca(n, Math.max(0, p - T)), Math.max(0, T - p)); }
+// piscada de luz: apaga por alguns quadros e volta falhando
+function pisca(t, padrao, quem) { let k = t; padrao.forEach(([v, d]) => { tl.set(LUZ, { [quem || 'n']: v }, k); k += d; }); tl.add(() => Som.estalo(.7), t); return k; }
+const mostra = (n, t) => Object.keys(PAL).forEach(k => tl.set(PAL[k], { visible: k === n }, t));
+const treme = (t, f) => tl.fromTo(C, { trem: f }, { trem: 0, duration: .4, ease: 'power3.out', immediateRender: false }, t);
+function monta() {
+  const oc = desk ? .7 : .86; let g, d;
+  tl.to('.progresso', { scaleX: 1, duration: 5, ease: 'none' }, 0).set(LUZ, { fumF: .8 }, 0);
+  // ALÉM · luz liga falhando; câmera desliza rente ao metal (macro, foco raso)
+  g = PAL.alem; d = dist(g, oc); mostra('alem', 0);
+  pisca(.12, [[.7, .04], [0, .05], [1, .03], [.2, .03], [1, 0]]);
+  tl.fromTo(C, { x: -g.userData.larg * .2, y: .15, z: d * .62, lx: -g.userData.larg * .12, ly: 0, lz: 0, rol: .06, abert: .006 }, { x: g.userData.larg * .12, z: d * .7, lx: g.userData.larg * .08, rol: .02, duration: .62, ease: 'power1.inOut' }, .12);
+  somEm('alem', .2); treme(.2, .02);
+  // piscada → DE UM · de baixo para cima
+  pisca(.72, [[0, .06], [1, 0]]); g = PAL.deum; d = dist(g, desk ? .5 : .7); mostra('deum', .76);
+  tl.fromTo(C, { x: .1, y: -g.userData.alt * .9, z: d * .8, lx: 0, ly: 0, lz: 0, rol: -.08, abert: .004 }, { y: -g.userData.alt * .35, z: d * .95, rol: -.02, duration: .4, ease: 'expo.out' }, .76);
+  somEm('deum', .8); treme(.8, .015);
+  // piscada → SIMPLES · giro rápido de lado + risco azul
+  pisca(1.14, [[0, .05], [.6, .03], [0, .03], [1, 0]]); g = PAL.simples; d = dist(g, oc); mostra('simples', 1.2);
+  tl.fromTo(C, { x: -d * .75, y: .2, z: d * .55, lx: 0, ly: 0, lz: 0, rol: .1, abert: .003 }, { x: -d * .18, z: d * .98, rol: 0, duration: .42, ease: 'expo.out' }, 1.2)
+    .to(C, { x: -d * .1, z: d * 1.02, duration: .3, ease: 'none' }, 1.62)
+    .fromTo(FL, { x: -1, a: .7 }, { x: 1, a: 0, duration: .5, ease: 'power2.inOut', immediateRender: false }, 1.22);
+  somEm('simples', 1.24); treme(1.24, .02);
+  // queda de energia → TREINO: só as veias de lava acendem no escuro, depois tudo estoura
+  tl.set(LUZ, { n: 0, fumF: 0 }, 1.92); tl.add(() => Som.estalo(1), 1.92);
+  g = PAL.treino; d = dist(g, oc); mostra('treino', 1.92);
+  tl.fromTo(C, { x: .2, y: .1, z: d * 1.12, lx: 0, ly: 0, lz: 0, rol: -.02, abert: .002 }, { x: 0, z: d * .96, rol: 0, duration: .9, ease: 'power1.out' }, 1.92)
+    .fromTo(LUZ, { lava: 0 }, { lava: .45, duration: .28, ease: 'power2.in', immediateRender: false }, 1.98)
+    .to(LUZ, { lava: 1.6, duration: .05 }, 2.3).to(LUZ, { lava: 1, duration: .5, ease: 'power2.out' }, 2.35)
+    .add(() => estouraBrasas(g.userData.larg, g.userData.alt), 2.3)
+    .set(LUZ, { fumQ: 1 }, 2.3);
+  pisca(2.3, [[.5, .04], [0, .04], [.7, 0]]);
+  somEm('treino', 2.3); treme(2.3, .05);
+  // apaga tudo (a lava some por último)
+  tl.set(LUZ, { n: 0 }, 2.86).to(LUZ, { lava: 0, fumQ: 0, duration: .14, ease: 'power2.in' }, 2.86);
+  // BODY GYM · luz volta falhando; câmera recua da macro até a marca inteira; risco azul e estilhaços soprados
+  g = PAL.marca; const altTot = g.userData.alt + g.userData.alt * (desk ? .42 : .3) * 2.6; g.userData.altT = altTot;
+  d = Math.max(dist(g, desk ? .62 : .84), (altTot / 2) / Math.tan(THREE.MathUtils.degToRad(cam.fov) / 2) / .78); mostra('marca', 3.02);
+  tl.set(LUZ, { sol: 1 }, 3.02);
+  pisca(3.02, [[.6, .03], [0, .04], [1, .03], [.3, .03], [1, 0]]);
+  tl.set(LUZ, { fumF: 1 }, 3.02)
+    .fromTo(C, { x: -g.userData.larg * .3, y: .2, z: d * .32, lx: -g.userData.larg * .26, ly: .1, lz: 0, rol: .08, abert: .007 }, { x: g.userData.larg * .04, y: g.userData.alt * .45, z: d, lx: 0, ly: g.userData.alt * .45, rol: 0, abert: .0015, duration: .75, ease: 'expo.out', immediateRender: false }, 3.05)
+    .to(C, { z: d * .94, duration: .75, ease: 'none' }, 3.8)
+    .fromTo(SOPRO, { k: 0 }, { k: 1, duration: 1.4, ease: 'expo.out', immediateRender: false }, 3.35)
+    .fromTo(FL, { x: -1, a: .9 }, { x: 1, a: 0, duration: .7, ease: 'power2.inOut', immediateRender: false }, 3.35)
+    .to('.cine.c,.cine.b', { scaleY: 0, duration: .7, ease: 'expo.inOut' }, 3.4)
+    .fromTo('.sub', { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: .5, ease: 'expo.out', immediateRender: false }, 3.7);
+  somEm('marca', 3.38); treme(3.38, .03); somEm('brilho', 3.7);
+  // saída: mergulho no "O" até o pôr do sol tomar a tela
+  const oX = FOCO_O(g); tl.to('.sub', { opacity: 0, duration: .15 }, 4.5)
+    .to(C, { x: oX.x, y: oX.y, lx: oX.x, ly: oX.y, lz: oX.z - 1, z: oX.z + .05, abert: .0008, duration: .36, ease: 'expo.in' }, 4.5)
+    .to(LUZ, { sol: 1.1, duration: .36 }, 4.5)
+    .fromTo('.final', { opacity: 0, scale: 1.35 }, { opacity: 1, scale: 1.04, duration: .2, ease: 'power2.out', immediateRender: false }, 4.8)
+    .to('.final', { scale: 1, duration: .3, ease: 'none' }, 5.02).set({}, {}, 5);
+}
+
+let acabou = false; const EMBUTIDA = P.has('embed');
+if (EMBUTIDA) q('#painel').remove();
+function fim() { if (acabou) return; acabou = true; if (EMBUTIDA) { try { parent.postMessage('abertura-fim', '*'); } catch (e) {} return; } q('#painel').classList.add('fim'); }
+q('.pular').addEventListener('click', () => { tl.progress(1); fim(); });
+addEventListener('keydown', e => { if (e.key === 'Escape') tl.progress(1); });
+if (!EMBUTIDA) qa('#painel button').forEach(b => { b.classList.toggle('on', +b.dataset.vel === VEL);
+  b.addEventListener('click', () => { VEL = +b.dataset.vel; if (b.dataset.som) Som.liga(true); qa('#painel button').forEach(x => x.classList.toggle('on', x === b)); q('#painel').classList.remove('fim'); acabou = false;
+    tempo = 0; Som.pronto().then(() => tl.timeScale(VEL).restart()); }); });
+
+let ult = performance.now(), amostras = [], ajustado = false;
+gsap.ticker.add(() => { const t = performance.now(), bruto = (t - ult) / 1000, dt = Math.min(.05, bruto) * (PAUSA !== null ? 0 : VEL); ult = t; if (!PAL.marca) return;
+  if (!ajustado && PAUSA === null && tl.isActive()) { amostras.push(bruto); if (amostras.length === 24) { ajustado = true; const med = amostras.sort((a, b) => a - b)[12];
+    if (med > 1 / 40) { r.setPixelRatio(1); dof.enabled = false; bloom.strength = .3; ajusta(); } else if (med > 1 / 52) { r.setPixelRatio(Math.min(devicePixelRatio || 1, 1.4)); ajusta(); } } }
+  render(dt); });
+
+new FontLoader().load('midia/anton-3d.json', fonte => {
+  ajusta(); addEventListener('resize', ajusta);
+  PAL.alem = palavra(fonte, 'ALÉM'); PAL.deum = palavra(fonte, 'DE UM'); PAL.simples = palavra(fonte, 'SIMPLES');
+  FONTE = fonte; PAL.treino = palavra(fonte, 'TREINO', true); PAL.marca = palavra(fonte, 'BODY GYM', false, true);
+  const R = PAL.marca.userData.alt * (desk ? .42 : .3); EMB = emblema(R); EMB.position.set(0, PAL.marca.userData.alt / 2 + R * 1.25, 0); PAL.marca.add(EMB); EMB.visible = true; EMB.position.sub(PAL.marca.position);
+  monta();
+  if (calmo) { tl.seek(4.2).pause(); LUZ.n = 1; render(0); fim(); return; }
+  if (PAUSA !== null) { tl.seek(PAUSA).pause(); tempo = PAUSA; if (PAUSA > 2.3 && PAUSA < 2.9) { estouraBrasas(PAL.treino.userData.larg, PAL.treino.userData.alt); passoBrasas(PAUSA - 2.3); } render(0); return; }
+  tl.timeScale(VEL).play(0);
+}, undefined, () => { document.documentElement.classList.add('sem3d'); setTimeout(fim, 1800); });
+window.abertura = { tl, LUZ, C };
+</script>
+</body>
+</html>

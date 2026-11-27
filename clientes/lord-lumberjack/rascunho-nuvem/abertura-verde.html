@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lord Lumberjack — Abertura</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --preto: #000;
+    --verde: #00ff5e;               /* verde forte */
+    --verde-brilho: rgb(0 255 94 / .55);
+    --ease: cubic-bezier(.77, 0, .18, 1);
+    --out: cubic-bezier(.16, 1, .3, 1);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--preto); color: #fff; font-family: Inter, system-ui, sans-serif; overflow: hidden; }
+
+  /* ===== ABERTURA ===== */
+  .abre { position: fixed; inset: 0; z-index: 10; background: var(--preto); display: grid; place-items: center; }
+  .abre.sai { animation: sai .9s var(--ease) forwards; }
+
+  .marca { position: relative; text-align: center; }
+  .lord-box { position: relative; }
+
+  /* a linha verde que corta a tela */
+  .linha { position: absolute; left: 50%; top: 50%; width: min(80vw, 900px); height: 2px; translate: -50% -50%;
+    background: var(--verde); box-shadow: 0 0 12px var(--verde), 0 0 40px var(--verde-brilho);
+    transform: scaleX(0); animation: linha .7s var(--ease) .2s forwards, linhaSome .5s ease 1.5s forwards; }
+
+  /* fresta: LORD aparece entre duas lâminas que se abrem a partir da linha */
+  .lord { font: 800 clamp(4rem, 22vw, 15rem)/.9 Cinzel, Georgia, serif; letter-spacing: .04em; margin: 0;
+    color: var(--verde); text-shadow: 0 0 18px var(--verde-brilho), 0 0 60px rgb(0 255 94 / .25);
+    clip-path: inset(50% -20% 50% -20%); opacity: 0; animation: fresta .8s var(--ease) .85s forwards; }
+
+  .lumber { margin: .6em 0 0; font: 600 clamp(.8rem, 2.4vw, 1.5rem) Cinzel, Georgia, serif; color: #fff;
+    letter-spacing: .9em; padding-left: .9em; opacity: 0; animation: lumber 1s var(--out) 1.5s forwards; }
+
+  @keyframes linha { to { transform: scaleX(1); } }
+  @keyframes linhaSome { to { transform: scaleX(1) scaleY(.5); opacity: 0; } }
+  @keyframes fresta { 0% { opacity: 1; } to { opacity: 1; clip-path: inset(-40% -20% -40% -20%); } }
+  @keyframes lumber { to { opacity: 1; letter-spacing: .55em; padding-left: .55em; } }
+  @keyframes sai { to { clip-path: inset(0 0 100% 0); } }
+
+  .pular { position: fixed; z-index: 11; right: 1.25rem; bottom: 1.25rem; background: none; color: rgb(255 255 255 / .55);
+    border: 1px solid rgb(255 255 255 / .2); border-radius: 999px; padding: .5em 1em; font: 600 .75rem Inter, sans-serif;
+    letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
+  .pular:hover { color: var(--verde); border-color: var(--verde); }
+  .pular:focus-visible, a:focus-visible { outline: 2px solid var(--verde); outline-offset: 3px; }
+
+  /* ===== SITE (placeholder do hero) ===== */
+  .site { position: fixed; inset: 0; display: grid; align-content: end; padding: clamp(1.5rem, 6vw, 5rem); background: var(--preto); }
+  .site__topo { position: absolute; top: clamp(1.5rem, 4vw, 2.5rem); left: clamp(1.5rem, 6vw, 5rem); right: clamp(1.5rem, 6vw, 5rem);
+    display: flex; justify-content: space-between; align-items: center; }
+  .site__logo { font: 800 1.25rem Cinzel, serif; color: var(--verde); letter-spacing: .08em; }
+  .site__foto { position: absolute; inset: 0; z-index: -1; display: grid; place-items: center;
+    background: radial-gradient(50% 40% at 50% 40%, rgb(0 255 94 / .06), transparent 70%), var(--preto); }
+  .site__foto span { font: 600 .65rem Inter, sans-serif; letter-spacing: .3em; color: rgb(255 255 255 / .15); }
+  .site h1 { font: 600 clamp(2.2rem, 6vw, 4.5rem)/1 Cinzel, Georgia, serif; margin: 0 0 1rem; }
+  .site h1 em { color: var(--verde); font-style: normal; }
+  .site p { color: rgb(255 255 255 / .6); max-width: 34ch; margin: 0 0 2rem; line-height: 1.6; }
+  .btn { display: inline-block; background: var(--verde); color: var(--preto); font-weight: 600; text-decoration: none;
+    padding: 1em 1.9em; border-radius: 999px; transition: box-shadow .3s, transform .3s var(--out); }
+  .btn:hover { box-shadow: 0 0 30px var(--verde-brilho); transform: translateY(-2px); }
+  .site > * { opacity: 0; transform: translateY(16px); transition: opacity .8s var(--out), transform .8s var(--out); }
+  .site.on > * { opacity: 1; transform: none; }
+  .site.on > :nth-child(3) { transition-delay: .1s; } .site.on > :nth-child(4) { transition-delay: .2s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .abre { display: none; } .pular { display: none; }
+    .site > * { opacity: 1; transform: none; transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<main class="site" id="site">
+  <div class="site__foto"><span>FOTO DA BARBEARIA ENTRA AQUI</span></div>
+  <div class="site__topo"><span class="site__logo">LORD</span><a class="btn" href="#agendar">Agendar</a></div>
+  <h1>Corte de <em>lorde</em>.<br>Sem fila.</h1>
+  <div><p>Escolha o barbeiro e o horário em segundos. Mineiros-GO.</p><a class="btn" href="#agendar">Agendar horário</a></div>
+</main>
+
+<div class="abre" id="abre" aria-hidden="true">
+  <div class="marca">
+    <div class="lord-box"><span class="linha"></span><h2 class="lord">LORD</h2></div>
+    <p class="lumber">LUMBERJACK</p>
+  </div>
+</div>
+<button class="pular" id="pular">Pular</button>
+
+<script>
+  const abre = document.getElementById('abre'), site = document.getElementById('site'), pular = document.getElementById('pular');
+  const reduz = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function fim() {
+    if (abre.classList.contains('sai')) return;
+    abre.classList.add('sai'); pular.remove();
+    setTimeout(() => site.classList.add('on'), 350);
+    setTimeout(() => abre.remove(), 950);
+  }
+  if (reduz) { abre.remove(); pular.remove(); site.classList.add('on'); }
+  else { setTimeout(fim, 3200); pular.onclick = fim; }
+</script>
+</body>
+</html>

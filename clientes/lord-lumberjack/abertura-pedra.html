@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Lord Lumberjack · Abertura</title>
+<style>
+:root{--bg:#000}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:var(--bg);overflow:hidden}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:3}
+:root{--verde:#6dbb3a;--led:#f4fbef;--sai:cubic-bezier(.16,1,.3,1)}
+/* parede real (foto) — posicionada pelo JS para o corte casado */
+.parede{position:fixed;left:0;top:0;z-index:1;transform-origin:0 0;opacity:0;will-change:transform,opacity}
+.parede img{display:block;width:100%;height:100%}
+.parede::after{content:'';position:absolute;inset:0;pointer-events:none}
+.sombra{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:0;
+  background:linear-gradient(90deg,rgb(3 4 3/.9) 0%,rgb(3 4 3/.5) 50%,rgb(3 4 3/.15)),linear-gradient(0deg,rgb(3 4 3/.92),transparent 50%)}
+/* letreiro aceso (vetor da logo) */
+.letreiro{position:fixed;inset:0;width:100%;height:100%;z-index:4;pointer-events:none;opacity:0;overflow:visible}
+.letreiro{mix-blend-mode:screen}
+.letreiro path{fill:#5fae34}
+/* texto do topo */
+.hero{position:fixed;left:clamp(1.25rem,6vw,5rem);bottom:clamp(2rem,11vh,6.5rem);max-width:38rem;z-index:5;color:var(--led);font-family:Manrope,system-ui,sans-serif;visibility:hidden}
+.hero.on{visibility:visible}
+.hero>*{opacity:0;transform:translateY(22px);filter:blur(6px)}
+.hero.on>*{opacity:1;transform:none;filter:none;transition:opacity 1s var(--sai),transform 1s var(--sai),filter 1s var(--sai)}
+.hero.on>:nth-child(2){transition-delay:.08s}.hero.on>:nth-child(3){transition-delay:.2s}.hero.on>:nth-child(4){transition-delay:.3s}
+.hero h1 .pal{display:inline-block;opacity:0;transform:translateY(.5em) rotate(2deg)}
+.hero.on h1 .pal{opacity:1;transform:none;transition:opacity .9s var(--sai),transform .9s var(--sai)}
+.nota{display:inline-block;font:600 .7rem Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;border:1px solid rgb(244 251 239/.2);border-radius:99px;padding:.5em 1em;margin-bottom:1.3rem;backdrop-filter:blur(4px)}
+.nota b{color:var(--verde);letter-spacing:.1em}
+.hero h1{font:500 clamp(2.6rem,7vw,5.6rem)/1 'Bodoni Moda',Georgia,serif;margin-bottom:1.1rem}
+.hero h1 em{color:var(--verde)}
+.hero p{color:rgb(244 251 239/.74);line-height:1.6;max-width:30rem;margin-bottom:1.7rem}
+.cta{display:inline-block;background:var(--verde);color:#030403;font:700 .8rem Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;padding:1.1em 2em;border-radius:99px;box-shadow:0 0 0 rgb(109 187 58/0);transition:box-shadow .4s}
+.cta:hover{box-shadow:0 0 34px rgb(109 187 58/.55)}
+.topo{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:1.1rem clamp(1.25rem,6vw,5rem);opacity:0;transform:translateY(-12px);transition:opacity .8s var(--sai) .4s,transform .8s var(--sai) .4s;pointer-events:none}
+.topo.on{opacity:1;transform:none;pointer-events:auto}
+.topo span{font:600 1.05rem 'Bodoni Moda',serif;letter-spacing:.18em;color:var(--led)}
+.topo a{font:700 .68rem Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--verde);text-decoration:none;border:1px solid rgb(109 187 58/.5);border-radius:99px;padding:.6em 1.2em}
+/* convite para entrar */
+.dica{position:fixed;left:50%;bottom:clamp(1.5rem,7vh,3.5rem);z-index:6;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.7rem;
+  font:700 .66rem Manrope,sans-serif;letter-spacing:.32em;text-transform:uppercase;color:rgb(244 251 239/.75);opacity:0;transition:opacity .8s;pointer-events:none}
+.dica.on{opacity:1}
+.dica i{display:block;width:1px;height:34px;background:linear-gradient(var(--verde),transparent);transform-origin:top;animation:pinga 1.6s cubic-bezier(.65,0,.35,1) infinite}
+@keyframes pinga{0%{transform:scaleY(0);opacity:1}60%{transform:scaleY(1);opacity:1}100%{transform:scaleY(1);opacity:0}}
+.cta:focus-visible,.ui button:focus-visible,.topo a:focus-visible{outline:2px solid var(--verde);outline-offset:3px}
+.ui{position:fixed;right:1.25rem;bottom:1.25rem;z-index:7;display:flex;gap:.5rem}
+.ui button{background:rgb(3 4 3/.5);color:rgb(244 251 239/.7);border:1px solid rgb(244 251 239/.2);border-radius:99px;padding:.55em 1.1em;font:700 .68rem Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px)}
+.ui button:hover{color:var(--verde);border-color:var(--verde)}
+@media (max-width:600px){.ui{right:.75rem;bottom:.75rem}}
+/* tela deitada: o letreiro fica à esquerda na foto, então o texto vai para a direita */
+@media (min-aspect-ratio:11/10){
+  .hero{left:auto;right:clamp(1.25rem,6vw,5rem);bottom:auto;top:50%;translate:0 -42%;max-width:min(34rem,44vw)}
+  .sombra{background:linear-gradient(270deg,rgb(3 4 3/.92) 0%,rgb(3 4 3/.6) 42%,rgb(3 4 3/.12) 70%),linear-gradient(0deg,rgb(3 4 3/.7),transparent 40%)}
+}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="parede" id="parede"><img src="img/foto-1757354912336.jpg" alt="Salão da Lord Lumberjack, com o letreiro LORD na parede" width="600" height="600"></div>
+<div class="sombra" id="sombra"></div>
+<canvas id="gl" aria-hidden="true"></canvas>
+<svg class="letreiro" id="letreiro" aria-hidden="true"><defs><filter id="neon" x="-50%" y="-50%" width="200%" height="200%">
+  <feGaussianBlur in="SourceAlpha" stdDeviation="1.6" result="b1"/><feGaussianBlur in="SourceAlpha" stdDeviation="9" result="b2"/>
+  <feFlood flood-color="#6dbb3a"/><feComposite in2="b2" operator="in" result="g2"/>
+  <feFlood flood-color="#b8f58f"/><feComposite in2="b1" operator="in" result="g1"/>
+  <feMerge><feMergeNode in="g2"/><feMergeNode in="g2"/><feMergeNode in="g1"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+  <g filter="url(#neon)" id="letreiroG"><g id="mono"><path d="M134.2,4.8 L130.8,8.0 L130.8,8.8 L133.8,11.8 L133.8,15.5 L133.0,16.2 L90.5,16.2 L89.8,17.5 L90.0,18.5 L89.8,34.2 L90.5,35.2 L93.5,35.0 L94.0,34.5 L94.0,32.8 L95.0,29.2 L97.0,26.0 L100.2,23.0 L105.0,20.8 L107.8,20.2 L124.5,20.2 L125.2,21.0 L125.2,25.8 L125.8,26.2 L133.0,23.2 L133.8,23.8 L133.8,31.0 L133.5,31.5 L128.8,33.8 L127.5,34.0 L125.8,35.5 L125.2,36.5 L125.2,43.2 L125.5,43.5 L127.5,43.0 L132.2,40.8 L133.2,40.8 L133.8,41.2 L133.8,47.5 L132.2,48.8 L131.0,49.0 L126.8,51.0 L125.8,52.0 L125.2,53.2 L125.2,59.5 L125.8,60.0 L127.0,59.8 L132.8,57.0 L133.8,57.5 L133.8,64.0 L133.0,64.8 L127.0,67.2 L125.2,69.5 L125.2,76.0 L125.8,76.5 L132.8,73.5 L133.8,74.0 L133.8,80.5 L132.0,81.8 L130.8,82.0 L130.2,82.5 L126.5,84.0 L125.2,86.0 L125.2,92.5 L125.5,92.8 L126.8,92.8 L132.5,90.0 L133.2,90.0 L133.8,90.5 L133.8,97.5 L133.0,98.5 L128.8,100.2 L123.2,100.2 L122.8,99.5 L122.8,32.2 L121.8,29.5 L119.8,27.5 L117.0,26.2 L102.8,26.0 L101.5,26.5 L101.2,27.5 L101.5,29.8 L102.0,30.0 L107.8,30.0 L108.8,30.8 L108.8,61.0 L105.0,65.0 L105.0,65.5 L108.8,69.2 L108.8,99.5 L108.0,100.2 L96.5,100.2 L96.0,100.8 L96.0,103.8 L96.5,104.2 L133.0,104.2 L133.8,105.0 L133.8,108.8 L130.8,112.0 L130.8,112.5 L134.0,115.5 L134.8,115.5 L138.0,112.5 L137.5,111.2 L135.0,108.8 L135.0,105.0 L135.8,104.2 L178.2,104.2 L179.0,103.2 L179.0,86.2 L178.0,85.2 L175.2,85.5 L174.8,86.0 L174.8,87.8 L173.8,91.2 L172.0,94.2 L168.2,97.8 L166.0,99.0 L163.0,100.0 L161.5,100.2 L143.8,100.2 L143.0,99.5 L142.8,94.5 L140.8,95.0 L136.8,97.0 L135.8,97.2 L135.0,96.5 L135.0,89.5 L135.8,88.8 L137.8,87.8 L141.2,86.5 L143.0,85.0 L143.5,84.0 L143.5,77.2 L142.5,77.0 L136.0,80.0 L135.0,79.2 L135.0,73.2 L135.2,72.8 L136.8,71.8 L141.8,69.8 L143.5,67.5 L143.5,61.0 L143.2,60.8 L142.0,60.8 L136.0,63.5 L135.0,63.0 L135.0,56.8 L135.2,56.2 L141.8,53.2 L142.8,52.5 L143.5,51.0 L143.5,44.5 L143.2,44.2 L142.0,44.2 L141.5,44.8 L138.0,46.0 L136.2,47.0 L135.5,47.0 L135.0,46.5 L135.0,40.2 L135.2,39.8 L136.2,39.0 L137.5,38.8 L142.2,36.5 L143.5,34.5 L143.5,28.0 L143.2,27.8 L141.5,28.0 L136.2,30.5 L135.5,30.5 L135.0,30.0 L135.0,23.0 L135.8,22.0 L140.0,20.2 L145.5,20.2 L146.0,21.0 L146.0,88.2 L146.8,90.5 L148.0,92.2 L149.2,93.2 L152.8,94.5 L166.5,94.5 L167.2,94.0 L167.5,93.2 L167.5,91.5 L166.8,90.5 L160.8,90.5 L160.0,89.5 L160.0,59.5 L163.8,55.8 L163.5,54.8 L160.0,51.2 L160.0,21.0 L160.8,20.2 L172.2,20.2 L172.8,19.8 L172.8,16.8 L172.2,16.2 L135.8,16.2 L135.0,15.5 L135.0,11.8 L138.0,8.8 L138.0,8.0 L135.0,5.0 Z"/></g><g id="lord"><path d="M5.8,129.8 L5.5,131.5 L6.0,132.5 L12.0,132.5 L12.8,132.8 L14.0,134.0 L14.2,134.8 L14.2,153.0 L10.2,157.2 L10.2,158.0 L14.2,162.2 L14.2,180.8 L13.8,181.8 L12.2,182.8 L5.2,182.8 L4.8,183.5 L5.0,185.5 L5.8,186.0 L6.2,185.8 L56.5,185.8 L56.8,186.0 L57.5,185.8 L58.0,185.2 L58.0,165.2 L57.5,164.8 L55.5,164.8 L55.0,165.2 L54.8,171.5 L53.8,176.0 L51.8,179.8 L49.5,181.5 L47.0,182.2 L42.2,182.8 L28.2,182.8 L27.2,182.2 L26.2,180.8 L26.0,179.8 L26.0,141.2 L26.2,141.0 L26.0,135.8 L26.5,134.0 L27.8,132.8 L34.5,132.5 L35.0,131.5 L34.8,129.8 L34.5,129.5 L6.2,129.5 Z"/><path d="M91.2,128.0 L86.2,129.0 L80.8,131.0 L74.8,135.0 L70.2,140.0 L67.2,145.5 L65.5,152.2 L65.2,161.2 L66.0,165.8 L68.0,171.5 L71.0,176.2 L74.5,180.0 L79.8,183.8 L86.0,186.2 L91.0,187.2 L99.5,187.5 L104.8,186.8 L109.0,185.5 L115.0,182.5 L117.0,181.0 L121.5,176.5 L123.5,173.5 L125.8,168.8 L127.0,163.8 L127.5,159.5 L127.5,155.5 L126.8,150.0 L124.8,144.0 L121.5,138.8 L117.2,134.5 L113.8,132.0 L109.5,130.0 L103.0,128.2 L98.0,128.0 L97.8,127.8 Z"/><path d="M93.5,131.0 L99.0,131.0 L102.2,131.8 L105.0,133.0 L107.8,135.0 L110.2,138.0 L112.0,141.8 L113.0,145.2 L114.0,151.0 L114.2,160.0 L114.0,160.2 L113.8,166.0 L113.0,168.5 L112.8,171.0 L110.5,176.8 L109.8,178.0 L106.2,181.5 L104.2,182.8 L100.8,184.0 L97.0,184.5 L93.2,184.2 L89.5,183.2 L86.8,181.8 L83.8,179.0 L82.2,177.0 L80.8,173.8 L79.0,166.8 L78.5,162.0 L78.8,150.2 L79.8,144.8 L81.0,140.8 L82.8,137.5 L85.5,134.5 L88.5,132.5 Z"/><path d="M95.8,153.8 L92.5,157.0 L92.2,157.8 L95.8,161.5 L96.5,161.8 L100.2,158.0 L100.2,157.2 L96.8,153.8 Z"/><path d="M132.8,129.8 L132.5,131.8 L133.0,132.5 L139.0,132.5 L139.8,132.8 L141.2,134.5 L141.2,176.2 L141.5,176.5 L141.5,179.5 L141.0,181.5 L139.5,182.8 L133.2,182.8 L132.5,183.5 L132.5,185.0 L133.0,185.8 L133.8,186.0 L134.0,185.8 L162.2,185.8 L162.8,185.2 L162.8,183.2 L162.2,182.8 L155.2,182.8 L154.2,182.2 L153.2,180.8 L153.0,179.5 L153.0,160.5 L153.8,159.2 L155.0,159.0 L158.8,159.5 L161.2,160.2 L164.0,161.8 L165.8,163.5 L168.8,169.0 L172.8,181.5 L175.0,185.2 L177.5,187.8 L182.0,190.0 L187.0,190.5 L190.0,189.5 L192.5,187.5 L192.2,186.8 L188.8,185.0 L185.0,180.8 L183.0,176.5 L180.5,168.8 L177.5,163.0 L174.5,160.0 L172.8,159.0 L170.8,158.5 L169.8,157.8 L170.2,157.0 L171.5,156.8 L174.5,155.2 L178.0,152.8 L179.8,150.8 L181.2,148.0 L182.0,144.8 L181.8,139.5 L180.2,136.0 L178.0,133.5 L173.5,131.0 L169.8,130.0 L165.2,129.5 L133.2,129.5 Z"/><path d="M154.0,132.5 L161.8,132.8 L164.8,133.8 L166.8,135.0 L168.8,137.0 L170.0,139.0 L170.8,141.8 L170.8,144.5 L169.8,148.2 L168.0,151.2 L165.5,153.8 L161.8,155.8 L158.5,156.2 L154.2,156.2 L153.0,155.0 L153.0,136.2 L153.2,136.0 L153.0,133.5 Z"/><path d="M198.0,129.8 L197.8,131.8 L198.2,132.5 L204.2,132.5 L205.0,132.8 L206.5,134.5 L206.5,155.8 L206.8,156.0 L206.8,180.2 L206.0,181.8 L204.5,182.8 L198.5,182.8 L198.0,183.0 L197.8,185.0 L198.2,185.8 L199.0,186.0 L199.2,185.8 L235.0,185.8 L237.0,185.5 L244.8,183.5 L249.8,180.8 L253.5,177.5 L255.8,174.5 L257.8,170.5 L258.8,167.5 L259.8,162.0 L263.5,158.2 L263.5,157.2 L259.8,153.2 L258.8,147.5 L257.5,144.0 L254.8,139.2 L251.8,136.0 L249.0,134.0 L245.2,132.0 L242.5,131.0 L236.5,129.8 L234.0,129.8 L233.8,129.5 L198.2,129.5 Z"/><path d="M219.2,132.5 L232.5,132.8 L236.5,133.8 L238.5,134.8 L241.2,137.2 L242.8,139.2 L244.8,143.0 L246.0,147.0 L247.0,153.2 L247.0,161.5 L246.0,167.5 L243.8,174.0 L241.8,177.2 L239.5,179.8 L236.2,181.8 L230.8,182.8 L220.5,182.8 L219.5,182.2 L218.5,180.8 L218.5,133.2 Z"/></g><g id="lumber"><path d="M35.0,199.8 L34.8,200.2 L34.8,212.8 L35.2,213.5 L42.8,213.5 L43.2,213.2 L43.5,212.2 L42.8,211.8 L37.2,211.8 L36.5,210.8 L36.5,200.2 L36.0,199.8 Z"/><path d="M55.0,199.8 L54.5,200.2 L54.5,209.8 L55.2,211.8 L57.0,213.2 L58.8,213.8 L61.0,213.5 L63.2,211.8 L64.0,210.0 L64.0,200.2 L63.8,199.8 L62.8,199.8 L62.2,200.2 L62.0,210.2 L60.2,211.8 L58.2,211.8 L56.8,210.5 L56.2,209.2 L56.2,200.2 L55.8,199.8 Z"/><path d="M87.5,199.8 L87.0,199.5 L85.8,200.5 L83.2,206.5 L82.2,208.0 L81.2,207.2 L78.2,200.2 L77.8,199.8 L76.2,200.0 L76.2,213.0 L76.8,213.5 L77.5,213.5 L78.0,212.5 L78.0,206.0 L78.5,205.5 L80.0,208.0 L81.0,210.8 L81.8,211.5 L82.8,211.2 L84.8,206.5 L85.5,205.5 L86.2,206.8 L86.0,209.2 L86.2,213.0 L86.8,213.5 L87.8,213.2 L88.0,212.2 L88.0,200.5 Z"/><path d="M100.8,199.8 L100.2,200.2 L100.2,213.0 L101.0,213.5 L106.8,213.5 L108.5,212.8 L109.8,211.0 L109.8,208.5 L108.2,206.8 L109.8,203.8 L109.8,202.8 L109.0,201.0 L107.2,199.8 Z"/><path d="M102.0,202.2 L102.5,201.5 L103.2,201.2 L106.5,201.5 L107.8,202.8 L107.8,204.2 L106.5,205.5 L102.8,205.5 L102.0,204.5 Z"/><path d="M102.0,208.0 L102.8,207.2 L106.2,207.2 L107.8,208.2 L108.0,210.0 L106.2,211.8 L102.8,211.8 L102.0,211.0 Z"/><path d="M130.0,199.8 L129.2,199.5 L122.2,199.8 L121.8,200.2 L121.8,213.0 L122.2,213.5 L129.8,213.5 L130.2,213.2 L130.5,212.5 L129.8,211.8 L124.2,211.8 L123.5,211.0 L123.5,208.2 L124.2,207.5 L128.8,207.5 L129.2,207.0 L129.2,206.2 L128.8,205.8 L124.2,205.8 L123.5,205.0 L123.5,202.2 L124.2,201.5 L129.5,201.5 L130.5,200.5 Z"/><path d="M142.5,199.8 L142.0,200.5 L142.0,212.5 L142.5,213.5 L143.8,213.2 L144.0,208.2 L145.0,207.5 L146.2,207.5 L147.5,208.5 L149.5,212.8 L150.2,213.5 L151.2,213.5 L151.5,212.2 L149.2,208.0 L149.5,207.2 L151.0,205.8 L151.5,204.5 L151.5,202.5 L150.8,201.0 L149.0,199.8 Z"/><path d="M143.8,202.5 L144.5,201.5 L148.2,201.5 L149.0,202.0 L149.5,203.0 L149.5,204.2 L148.2,205.8 L144.5,205.8 L144.0,205.2 Z"/><path d="M169.2,199.8 L168.0,200.0 L168.0,209.2 L167.8,210.2 L166.2,211.8 L164.5,211.8 L164.0,211.2 L163.0,211.2 L162.5,211.8 L162.5,212.5 L164.0,213.5 L165.5,213.8 L167.0,213.5 L168.0,213.0 L169.5,211.0 L169.8,210.2 L169.8,200.2 Z"/><path d="M186.0,199.8 L185.0,201.5 L181.8,211.0 L181.0,212.2 L181.0,213.0 L181.5,213.5 L182.2,213.5 L184.2,210.5 L189.0,210.5 L189.8,211.2 L190.2,212.8 L191.0,213.5 L191.8,213.5 L192.0,212.0 L188.0,201.0 L187.2,199.8 Z"/><path d="M186.2,203.2 L187.2,204.0 L188.5,208.0 L187.8,208.8 L185.5,208.8 L184.8,208.0 L184.8,207.0 Z"/><path d="M206.2,199.5 L204.8,200.0 L203.0,201.8 L202.5,203.0 L202.2,205.0 L202.5,209.8 L203.2,211.8 L204.2,212.8 L205.8,213.5 L207.5,213.8 L210.0,212.8 L211.5,211.0 L211.5,209.8 L211.0,209.5 L210.2,209.8 L208.0,211.8 L205.8,211.5 L205.0,210.8 L204.2,209.0 L204.5,203.2 L205.2,202.0 L206.8,201.2 L208.8,201.8 L210.2,203.5 L211.5,203.5 L211.5,202.2 L210.8,201.0 L209.5,200.0 L208.2,199.5 Z"/><path d="M232.5,199.8 L232.0,199.5 L231.2,199.8 L226.5,205.8 L225.8,205.8 L225.2,204.8 L225.5,200.5 L225.0,199.8 L223.8,200.0 L223.5,200.5 L223.5,212.5 L224.2,213.5 L225.2,213.0 L225.5,209.5 L227.2,207.2 L228.0,207.2 L228.5,207.8 L231.5,213.0 L232.2,213.5 L233.5,213.2 L233.5,212.5 L229.2,205.2 L230.0,203.8 L232.8,200.5 Z"/></g></g></svg>
+<header class="topo" id="topo"><span>LORD</span><a href="https://sites.appbarber.com.br/lordlumberjackb-nxpr">Agendar</a></header>
+<main class="hero" id="hero">
+  <span class="nota"><b>★★★★★</b> 5,0 no Google · 125 avaliações</span>
+  <h1><span class="pal">Seu</span> <span class="pal">corte</span> <span class="pal">em</span> <em><span class="pal">outro</span> <span class="pal">nível.</span></em></h1>
+  <p>Barbearia em Mineiros, com espelhos iluminados, sinuca e cerveja gelada esperando você. Agende em 30 segundos e chegue só na sua hora.</p>
+  <a class="cta" href="https://sites.appbarber.com.br/lordlumberjackb-nxpr">Agendar horário</a>
+</main>
+<div class="dica" id="dica"><span>Toque para entrar</span><i></i></div>
+<div class="ui" id="ui"><button id="pular">Pular</button><button id="denovo" hidden>Ver de novo</button></div>
+<script>
+(() => {
+'use strict';
+const Q=new URLSearchParams(location.search);
+const cv=document.getElementById('gl');
+const gl=cv.getContext('webgl2',{antialias:false,alpha:false,preserveDrawingBuffer:true});
+if(!gl){ document.body.style.background='#000'; return; }
+const HDR=!!gl.getExtension('EXT_color_buffer_float');
+gl.getExtension('OES_texture_float_linear');
+
+// ---------- shaders ----------
+const VS=`#version 300 es
+in vec2 p; out vec2 vUv; void main(){ vUv=p*.5+.5; gl_Position=vec4(p,0,1); }`;
+
+const SCENE=`#version 300 es
+precision highp float;
+in vec2 vUv; out vec4 o;
+uniform sampler2D uMap; uniform vec2 uRes; uniform vec3 uCam,uTgt; uniform float uFov,uT,uTime;
+uniform vec2 uSpot; uniform float uKey; uniform vec3 uUp;
+const float MH=0.82759;            // altura do mapa (largura = 1)
+float h21(vec2 p){ p=fract(p*vec2(123.34,456.21)); p+=dot(p,p+45.32); return fract(p.x*p.y); }
+float vn(vec2 p){ vec2 i=floor(p),f=fract(p); f=f*f*(3.-2.*f);
+  return mix(mix(h21(i),h21(i+vec2(1,0)),f.x),mix(h21(i+vec2(0,1)),h21(i+vec2(1,1)),f.x),f.y); }
+float fbm(vec2 p){ float a=.5,s=0.; for(int i=0;i<5;i++){ s+=a*vn(p); p=p*2.03+17.1; a*=.5; } return s; }
+// pedra: relevo grosso + poros finos
+// poro/cristal redondo (antes era célula quadrada e virava quadradinho no close)
+float ponto(vec2 w,float esc,float lim,float raio){ vec2 c=floor(w*esc), f=fract(w*esc); float h=h21(c); vec2 o=vec2(h21(c+7.1),h21(c+3.3))*.5+.25; return step(lim,h)*smoothstep(raio,raio*.5,length(f-o)); }
+// ardósia preta (referência: foto do senhor): placas em camadas com degraus suaves, poucas rachaduras, grão fino
+vec2 torce(vec2 w){ return w + .07*vec2(vn(w*4.)-.5, vn(w*4.+5.2)-.5); }
+float stoneH(vec2 w){
+  vec2 q=torce(w);
+  float t=fbm(q*1.5)*2.6;                                       // poucas placas grandes
+  float f=fract(t);
+  float camadas=(floor(t)+smoothstep(.62,.98,f))/2.6;            // degrau largo e quebrado entre placas
+  float borda=smoothstep(.62,.8,f)*smoothstep(.98,.85,f);        // lascado só na borda da placa
+  float racha=smoothstep(.012,.0,abs(fbm(q*4.+11.)-.5))*smoothstep(.55,.7,vn(w*1.3+3.)); // raras
+  float grao=vn(w*190.)*.10 + vn(w*70.)*.12 + vn(w*420.)*.05;
+  return camadas*2.6 + grao + borda*vn(w*90.)*.5 - racha*1.1;
+}
+vec4 mapAt(vec2 w){
+  vec2 uv=vec2(w.x+.5,(MH*.5-w.y)/MH);
+  if(any(lessThan(uv,vec2(0)))||any(greaterThan(uv,vec2(1)))) return vec4(-99.,99.,0.,0.);
+  vec4 m=texture(uMap,uv);
+  float edge=smoothstep(0.,.04,min(min(uv.x,1.-uv.x),min(uv.y,1.-uv.y)));
+  return vec4((m.r*255.-128.)/12., mix(99.,m.g*5.,edge), m.b, edge);   // sdf (px da logo), chegada (s), semente
+}
+float groove(float sdf){ return smoothstep(-.4,2.4,sdf); }          // 0 = pedra, 1 = fundo do sulco
+// chegada "viva": o líquido acelera e segura conforme a região (não anda em ritmo de máquina)
+float chegada(vec2 w,float arr){ return arr*(1.+.16*(vn(w*7.)-.5)) + .10*(vn(w*19.+3.1)-.5); }
+// x = quanto da fenda está cheio, y = calor da ponta que avança
+vec2 liq(vec2 w,vec4 m){
+  float tl=uT-chegada(w,m.y);
+  tl-=.16*exp(-m.x*.55);                     // corre pelo meio primeiro: ponta em língua, bordas depois
+  tl+=(vn(w*380.+vec2(0,uTime*2.))-.5)*.04;  // borda da ponta irregular
+  float fill=smoothstep(0.,.07,tl)*smoothstep(.1,1.,m.x);
+  return vec2(fill, exp(-max(tl,0.)*9.)*fill);
+}
+// o líquido tem volume: sobe dentro do sulco e faz menisco na ponta
+float height(vec2 w){ vec4 m=mapAt(w); vec2 l=liq(w,m); float g=groove(m.x); return - g*.0062 + l.x*.0047*(1.+.5*l.y); } // dentro da fenda o líquido fica liso
+
+void main(){
+  vec2 q=(vUv*2.-1.)*vec2(uRes.x/uRes.y,1.);
+  vec3 f=normalize(uTgt-uCam), r=normalize(cross(f,uUp)), u=cross(r,f);
+  vec3 rd=normalize(f + (q.x*r + q.y*u)*tan(uFov*.5));
+  if(rd.z>=-.0001){ o=vec4(0,0,0,10.); return; }
+  float dist=-uCam.z/rd.z; vec3 P=uCam+rd*dist; vec2 w=P.xy;
+
+  vec4 m=mapAt(w); float sdf=m.x, arr=m.y, sd=m.z;
+  float e=.0009;
+  float h0=height(w), hx=height(w+vec2(e,0)), hy=height(w+vec2(0,e));
+  vec3 n=normalize(vec3(-(hx-h0)/e,-(hy-h0)/e,1.));
+  vec3 V=-rd;
+
+  // pedra preta texturizada
+  float tone=vn(torce(w)*9.)*.6+vn(w*55.)*.4;
+  vec3 alb=vec3(.016,.017,.016)*(.6+.7*tone);
+  vec3 albV=alb;                                               // cor usada só onde o verde vaza
+  float speck=ponto(w,1400.,.997,.16)*.35;                    // quase sem cristais: ardósia é fosca
+  float g=groove(sdf);
+  alb*=1.-.6*g;                                                // fundo do sulco mais escuro
+
+  // luz rasante (chave) num foco de luz sobre a pedra
+  vec3 L=normalize(vec3(-.78,.52,.34));
+  float pool=smoothstep(.85,.05,length(w-uSpot));
+  float dif=max(dot(n,L),0.);
+  vec3 H=normalize(L+V);
+  float spec=pow(max(dot(n,H),0.),38.)*.32 + speck*pow(max(dot(n,H),0.),8.)*1.2;  // brilho acetinado das placas
+  vec3 key=vec3(1.,.97,.92)*1.25*pool*uKey;
+  vec3 col=alb*dif*key*.28 + spec*key*.09;                    // preto absoluto: a pedra só aparece de raspão
+
+  // luz líquida dentro do sulco
+  vec2 lq=liq(w,m); float fill=lq.x, front=lq.y;
+  float tl=uT-chegada(w,arr);
+  float core=smoothstep(.8,4.5,sdf);
+  // correnteza: faixas de brilho que andam no sentido do fluxo (a chegada é a coordenada ao longo da fenda)
+  float corr=.72+.28*smoothstep(.2,1.,sin(arr*34.-uTime*19.+vn(w*240.)*4.));
+  float shimmer=.9+.1*vn(w*260.+vec2(uTime*.7,-uTime*1.3));
+  vec3 em=mix(vec3(.13,.58,.08),vec3(.78,1.,.70),core*.38)*2.0*fill*shimmer*corr;
+  em+=vec3(.85,1.,.8)*front*2.6;
+  // superfície molhada: reflexo da luz da cena no líquido
+  float specL=pow(max(dot(n,H),0.),120.)*fill;
+  em+=vec3(.9,1.,.9)*specL*1.6;
+
+  // a luz vaza e acende a textura da pedra em volta
+  float dOut=max(-sdf,0.);
+  float litN=smoothstep(0.,.35,tl)*m.w;
+  float spill=litN*(exp(-dOut/2.2)*.9+exp(-dOut/5.5)*.28)*smoothstep(10.2,5.5,dOut);
+  vec3 sc=vec3(.32,.85,.18);
+  float faceS=.35+.65*clamp(n.z,0.,1.);
+  col+=albV*sc*spill*14.*faceS + sc*spill*speck*1.5 + sc*spill*pow(max(dot(n,normalize(V+vec3(0,0,1))),0.),40.)*.25;
+  // paredes do sulco ainda vazias pegam o reflexo verde
+  col+=sc*g*(1.-fill)*litN*.12;
+
+  col=vec3(0.);                                               // só o preto: nenhuma textura de pedra, só a luz verde
+  col+=em;
+  col*=smoothstep(.015,.16,-rd.z);
+  o=vec4(col,dist);
+}`;
+
+const COPY=`#version 300 es
+precision highp float; in vec2 vUv; out vec4 o; uniform sampler2D uTex; uniform vec2 uTexel;
+void main(){ vec4 s=vec4(0); for(int i=-1;i<=1;i++) for(int j=-1;j<=1;j++) s+=texture(uTex,vUv+vec2(i,j)*uTexel); o=s/9.; }`;
+
+const BLUR=`#version 300 es
+precision highp float; in vec2 vUv; out vec4 o; uniform sampler2D uTex; uniform vec2 uDir;
+void main(){ float w[5]=float[](.227,.195,.122,.054,.016); vec4 s=texture(uTex,vUv)*w[0];
+  for(int i=1;i<5;i++){ s+=texture(uTex,vUv+uDir*float(i))*w[i]; s+=texture(uTex,vUv-uDir*float(i))*w[i]; } o=s; }`;
+
+const FINAL=`#version 300 es
+precision highp float; in vec2 vUv; out vec4 o;
+uniform sampler2D uScene,uBlur,uBlur2; uniform float uFocus,uDof,uTime,uExpo; uniform vec2 uRes;
+float h(vec2 p){ return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453); }
+vec3 aces(vec3 x){ return clamp((x*(2.51*x+.03))/(x*(2.43*x+.59)+.14),0.,1.); }
+void main(){
+  vec4 s=texture(uScene,vUv), b=texture(uBlur,vUv), b2=texture(uBlur2,vUv);
+  float coc=clamp(abs(s.a-uFocus)*uDof,0.,1.);
+  vec3 c=mix(s.rgb,b.rgb,coc);
+  vec3 bloom=max(b.rgb-.3,0.)*1.0 + max(b2.rgb-.08,0.)*1.1;   // halo de luz no ar (no lugar do brilho que vinha da pedra)
+  c+=bloom;
+  c=aces(c*uExpo);
+  c=pow(c,vec3(.95,.97,1.02))*vec3(.98,1.0,.97);              // leve grade fria/verde nas sombras
+  vec2 d=vUv-.5; d.x*=uRes.x/uRes.y;
+  c*=smoothstep(1.05,.25,length(d));                           // vinheta
+  float lum=dot(c,vec3(.3,.59,.11));
+  c+=(h(vUv*uRes+fract(uTime*7.)*91.)-.5)*.045*smoothstep(.02,.15,lum);  // grão só onde há luz
+  c=max(c-.012,0.)*1.012;                                       // preto absoluto de verdade
+  o=vec4(c,1);
+}`;
+
+function sh(t,s){ const x=gl.createShader(t); gl.shaderSource(x,s); gl.compileShader(x);
+  if(!gl.getShaderParameter(x,gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(x)); return x; }
+function prog(fs){ const p=gl.createProgram(); gl.attachShader(p,sh(gl.VERTEX_SHADER,VS)); gl.attachShader(p,sh(gl.FRAGMENT_SHADER,fs));
+  gl.bindAttribLocation(p,0,'p'); gl.linkProgram(p); if(!gl.getProgramParameter(p,gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
+  const U={}; const n=gl.getProgramParameter(p,gl.ACTIVE_UNIFORMS); for(let i=0;i<n;i++){ const a=gl.getActiveUniform(p,i); U[a.name]=gl.getUniformLocation(p,a.name); }
+  return {p,U}; }
+const P={scene:prog(SCENE),copy:prog(COPY),blur:prog(BLUR),final:prog(FINAL)};
+const vb=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,vb); gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0,2,gl.FLOAT,false,0,0);
+
+function target(w,h){ const t=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,t);
+  gl.texImage2D(gl.TEXTURE_2D,0,HDR?gl.RGBA16F:gl.RGBA8,w,h,0,gl.RGBA,HDR?gl.HALF_FLOAT:gl.UNSIGNED_BYTE,null);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  const f=gl.createFramebuffer(); gl.bindFramebuffer(gl.FRAMEBUFFER,f); gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,t,0);
+  return {t,f,w,h}; }
+
+let W,H,RT={}, scale=1;
+function resize(){
+  const dpr=Math.min(devicePixelRatio||1,2)*scale;
+  W=Math.round(innerWidth*dpr); H=Math.round(innerHeight*dpr); cv.width=W; cv.height=H;
+  RT.scene=target(W,H);
+  const qw=Math.max(1,W>>2), qh=Math.max(1,H>>2);
+  RT.a=target(qw,qh); RT.b=target(qw,qh);
+  RT.c=target(Math.max(1,W>>4),Math.max(1,H>>4)); RT.d=target(Math.max(1,W>>4),Math.max(1,H>>4));
+}
+
+// ---------- mapa das letras ----------
+const mapTex=gl.createTexture();
+const img=new Image();
+img.onload=()=>{ gl.bindTexture(gl.TEXTURE_2D,mapTex); gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);
+  gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA8,gl.RGBA,gl.UNSIGNED_BYTE,img);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  start(); };
+img.src='img/pedra-mapa.png';
+
+// ---------- coreografia (segundos) ----------
+// ponta da luz a cada 0,1 s do mapa (calculado do pedra-mapa.png): a câmera persegue isso
+const FRONT=[[0.001,0.289],[0.001,0.289],[-0.014,0.258],[0.001,0.289],[-0.014,0.258],[-0.012,0.245],[-0.008,0.23],[-0.006,0.214],[-0.001,0.188],[-0.005,0.154],[-0.022,0.111],[-0.033,0.077],[-0.042,0.034],[-0.051,-0.006],[-0.055,-0.046],[-0.066,-0.081],[-0.084,-0.123],[-0.059,-0.137],[-0.028,-0.144],[0.009,-0.147],[0.047,-0.151],[0.08,-0.158],[0.114,-0.166],[0.15,-0.174],[0.208,-0.182],[0.233,-0.192],[0.248,-0.2],[0.233,-0.211],[0.196,-0.225],[0.091,-0.255],[0.03,-0.284],[0.103,-0.286],[0.154,-0.286],[0.162,-0.287],[0.22,-0.285]];
+const LUZ=.2, VEL=1.35;                      // a luz enche tudo em ~2,5 s
+const PERSEGUE=1.2, DECOLA=2.3, POUSO=3.15;  // depois do pouso a câmera fica parada em cima da logo
+const ENT=2.6;                               // duração da entrada do site (disparada por qualquer toque)
+const cl=(x,a=0,b=1)=>Math.min(b,Math.max(a,x)), mix=(a,b,k)=>a+(b-a)*k;
+const sm=x=>{x=cl(x);return x*x*(3-2*x);}, io=x=>{x=cl(x);return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;};
+const inQ=x=>{x=cl(x);return x*x*x;};
+function frente(T){ let sx=0,sy=0,n=0; for(let d=-.3;d<=.3;d+=.05){ const k=cl((T+d)*10,0,FRONT.length-1), i=Math.floor(k), f=k-i, a=FRONT[i], b=FRONT[Math.min(i+1,FRONT.length-1)]; sx+=mix(a[0],b[0],f); sy+=mix(a[1],b[1],f); n++; } return [sx/n,sy/n]; }
+function orbita(alvo,az,el,dist){ const a=az*Math.PI/180, e=el*Math.PI/180;
+  return [alvo[0]+dist*Math.cos(e)*Math.cos(a), alvo[1]+dist*Math.cos(e)*Math.sin(a), alvo[2]+dist*Math.sin(e)]; }
+// logo na pedra (medido do mapa): largura .744, altura .600, centro (0,0)
+const LOGO_W=.744, LOGO_H=.600;
+function dPouso(){ const tg=Math.tan(19*Math.PI/180), asp=W/H;
+  return Math.max(LOGO_H/(.56*2*tg), LOGO_W/(.86*2*tg*asp)); }
+const outBack=x=>{x=cl(x);const c=1.25;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2);};
+function shot(t,e=0){
+  const T=(t-LUZ)*VEL;
+  const asp=W/H, tg=Math.tan(19*Math.PI/180);
+  const dAlto=Math.max(.5/tg,.44/(tg*asp));
+  const fr=frente(Math.max(T,0)+.12);
+  let alvo, az, el, dist, up=[0,0,1];
+  if(t<PERSEGUE){                                   // 1. rasante, atrás da gota
+    const k=t/PERSEGUE;
+    alvo=[fr[0],fr[1],0]; az=mix(96,84,k); el=mix(5,9,k); dist=mix(.15,.19,k);
+  } else if(t<DECOLA){                              // 2. decola rápido girando por cima até o lado da frente
+    const k=io((t-PERSEGUE)/(DECOLA-PERSEGUE));
+    alvo=[mix(fr[0],0,k), mix(fr[1],-.02,k), 0];
+    az=mix(84,-90,k); el=mix(9,62,Math.sin(Math.PI*Math.min(k*1.25,1)*.5)); dist=mix(.19,dAlto,k);
+  } else {                                          // 3. desce rápido e pousa em cima da logo (freia com um leve assentamento)
+    const k=(t-DECOLA)/(POUSO-DECOLA), kk=outBack(k);
+    alvo=[0,mix(-.02,0,cl(k)),0]; az=-90; el=mix(62,76,cl(kk)); dist=mix(dAlto,dPouso(),kk);
+    if(k>1){ const r=t-POUSO; el+=Math.sin(r*.9)*.6; az+=Math.sin(r*.6)*.8; } // respira parada
+  }
+  // 4. entrada do site: a câmera sobe até ficar de cima, olhando a pedra reto
+  if(e>0){ const k=io(cl(e/.22)); el=mix(el,90,k); az=mix(az,-90,k); dist=mix(dist,dPouso()*1.06,k); alvo=[0,0,0]; up=[0,k>.999?1:0,k>.999?0:1]; }
+  const cam = el>=89.999 ? [alvo[0],alvo[1],dist] : orbita(alvo,az,el,dist);
+  const revela=sm(t/.35);
+  const pulso=Math.exp(-Math.pow((t-(LUZ+2.5/VEL+.1))*5,2))*.2;
+  return { T, cam, tgt:alvo, up, fov:38*Math.PI/180,
+    spot:[alvo[0]-.4*(1-revela), alvo[1]+.05], dof:t<PERSEGUE?4.5:mix(1.5,.6,cl((t-DECOLA)/.8)),
+    expo:mix(.3,t<PERSEGUE?.72:1,revela)+pulso, key:mix(3.,1.5,sm((t-LUZ)/1.))+(t>PERSEGUE&&t<DECOLA?.8:0)+(t>DECOLA?.5:0) };
+}
+function pass(pr,rt){ gl.useProgram(pr.p); gl.bindFramebuffer(gl.FRAMEBUFFER,rt?rt.f:null); gl.viewport(0,0,rt?rt.w:W,rt?rt.h:H); }
+function tex(pr,name,t,unit){ gl.activeTexture(gl.TEXTURE0+unit); gl.bindTexture(gl.TEXTURE_2D,t); gl.uniform1i(pr.U[name],unit); }
+function blurPair(src,tmp,dst,w,h,k){
+  pass(P.blur,tmp); tex(P.blur,'uTex',src.t,0); gl.uniform2f(P.blur.U.uDir,k/w,0); gl.drawArrays(gl.TRIANGLES,0,3);
+  pass(P.blur,dst); tex(P.blur,'uTex',tmp.t,0); gl.uniform2f(P.blur.U.uDir,0,k/h); gl.drawArrays(gl.TRIANGLES,0,3);
+}
+
+function draw(T,time,S){
+  const cam=S.cam, tgt=S.tgt;
+  let s=P.scene; pass(s,RT.scene); tex(s,'uMap',mapTex,0);
+  gl.uniform2f(s.U.uRes,W,H); gl.uniform3fv(s.U.uCam,cam); gl.uniform3fv(s.U.uTgt,tgt);
+  gl.uniform1f(s.U.uFov,S.fov); gl.uniform1f(s.U.uKey,S.key); gl.uniform3fv(s.U.uUp,S.up||[0,0,1]); gl.uniform1f(s.U.uT,T); gl.uniform1f(s.U.uTime,time); gl.uniform2fv(s.U.uSpot,S.spot);
+  gl.drawArrays(gl.TRIANGLES,0,3);
+  // 1/4 e 1/16 de resolução: desfoque (profundidade de campo) e bloom
+  pass(P.copy,RT.a); tex(P.copy,'uTex',RT.scene.t,0); gl.uniform2f(P.copy.U.uTexel,1/W,1/H); gl.drawArrays(gl.TRIANGLES,0,3);
+  blurPair(RT.a,RT.b,RT.a,RT.a.w,RT.a.h,1.4);
+  pass(P.copy,RT.c); tex(P.copy,'uTex',RT.a.t,0); gl.uniform2f(P.copy.U.uTexel,1/RT.a.w,1/RT.a.h); gl.drawArrays(gl.TRIANGLES,0,3);
+  blurPair(RT.c,RT.d,RT.c,RT.c.w,RT.c.h,1.6);
+  const d=Math.hypot(tgt[0]-cam[0],tgt[1]-cam[1],tgt[2]-cam[2]);
+  const f=P.final; pass(f,null);
+  tex(f,'uScene',RT.scene.t,0); tex(f,'uBlur',RT.a.t,1); tex(f,'uBlur2',RT.c.t,2);
+  gl.uniform1f(f.U.uFocus,d); gl.uniform1f(f.U.uDof,S.dof); gl.uniform1f(f.U.uTime,time); gl.uniform1f(f.U.uExpo,S.expo); gl.uniform2f(f.U.uRes,W,H);
+  gl.drawArrays(gl.TRIANGLES,0,3);
+}
+
+const $=id=>document.getElementById(id);
+const parede=$('parede'), sombra=$('sombra'), letreiro=$('letreiro'), hero=$('hero'), topo=$('topo'), dica=$('dica');
+const reduz=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let raf=0, t=0, ant=0, estado='abertura', e=0;   // abertura → parado → entrando → site
+
+// ---- letreiro real na foto 600×600 (medido pelo v9, em px da foto) ----
+const FOTO={w:600,h:600,posX:.22,posY:.26};
+const PAREDE={ mono:[183,115,228,206], lord:[139.5,214.5,265,265.5], lumber:[155.5,275,251,288] };
+const CENTRO_P=[202.25,201.5], ALT_P=173;
+// mesmas partes no vetor da logo (viewBox 270×218)
+const VET={ mono:[89.8,4.8,179.0,115.5], lord:[4.8,127.8,263.5,190.5], lumber:[34.8,199.5,233.5,213.8] };
+// vetor → pedra: 1 unidade = .002875; x = (vx-134.15)*k ; y = .2994-(vy-4.8)*k
+const K=.002875, vx2w=v=>(v-134.15)*K, vy2w=v=>.2994-(v-4.8)*K;
+
+function capa(){ const sc=Math.max(W/FOTO.w,H/FOTO.h), iw=FOTO.w*sc, ih=FOTO.h*sc;
+  return { sc, x0:(W-iw)*FOTO.posX, y0:(H-ih)*FOTO.posY }; }
+// tamanho da tela em px CSS (W/H do canvas incluem o devicePixelRatio)
+const vw=()=>innerWidth, vh=()=>innerHeight;
+function pedraNaTela(wx,wy){ // câmera de cima: projeção direta
+  const d=dPouso()*1.06, px=vh()/(2*d*Math.tan(19*Math.PI/180));
+  return [vw()/2+wx*px, vh()/2-wy*px]; }
+
+function posicionaParede(z){ // z: 0 = letreiro do tamanho da logo de pedra, 1 = foto normal (cobrindo a tela)
+  const sc=Math.max(vw()/FOTO.w,vh()/FOTO.h), x0=(vw()-FOTO.w*sc)*FOTO.posX, y0=(vh()-FOTO.h*sc)*FOTO.posY;
+  const hLogo=pedraNaTela(0,-LOGO_H/2)[1]-pedraNaTela(0,LOGO_H/2)[1];
+  const S0=hLogo/(ALT_P*sc), S=mix(S0,1,z);
+  const cx=x0+CENTRO_P[0]*sc, cy=y0+CENTRO_P[1]*sc;          // centro do letreiro sem zoom
+  const tx=mix(vw()/2-cx,0,z), ty=mix(vh()/2-cy,0,z);
+  parede.style.width=FOTO.w*sc+'px'; parede.style.height=FOTO.h*sc+'px';
+  // tela = c + (base-c)*S + t
+  let ox=cx+(x0-cx)*S+tx, oy=cy+(y0-cy)*S+ty;
+  // a foto nunca descobre o fundo preto: prende as bordas dentro da tela
+  const fw=FOTO.w*sc*S, fh=FOTO.h*sc*S;
+  ox = fw>=vw() ? Math.min(0,Math.max(vw()-fw,ox)) : (vw()-fw)/2;
+  oy = fh>=vh() ? Math.min(0,Math.max(vh()-fh,oy)) : (vh()-fh)/2;
+  parede.style.transform=`translate(${ox}px,${oy}px) scale(${S})`;
+  return (u,v)=>[ox+u*sc*S, oy+v*sc*S];
+}
+function caixaDe(g,mapaFoto,m){ // caixa na tela de uma parte: m=0 sobre a pedra, m=1 sobre a parede
+  const v=VET[g];
+  const a=pedraNaTela(vx2w(v[0]),vy2w(v[1])), b=pedraNaTela(vx2w(v[2]),vy2w(v[3]));
+  const p=PAREDE[g], c=mapaFoto(p[0],p[1]), d=mapaFoto(p[2],p[3]);
+  return [mix(a[0],c[0],m),mix(a[1],c[1],m),mix(b[0],d[0],m),mix(b[1],d[1],m)];
+}
+function encaixa(mapaFoto,m){ // deforma cada parte do vetor para a caixa atual
+  ['mono','lord','lumber'].forEach((g,i)=>{
+    const mm=cl(m*1.25-i*.12);                         // as partes chegam uma atrás da outra
+    const v=VET[g], cx=caixaDe(g,mapaFoto,io(mm));
+    const sx=(cx[2]-cx[0])/(v[2]-v[0]), sy=(cx[3]-cx[1])/(v[3]-v[1]);
+    $(g).setAttribute('transform',`translate(${cx[0]-v[0]*sx},${cx[1]-v[1]*sy}) scale(${sx},${sy})`);
+  });
+}
+function mostraFinal(){
+  estado='site'; cancelAnimationFrame(raf); cv.style.visibility='hidden'; dica.classList.remove('on');
+  parede.style.opacity=1; sombra.style.opacity=1; letreiro.style.opacity=.92;
+  const mp=posicionaParede(1); encaixa(mp,1);
+  hero.classList.add('on'); topo.classList.add('on');
+  $('pular').hidden=true; $('denovo').hidden=false;
+  // o letreiro respira de leve, como neon de verdade
+  $('letreiroG').animate([{opacity:1},{opacity:.86},{opacity:1},{opacity:.95},{opacity:1}],{duration:4200,iterations:Infinity});
+}
+function quadroEntrada(e){ // e: 0 → 1 ao longo de ENT segundos
+  const casa=sm((e-.25)/.1);                    // a pedra vira vetor aceso no mesmo lugar
+  const z=io(cl((e-.33)/.5));                    // zoom da foto: do letreiro até a barbearia inteira
+  cv.style.opacity=1-casa;
+  letreiro.style.opacity=mix(0,1,sm((e-.22)/.06))*mix(1,.92,cl((e-.8)/.2));
+  parede.style.opacity=sm((e-.42)/.22);
+  sombra.style.opacity=sm((e-.45)/.35);
+  const mp=posicionaParede(z); encaixa(mp,cl((e-.33)/.45));
+  if(e>.8 && !hero.classList.contains('on')){ hero.classList.add('on'); topo.classList.add('on'); }
+}
+function entrar(){
+  if(estado!=='parado') return;
+  estado='entrando'; dica.classList.remove('on'); let e0=0, a0=0;
+  const f=now=>{ e0+=a0?Math.min((now-a0)/1000,.05):0; a0=now; t+=a0?.016:0;
+    e=cl(e0/ENT); if(e<.36){ const S=shot(t,e); draw(S.T,t,S); }
+    quadroEntrada(e);
+    if(e>=1){ mostraFinal(); return; } raf=requestAnimationFrame(f); };
+  cancelAnimationFrame(raf); raf=requestAnimationFrame(f);
+}
+['pointerdown','keydown','wheel','touchstart'].forEach(ev=>addEventListener(ev,x=>{ if(x.key==='Tab'||(x.target.closest&&x.target.closest('.ui'))) return; entrar(); },{passive:true}));
+
+function start(){
+  resize();
+  if(Q.has('quadro')){ const tt=parseFloat(Q.get('quadro')), ee=Q.has('e')?parseFloat(Q.get('e')):0; const S=shot(tt,ee); draw(S.T,tt,S);
+    if(ee>0){ quadroEntrada(ee); } return; }                       // quadro fixo (prints e vídeo)
+  const visto=(()=>{try{return sessionStorage.getItem('lord-intro')}catch(x){return null}})();
+  if(reduz || (visto && !Q.has('intro'))){ mostraFinal(); return; }
+  try{sessionStorage.setItem('lord-intro','1')}catch(x){}
+  const loop=now=>{ t+=ant?Math.min((now-ant)/1000,.05):0; ant=now; /* engasgo não pula a cena */
+    const S=shot(t); draw(S.T,t,S);
+    if(estado==='abertura' && t>=POUSO){ estado='parado'; dica.classList.add('on'); $('pular').hidden=true; }
+    raf=requestAnimationFrame(loop); };
+  raf=requestAnimationFrame(loop);
+}
+$('pular').onclick=()=>{ if(estado==='abertura'){ t=POUSO; } else mostraFinal(); };
+$('denovo').onclick=()=>{ location.search='?intro'; };
+addEventListener('resize',()=>{ resize(); if(estado==='site'){ const mp=posicionaParede(1); encaixa(mp,1); } });
+})();
+</script>
+</body>
+</html>
