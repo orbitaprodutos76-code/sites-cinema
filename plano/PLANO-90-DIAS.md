@@ -22,3 +22,11 @@ Sonho: trabalhar de casa só com um PC (trabalhar de qualquer lugar e viajar), v
 ## Dias 61–90 · primeiro dólar e primeiro investimento
 - Fechar o primeiro cliente de fora.
 - Separar uma parte fixa de cada pagamento para investir (definir % com o senhor).
+
+## Números e datas (27/11/2026) — versão combinada no chat
+Premissas: região R$ 250 de entrada + R$ 197/mês, teto de 8 clientes; EUA US$ 250/mês por cliente; dólar a ~R$ 5,30 (conferir a cotação); sem contar cancelamentos.
+- Dez/2026: oferta e portfólio em inglês (1–7/12), depois 30 abordagens/dia nos EUA; 2 clientes na região.
+- Jan/2027: 5 na região; conversas nos EUA. · Fev: 8 na região (para aqui); 1º cliente EUA.
+- Mar: 2 EUA · Abr: 3 · a partir de Mai: +2 por mês → Jan/2028: 21 EUA.
+- Cenário 2/mês: Jan/2028 ≈ US$ 5.250 + R$ 1.576 ≈ R$ 29 mil/mês. Cenário 1/mês: ≈ R$ 17 mil/mês.
+- Editor contratado quando passar de 8 clientes EUA (~Jul/2027). Investir 10–20% de tudo que entra.
